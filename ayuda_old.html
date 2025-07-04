@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="Bootstrap/bootstrap.min.css" rel="stylesheet"> 
+        <link rel="stylesheet" type="text/css" href="css/estilos.css" />
+        <title>AYUDA</title>
+        <link rel="icon" href="img/favicon.png">
+    </head>
+<body>
+    <h1> AYUDA CABAL</h1>
+    <b> GENERAR ALTAS NUEVAS </b>
+    <br>
+    <ol>
+        <li>Subir el archivo ALTAS.xlsx.</li>
+        <li>Menu - Cargar Altas Excel.</li>
+        <Li>El mismo posee el siguiente formato</Li>
+        <li>Apellido-Nombre-Domicilio-Calle	Domicilio-Numero Domicilio-Piso	Domicilio-Departamento-Localidad-Provincia-Sexo-Codigo-Postal-Telefono Caracteristica-Telefono Numero-Estado Civil-Fecha Nacimiento-Tipo Documento-Numero Documento-Prov. Documento-CUIT/CUIL
+        </li>
+        <li> Respetando el Formato del <b>Anexo 1 - Novedades de Altas de Tarjetas Precargadas </b> Del Manual Cabal</li>
+        <li>Menu - Generar ALTAUSUCBPRE.</li>
+        <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+        <li>Subir ese archivo a la plataforma de cabal con el nombre ALTAUSUCBPRE.782</li>
+        <li>La plataforma responde con un archivo del tipo 782_out_altas_tpc_202207XX_XXXX_XXXXXX</li>
+    </ol>
+    <br>
+    <b>PROCESAR NOV. ALTAS </b>
+    <br>(En este archivo se encuentran los datos de la nueva tarjeta, incluyendo Numero Cuenta y Numero Tarjeta)
+    <ol>
+        <li>Descargar desde plataforma el archivo 782_out_altas_tpc_202207XX_XXXX_XXXXXX </li>
+        <li>Renombrar el mismo a MovAltas.txt</li>
+        <li>Subir el archivo  MovAltas.txt</li>
+        <li>Menu - PROCESAR NOV. ALTAS</li>
+        <li>Se cargan los beneficiarios en la BD, se debe de exportar desde phpmyadmin a excel. </li>
+    </ol>
+    <!-- <b>GENERAR ACREDITACIONES DE SALDO</b>
+    <ol>
+        <li>General el archivo AltaCargas.xlsx</li>
+        <li>El Mismo debe de Tener el siguiente formato</li>
+        <li>ID-APELLIDO-NOMBRE-DNI-NUMCUENTA-CREDITO A CARGAR-CREDITO CAJERO</li>
+        <li>Subir el archivo AltaCargas.xlsx</li>
+        <li>Menu - Cargar Carga de Credito Desde Excel</li>
+        <li>Menu - Generar NOVCAR</li>
+        <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+        <li>Subir ese archivo a la plataforma de cabal con el nombre NOVCAR.782</li>
+
+    </ol>  -->
+   <!-- <b>ACREDITACION CSV</b>
+    <ol>
+        <li>General el archivo AltaCargas.xlsx</li>
+        <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+        <li>Subir ese archivo a la plataforma de cabal con el nombre NOVCAR.782</li>
+
+    </ol> -->
+    <b>GENERAR ACREDITACIONES DE SALDO (Este archivo con este formato lo envian desde Suministros con pequeños cambios) </b>
+    <ol>
+        <li>General el archivo Acreditaciones.xlsx</li>
+        <li>El Mismo debe de Tener el siguiente formato</li>
+        <li>Id-Apellido-Nombre-Localidad-DNI-CUIT-Monto a Acreditar</li>
+        <li>Subir el archivo Acreditaciones.xlsx - En el formato de abajo, no lleva el total en la ultima fila</li>
+        <img src="./img/acreditacion.png" id="foto" alt="">
+        <li>Menu - Acreditar Saldo 3</li>
+        <li>Menu - Generar NOVCAR</li>
+        <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+        <li>Subir ese archivo a la plataforma de cabal con el nombre NOVCAR.782</li>
+
+    </ol> 
+    <!-- <b>PROCESAR LIQUIDACION CSV</b>
+    <ol>
+        <li>El archivo de liquidacion que envian desde Suministros se debe de guardar como CSV</li>
+        <li>Se debe dejar solo los datos a importar, sin cabecera ni sumatoria al final</li>
+        <img src="img/ArchivoCSV.png">
+        <li>En el Menu ir a Cargar Credito CSV</li>
+        <li>Subir el archivo con los datos a liquidar, debe si o si estar en CSV</li>
+        <li>Seguir los pasos</li>
+        <li>Menu - Generar NOVCAR</li>
+        <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+        <li>Subir ese archivo a la plataforma de cabal con el nombre NOVCAR.782</li>
+        
+
+    </ol> -->
+    <b>PROCESAR MOVIMIENTO DE CUENTAS</b>
+    <ol>
+        <li>Descargar desde Plataforma Archivo del tipo 782_Nacion_20220731_1841_324794.txt</li>
+        <li>Este archivo se sube a la misma El ultimo dia Habil de Cada Mes (o El 1er Dia Del Mes Siguiente</li>
+        <li>Renombarar el archivo descargado a Movimientos.txt</li>
+        <li>Subir el archivo Movimientos.txt</li>
+        <li>Menu - Procesar Movimientos</li>
+        <li>Seleccionar el Mes al que corresponden los movimientos</li>
+        <li>Si el mes seleccionado ya esta cargado, genera un mensaje de error y no permite nuevamente la carga</li>
+        <li>Se graban los datos a la tabla movimientos, exportar la misma a CSV For Ms excel</li>
+
+    </ol>
+    <b>PROCESAR RESPUESTA DE ACREDITACIONES</b>
+    <ol>
+        <li>Descargar desde Plataforma Archivo del tipo 782_RCAR_20220731_1841_324794.txt</li>
+        <li>Este archivo se el dia que se realiza la acreditacion en las cuentas de los beneficiarios</li>
+        <li>Renombarar el archivo descargado a RespuestaCargas.txt</li>
+        <li>Subir el archivo RespuestaCargas.txt</li>
+        <li>Menu - PROCESAR CARGA CREDITO</li>
+        <li>se Mostrara en Pantalla las Cargas de Credito Realizadas</li>
+<!--        <li>Se graban los datos a la tabla movimientos, exportar la misma a CSV For Ms excel</li>-->
+
+    </ol>
+    <a href="javascript:history.back()" class="btn-flotante">Volver Atras</a>  
+</body>
+</html>

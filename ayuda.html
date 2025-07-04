@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda Sistema Cabal - FRS</title>
+    <link href="Bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/estilos2.css" />
+    <link rel="icon" href="img/favicon.png">
+
+</head>
+<body>
+    <div class="ayuda">
+        <h1> AYUDA</h1>
+        <a class="titular"> GENERAR ALTAS NUEVAS </a>
+        <br>
+        <ol>
+            <li>Subir el archivo ALTAS.xlsx.</li>
+            <li>Menu - Beneficiarios - Procesar Excel (Altas.xls)</li>
+            <Li>El mismo posee el siguiente formato</Li>
+            <li>Apellido-Nombre-Domicilio-Calle Domicilio-Numero Domicilio-Piso Domicilio-Departamento-Localidad-Provincia-Sexo-Codigo-Postal-Telefono Caracteristica-Telefono Numero-Estado Civil-Fecha Nacimiento-Tipo Documento-Numero Documento-Prov. Documento-CUIT/CUIL
+            </li>
+            <li> Respetando el Formato del <b>Anexo 1 - Novedades de Altas de Tarjetas Precargadas </b> Del Manual Cabal</li>
+            <li>Menu - Beneficiarios Generar ALTAUSUCBPRE</li>
+            <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+            <li>Subir ese archivo a la plataforma de cabal con el nombre ALTAUSUCBPRE.782</li>
+            <li>La plataforma responde con un archivo del tipo 782_out_altas_tpc_202207XX_XXXX_XXXXXX Que se procesa en el siguiente paso</li>
+        </ol>
+        <br>
+        <a class="titular">PROCESAR NOV. ALTAS </a>
+        <ol>
+            <li>En este archivo se encuentran los datos de la nueva tarjeta, incluyendo Numero Cuenta y Numero Tarjeta</li>
+            <li>Descargar desde plataforma el archivo 782_out_altas_tpc_202207XX_XXXX_XXXXXX </li>
+            <li>Renombrar el mismo a MovAltas.txt</li>
+            <li>Subir el archivo MovAltas.txt</li>
+            <li>Menu - Beneficiarios - Procesar MovAltas.txt (Dev. Banco)</li>
+            <li>Se cargan los beneficiarios en la BD, se debe de exportar desde phpmyadmin a excel. </li>
+        </ol>
+        
+        <a class="titular">GENERAR ACREDITACIONES DE SALDO (Este archivo con este formato lo envian desde Suministros con pequeños cambios) </a>
+        <ol>
+            <li>Modificacr y Generar el archivo Acreditaciones.xlsx</li>
+            <li>El Mismo debe de Tener el siguiente formato</li>
+            <li>Id-Apellido-Nombre-Localidad-DNI-CUIT-Monto a Acreditar</li>
+            <li>Subir el archivo Acreditaciones.xlsx - En el formato de abajo, no lleva el total en la ultima fila</li>
+            <!-- <img id="foto"src="./img/acreditacion.png" alt=""> -->
+            <li>ASI ES EL ARCHIVO FINAL</li>
+            <img id="foto"src="./img/acreditacion2.png" alt="">
+            <li>Menu - Acreditaciones - Procesar Excel (Acreditaciones.xlsx)</li>
+            <li>Menu - Acreditaciones - Generar NOVCAR</li>
+            <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+            <li>Subir ese archivo a la plataforma de cabal con el nombre NOVCAR.782</li>
+            <li>La plataforma responde con un archivo del tipo 782_RCAR_20220731_1841_324794.txt Que se procesa en Procesar Respuesta Acreditaciones</li>
+        </ol>
+        
+        <a  class="titular">PROCESAR RESPUESTA DE ACREDITACIONES</a>
+        <ol>
+            <li>Descargar desde Plataforma Archivo del tipo 782_RCAR_20220731_1841_324794.txt</li>
+            <li>Este archivo se el dia que se realiza la acreditacion en las cuentas de los beneficiarios</li>
+            <li>Renombarar el archivo descargado a RespuestaCargas.txt</li>
+            <li>Subir el archivo RespuestaCargas.txt</li>
+            <li>Menu - Procesar RespuestaCargas.txt  (Dev. Banco)</li>
+            <li>se Mostrara en Pantalla las Cargas de Credito Realizadas</li>
+        </ol>
+        <a  class="titular">PROCESAR MOVIMIENTO DE CUENTAS</a>
+        <ol>
+            <li>Descargar desde Plataforma Archivo del tipo 782_Nacion_20220731_1841_324794.txt</li>
+            <li>Este archivo se sube a la misma El ultimo dia Habil de Cada Mes (o El 1er Dia Del Mes Siguiente</li>
+            <li>Renombrar el archivo descargado a Movimientos.txt</li>
+            <li>Subir el archivo Movimientos.txt</li>
+            <li>Menu - Movimientos - Procesar Movimientos.txt</li>
+            <li>Seleccionar el Mes al que corresponden los movimientos</li>
+            <li>Si el mes seleccionado ya esta cargado, genera un mensaje de error y no permite nuevamente la carga</li>
+            <li>Se graban los datos a la tabla movimientos, exportar la misma a CSV For Ms excel</li>
+        </ol>
+        <a  class="titular">PROCESAR MAESTRO PLASTICOS</a>
+        <ol>
+            <li>Descargar el Archvio MAESPLASXXXXX.txt desde la plataforma</li>
+            <li>Subir el archivo con el nombre MAESPLA.txt</li>
+            <li>Copiar el Nombre de Archivo, ya que se solicitara el nombre original para poder realizar la carga</li>
+            <li>Ir al Menu Maestros Tarjetas - Procesar Maestro Tarjetas</li>
+        </ol>
+        <a  class="titular">Descarga Saldos Cuentas</a>
+        <ol>
+            <li>Subir el archivo con el nombre DescargaSaldos.xlsx</li>
+            <li>El Archivo debe de contener las siguientes filas 1 - id    2 - CUIT 3 - DNI 7 - Nombre 5 - Monto a Descargar  </li>
+            <li>Ir al Menu Descarga Saldos - Procesar Descargas</li>
+
+        </ol>
+    </div>
+    
+</body>
+</html> 
+</body>
+</html>

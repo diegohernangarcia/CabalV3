@@ -1,0 +1,23 @@
+
+          $cuenta = DevuelvoNumeroCuenta($DNICARGA, $CUITCARGA);
+          $validar = DevuelvoApellidoNombrePorDNICUIT($DNICARGA, $CUITCARGA);
+          // var_dump($validar);
+          // if (($validar[1] != $apellidocarga) || ($validar[2] != $nombrecarga)) {
+          if ($validar[1] != $apellidocarga) {
+            $cual = $num++;
+            // echo "<h1 center class='display-2'> EL APELLIDO NO COINCIDE EN LA LINEA 3  $cual</h1> ";
+            // echo "<h2 class='display-5'> El Apellido $apellidocarga Informado en el archivo de carga no se correponde con $validar[1] que es el cargado en el sistema";
+            // echo "<h2 class='display-6'>VERIFICAR EL BENEFICIARIO, NO CORRESPONDEN LOS APELLIDOS EN EL EXCEL CON LA BD";
+            // echo "<a href='javascript:history.back()' class='btn-flotante'>Volver Atras</a>  ";
+          ?>
+            
+            <div class="alert alert-danger" role="alert">
+              EL APELLIDO NO COINCIDE EN LA LINEA <?php echo $cual ?>
+            </div>
+            <div class="alert alert-danger" role="alert">
+            VERIFICAR EL BENEFICIARIO, NO CORRESPONDEN LOS APELLIDOS EN EL EXCEL ENVIADO CON EL QUE ESTA CARGADO EN LA BASE DE DATOS 
+            </div>
+          <?php
+
+           // die();
+          }
