@@ -17,6 +17,7 @@
     <ul>
     <li><a href="#">Beneficiarios &dtrif;</a>
         <ul class="dropdown">
+            <li><a href="subir_excel_altas.php">Cargar Archivo de Altas</a></li>
             <li><a href="CargaAltasDeExcelaBD.php">Procesar Excel (Altas.xls)</a></li>
             <li><a href="GenerarNovedadAltas.php">Generar ALTAUSUCBPRE</a></li>
             <li><a href="ProcesaNovedadesAltas.php">Procesar MovAltas.txt (Dev. Banco)</a></li>
@@ -25,10 +26,15 @@
     </li>
     <li><a href="#">Acreditaciones &dtrif;</a>
       <ul class="dropdown">
+        <li><a href="subir_excel_acreditaciones.php">Cargar Archivo de Acreditaciones</a></li>
         <li><a href="AcreditarSaldos-2023.php">Procesar Excel (Acreditaciones.xlsx)</a></li>
         <li><a href="GenerarCargaCredito2.php">Generar NOVCAR</a></li>
+        <li><a href="subir_novcar.php">Cargar Archivo NOVCAR</a></li>
         <li><a href="VerificarNovcar.php">Verificar NOVCAR</a></li>
+        <li><a href="subir_respuesta_cargas.php">Subir Respuesta Cargas (Dev. Banco)</a></li>
         <li><a href="ProcesarCarga.php">Procesar RespuestaCargas<br>.txt  (Dev. Banco)</a></li>
+        
+        
       </ul>
     </li>
     <li><a href="#">Descarga Saldos &dtrif;</a>
