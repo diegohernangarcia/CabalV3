@@ -1,189 +1,174 @@
-<!--
-Lee el archivo de excel con los datos de nuevas cargas de credito y carga la BD
-Valida la longitud de los campos
-y lo guarda en la tabla altas
-Cada vez que se ejecuta vacia la tabla altas para agregar datos.
--->
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Cargar PHPExcel
+require_once 'phpexcel/PHPExcel.php';
+
+// Conexión
+$conn = mysqli_connect("localhost", "pucho", "78900", "cabal");
+mysqli_set_charset($conn, "utf8");
+
+$stats = array('total' => 0, 'exitos' => 0, 'fallidos' => 0, 'dinero' => 0);
+$procesados = array();
+
+if (isset($_POST['btn_cargar'])) {
+    $archivoTmp = $_FILES['archivo_excel']['tmp_name'];
+
+    try {
+        $phpExcel = PHPExcel_IOFactory::load($archivoTmp);
+        $hoja = $phpExcel->getSheet(0); 
+        $filasMax = $hoja->getHighestRow();
+
+        mysqli_query($conn, "TRUNCATE TABLE acreditar2");
+
+        $sql_busqueda = "SELECT id, Apellido, Nombre, NumeroCuenta, NumeroDocumento FROM beneficiario WHERE Cuit = ? LIMIT 1";
+        $stmt_busqueda = mysqli_prepare($conn, $sql_busqueda);
+
+        $sql_ins = "INSERT INTO acreditar2 (id_beneficiario, Apellido, Nombre, NumeroCuenta, ImporteCompra, ImporteCajero, DNI, Fecha, Hora) 
+                    VALUES (?, ?, ?, ?, ?, '0', ?, ?, ?)";
+        $stmt_ins = mysqli_prepare($conn, $sql_ins);
+
+        // Empezamos en fila 6. 
+        for ($fila = 6; $fila <= $filasMax; $fila++) {
+            $cuil_excel = trim($hoja->getCellByColumnAndRow(6, $fila)->getValue());
+            $monto = $hoja->getCellByColumnAndRow(7, $fila)->getValue();
+            $apellido_check = trim($hoja->getCellByColumnAndRow(2, $fila)->getValue());
+
+            // --- FILTRO: Ignorar fila de total o vacías ---
+            // Si no hay apellido o el CUIL no es un número válido, saltamos la fila
+            if (empty($apellido_check) || empty($cuil_excel) || !is_numeric($cuil_excel)) {
+                continue; 
+            }
+
+            $stats['total']++;
+            mysqli_stmt_bind_param($stmt_busqueda, "s", $cuil_excel);
+            mysqli_stmt_execute($stmt_busqueda);
+            $resultado = mysqli_stmt_get_result($stmt_busqueda);
+
+            $item = array('fila' => $fila, 'cuil' => $cuil_excel, 'monto' => $monto, 'status' => 'error', 'msg' => 'No encontrado en BD');
+
+            if ($row = mysqli_fetch_assoc($resultado)) {
+                $fecha_actual = date("Y-m-d");
+                $hora_actual  = date("H:i:s");
+                
+                mysqli_stmt_bind_param($stmt_ins, "isssssss", 
+                    $row['id'], $row['Apellido'], $row['Nombre'], $row['NumeroCuenta'], 
+                    $monto, $row['NumeroDocumento'], $fecha_actual, $hora_actual
+                );
+
+                if (mysqli_stmt_execute($stmt_ins)) {
+                    $item['status'] = 'success';
+                    $item['msg'] = $row['Apellido'] . ", " . $row['Nombre'];
+                    $stats['exitos']++;
+                    $stats['dinero'] += (float)$monto;
+                }
+            } else {
+                $stats['fallidos']++;
+            }
+            $procesados[] = $item;
+        }
+
+    } catch (Exception $e) {
+        $error_critico = $e->getMessage();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="Bootstrap/bootstrap.min.css" rel="stylesheet"> 
-    <link rel="stylesheet" type="text/css" href="css/estilos.css" />
-    <title>Importar Altas A Base De Datos</title>
-    <link rel="icon" href="img/favicon.png">
+    <title>Sistema de Acreditación | Cabal</title>
+    <style>
+        :root { --primary: #2563eb; --success: #22c55e; --danger: #ef4444; --bg: #f8fafc; }
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: #1e293b; padding: 40px 20px; }
+        .container { max-width: 1100px; margin: auto; }
+        
+        .header { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { margin: 0; font-size: 1.5rem; color: #0f172a; }
+
+        .card-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
+        .stat { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+        .stat-val { display: block; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.8rem; color: #64748b; text-transform: uppercase; }
+
+        .upload-box { background: #ffffff; border: 2px dashed #cbd5e1; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 25px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th { background: #f1f5f9; padding: 15px; text-align: left; font-size: 0.85rem; color: #475569; }
+        td { padding: 15px; border-top: 1px solid #f1f5f9; font-size: 0.9rem; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .bg-success { background: #dcfce7; color: #166534; }
+        .bg-danger { background: #fee2e2; color: #991b1b; }
+    </style>
 </head>
 <body>
-<BR>
-<h4 class="display-4">Importar Excel Cargar Credito Tarjetas a Base de Datos </h4>
-<BR><BR>
- 
 
-    
-<table class="table table-bordered">
-      
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Apellido</th>
-          <th>Nombre</th>
-          <th>Localidad</th>
-          <th>DNI</th>
-          <th>CUIT</th>
-          <th>Monto Acreditar</th>
-          <th>Numero Cuenta</th>
-          <th>Fecha</th>
-          <th>Hora</th>
-        </tr>
-      </thead>
-      <tbody>     
+<div class="container">
+    <div class="header">
+        <h1>💳 Sistema de Acreditación Cabal</h1>
+        <small><?php echo date("d/m/Y H:i"); ?></small>
+    </div>
 
-<?php
-     require_once('phpexcel/PHPExcel.php');
-     require_once('BD/BD.php');
-     $archivo = "archivos/Acreditaciones.xlsx";
-     $error=0;
-     $num=0;
-     $inputFileType = PHPExcel_IOFactory::identify($archivo);
-     $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-     $objPHPExcel = $objReader->load($archivo);
-     $sheet = $objPHPExcel->getSheet(0); 
-     $highestRow = $sheet->getHighestRow(); 
-     $highestColumn = $sheet->getHighestColumn();
-     $dia=date("d");
-     $mes=date("m");
-     $anio=date("y");
-     $fecha=$dia.$mes.$anio;
-     //echo $fecha;die();
-     
-     date_default_timezone_set("UTC");
-     date_default_timezone_set("America/Mendoza");
-     
+    <div class="upload-box">
+        <form action="" method="post" enctype="multipart/form-data">
+            <p>Seleccione la planilla Excel de Suministro para procesar</p>
+            <input type="file" name="archivo_excel" required style="margin-bottom: 15px;"><br>
+            <button type="submit" name="btn_cargar" class="btn">Procesar y Blanquear Tabla</button>
+        </form>
+    </div>
 
-     $hora=$hoy = getdate();
-     $horaactual=$hora["hours"].$hora["minutes"].$hora["seconds"];
-     //echo $fecha." ".$horaactual;
-    //EXCEL VA A USAR ESTAS CELDAS
-    for ($row = 2; $row <= $highestRow; $row++){ 
-        $num++;?>
-        <tr>
-            <th scope='row'><?php echo $num;?></th>
-            <td><?php echo $sheet->getCell("B".$row)->getValue();?></td> <!-- Apellido -->
-            <td><?php echo $sheet->getCell("C".$row)->getValue();?></td>  <!-- Nombre -->
-            <td><?php echo $sheet->getCell("D".$row)->getValue();?></td>  <!-- Localidad -->
-            <td><?php echo $sheet->getCell("E".$row)->getValue();?></td>  <!-- DNI -->
-            <td><?php echo $sheet->getCell("F".$row)->getValue();?></td>  <!-- CUIT -->
-            <td><?php echo $sheet->getCell("G".$row)->getValue();?></td>  <!-- Monto -->
-            
-            <?php 
-              $DNICARGA=$sheet->getCell("E".$row)->getValue(); 
-              $CUITCARGA=$sheet->getCell("F".$row)->getValue(); 
-              $apellidocarga= $sheet->getCell("B".$row)->getValue();
-              $nombrecarga=$sheet->getCell("C".$row)->getValue();
-              $quien= $apellidocarga . " ". $nombrecarga;?>
-              
-            <?php 
-              $cuenta=DevuelvoNumeroCuenta($DNICARGA,$CUITCARGA);
-              $querror="POR FAVOR VERIFICAR LOS DATOS DEL EXCEL ".$quien;
-              if (empty($cuenta)) {
-                //echo "POR FAVOR VERIFIQUE LOS DATOS DE ". $quien;
-                ?> <h4 class="display-6"> <?php echo "POR FAVOR VERIFIQUE LOS DATOS DE ". $quien;?> </h4> <?php
-                die();
-              }
-              /*$Estabien=EstaBienCuenta($nombrecarga,$apellidocarga, DevuelvoNumeroCuenta($DNICARGA,$CUITCARGA));
-              //echo "Esta Buebn ".$Estabien;
-              
-              if (empty($Estabien)) {
-                ?> <h4 class="display-8"> <?php echo "POR FAVOR VERIFIQUE LOS DATOS DE ". $quien;?> </h4> <?php
-                
-              }*/
-              ?>
-            <td><?php echo DevuelvoNumeroCuenta($DNICARGA,$CUITCARGA); ?></td>  <!-- Monto -->
-            <td><?php echo $fecha; ?></td>  <!-- Fecha-->
-            <td><?php echo $horaactual; ?></td>  <!-- Hora-->
-            
+    <?php if (!empty($procesados)): ?>
+        <div class="card-stats">
+            <div class="stat">
+                <span class="stat-val"><?php echo $stats['total']; ?></span>
+                <span class="stat-label">Filas Leídas</span>
+            </div>
+            <div class="stat">
+                <span class="stat-val" style="color: var(--success);"><?php echo $stats['exitos']; ?></span>
+                <span class="stat-label">Cargados OK</span>
+            </div>
+            <div class="stat">
+                <span class="stat-val" style="color: var(--danger);"><?php echo $stats['fallidos']; ?></span>
+                <span class="stat-label">No encontrados</span>
+            </div>
+            <div class="stat">
+                <span class="stat-val">$<?php echo number_format($stats['dinero'], 0, ',', '.'); ?></span>
+                <span class="stat-label">Total Acreditado</span>
+            </div>
+        </div>
 
+        <table>
+            <thead>
+                <tr>
+                    <th>FILA</th>
+                    <th>CUIL</th>
+                    <th>APELLIDO Y NOMBRE</th>
+                    <th>MONTO</th>
+                    <th>ESTADO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($procesados as $p): ?>
+                <tr>
+                    <td>#<?php echo $p['fila']; ?></td>
+                    <td><strong><?php echo $p['cuil']; ?></strong></td>
+                    <td><?php echo $p['msg']; ?></td>
+                    <td>$<?php echo number_format($p['monto'], 2, ',', '.'); ?></td>
+                    <td>
+                        <span class="badge <?php echo ($p['status'] == 'success') ? 'bg-success' : 'bg-danger'; ?>">
+                            <?php echo ($p['status'] == 'success') ? 'PROCESADO' : 'ERROR'; ?>
+                        </span>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
 
-        </tr> 
-    <?php 
-    }
-    // CARGO EL ARRAY PARA SUBIR A LA BASE DE DATOS
-    $CargaTarjetaA=array();
-    $num=0;
-    for ($row = 2; $row <= $highestRow; $row++){ 
-        $num++;
-/*        $CargaTarjetaA[$num-1][0]=$sheet->getCell("B".$row)->getValue();
-        $CargaTarjetaA[$num-1][1]=$sheet->getCell("C".$row)->getValue();
-        $CargaTarjetaA[$num-1][2]=$sheet->getCell("E".$row)->getValue();
-        $CargaTarjetaA[$num-1][2]=number_format($CargaTarjetaA[$num-1][2], 0, '.', '');
-        $CargaTarjetaA[$num-1][3]=$sheet->getCell("F".$row)->getValue();
-        $CargaTarjetaA[$num-1][4]=$sheet->getCell("G".$row)->getValue();
-        $CargaTarjetaA[$num-1][5]=$sheet->getCell("D".$row)->getValue();
-        $CargaTarjetaA[$num-1][6]=$fecha;
-        $CargaTarjetaA[$num-1][7]=$horaactual; */
-
-        $CargaTarjetaA[$num-1][0]=$sheet->getCell("B".$row)->getValue(); //Apellido
-        $CargaTarjetaA[$num-1][1]=$sheet->getCell("C".$row)->getValue(); // Nombre
-        $CargaTarjetaA[$num-1][2]=$sheet->getCell("D".$row)->getValue(); // Localidad
-        $CargaTarjetaA[$num-1][3]=$sheet->getCell("E".$row)->getValue(); // DNI
-        $CargaTarjetaA[$num-1][4]=$sheet->getCell("F".$row)->getValue(); // CUIT
-        $CargaTarjetaA[$num-1][5]=$sheet->getCell("G".$row)->getValue(); // Monto
-        $CargaTarjetaA[$num-1][6]=DevuelvoNumeroCuenta ($CargaTarjetaA[$num-1][3],$CargaTarjetaA[$num-1][4]);
-       // $CargaTarjetaA[$num-1][6]="PEPE";
-        //die();
-        
-      }
-    TruncateTable('cargatarjeta');
-    // GRABAR EN LA BASE DE DATOS
-    require_once("BD/UsarGestion.php");
-    TruncateTable('acreditar');
-    $IdBenef=1;
-    
-    //var_dump($CargaTarjetaA);die();
-    //$conn = new PDO('mysql:host=localhost;dbname=cabal','root','');
-    $my_Insert_Statement = $conn->prepare("INSERT INTO acreditar(id_beneficiario,Apellido,Nombre,NumeroCuenta,ImporteCompra,ImporteCajero,DNI,Fecha,Hora) VALUES (:id_beneficiario,:Apellido,:Nombre,:NumeroCuenta,:ImporteCompra,:ImporteCajero,:DNI,:Fecha,:Hora)");
-    for ($reg=0;$reg<=sizeof($CargaTarjetaA)-1;$reg++) {
-          try {      
-                $Apellido=strval($CargaTarjetaA[$reg][0]); 
-                $Nombre=strval($CargaTarjetaA[$reg][1]); 
-                $NumeroCuenta=strval($CargaTarjetaA[$reg][6]); 
-                $ImporteCompra=strval($CargaTarjetaA[$reg][5]); 
-                $ImporteCajero=0; 
-                $DNI=strval($CargaTarjetaA[$reg][3]); 
-                $IdBenef=DevuelvoIdBeneficiario($DNI);
-                $Fecha=strval($fecha); 
-                $Hora=strval($horaactual); 
-                $my_Insert_Statement->bindParam(':id_beneficiario', $IdBenef);
-                $my_Insert_Statement->bindParam(':Apellido',$Apellido);
-                $my_Insert_Statement->bindParam(':Nombre',$Nombre);
-                $my_Insert_Statement->bindParam(':NumeroCuenta',$NumeroCuenta);
-                $my_Insert_Statement->bindParam(':ImporteCompra',$ImporteCompra);
-                $my_Insert_Statement->bindParam(':ImporteCajero',$ImporteCajero);
-                $my_Insert_Statement->bindParam(':DNI',$DNI);
-                $my_Insert_Statement->bindParam(':Fecha',$Fecha);
-                $my_Insert_Statement->bindParam(':Hora',$Hora);
-                //var_dump($CargaTarjetaA);die();
-                /*if ($my_Insert_Statement->execute()) {
-                  } else {
-                    echo 'No Se Pudo Guardar el Registro en la Base de Datos <br>';  
-                  } */
-                $my_Insert_Statement->execute();
-
-                }catch (PDOException $e) {
-                                   echo "Fallo de conexion al enviar los datos:".$e ->getMessage()."<br>";
-                } 
-
-
-    }
-    //echo 'Registros Importado en la Base de Datos';
-?>
-    <a href="javascript:history.back()" class="btn-flotante">Volver Atras</a>  
-    <!-- 
-    <button type="button" href="javascript:history.back()" class="btn btn-danger">Volver a Principal</button> <br> <a href="GenerarCargaCredito2.php" class="btn-flotante">Generar Archivo NOVCAR</a>
-    <button type="button" href="GenerarCargaCredito2.php" class="btn btn-success">Generar Archivo NOVCAR</button>  -->
-    
-    <center><a href="GenerarCargaCredito2.php">Continuar a Generar NOVCAR.782</a></center><br>
-
-
+</body>
+</html>

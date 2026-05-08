@@ -27,7 +27,9 @@
     <li><a href="#">Acreditaciones &dtrif;</a>
       <ul class="dropdown">
         <li><a href="subir_excel_acreditaciones.php">Cargar Archivo de Acreditaciones</a></li>
-        <li><a href="AcreditarSaldos-2023.php">Procesar Excel (Acreditaciones.xlsx)</a></li>
+        <li><a href="AcreditarSaldos-2023.php">Procesar Excel 2023(Acreditaciones.xlsx)</a></li>
+        <li><a href="AcreditarSaldos2026.php">Procesar Excel 2026</a></li>
+        <li><a href="GenerarCargaCredito2026.php">Generar NOVCAR2026</a></li>
         <li><a href="GenerarCargaCredito2.php">Generar NOVCAR</a></li>
         <li><a href="subir_novcar.php">Cargar Archivo NOVCAR</a></li>
         <li><a href="VerificarNovcar.php">Verificar NOVCAR</a></li>
@@ -65,6 +67,7 @@
           <li><a href="ReporteAltaBeneficiarios.php">Reporte Beneficiarios</a></li>
           <li><a href="ReporteMovimientos.php">Reporte Movimientos <br>Mensual</a></li>
           <li><a href="ReporteMovimientosPorNombre.php">Reporte Movimientos Por Beneficiario</a></li>
+          <li><a href="reporte_tarjetas.php">Reporte Master Tarjetas</a></li>
           
 
         </ul>
