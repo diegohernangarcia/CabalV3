@@ -32,6 +32,8 @@ if (!empty($dni_limpio)) {
     <link rel="icon" href="img/favicon.png">
     <!-- Estilos del Tablero de Operaciones -->
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Gestor de Modo Oscuro / Claro -->
+    <script src="js/theme.js"></script>
     <style>
         .profile-container {
             max-width: 880px;
@@ -154,7 +156,7 @@ if (!empty($dni_limpio)) {
             font-weight: 700;
             padding: 4px 10px;
             border-radius: var(--radius-sm);
-            background: #eff6ff;
+            background: var(--primary-50);
             color: var(--primary-700);
             border: 1px solid var(--primary-200);
             letter-spacing: 0.04em;

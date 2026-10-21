@@ -167,6 +167,8 @@ if (isset($_GET['descargar']) && $_GET['descargar'] == '1' && !$error_dni && cou
     <link rel="icon" href="img/favicon.png">
     <!-- Estilos del Tablero de Operaciones -->
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Gestor de Modo Oscuro / Claro -->
+    <script src="js/theme.js"></script>
     <style>
         .page-container {
             max-width: 1440px;

@@ -120,6 +120,8 @@ if ($conexion->connect_error) {
     <link rel="icon" href="img/favicon.png">
     <!-- Estilos del Tablero de Operaciones -->
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Gestor de Modo Oscuro / Claro -->
+    <script src="js/theme.js"></script>
     <style>
         .export-card-success {
             background: var(--surface-card);

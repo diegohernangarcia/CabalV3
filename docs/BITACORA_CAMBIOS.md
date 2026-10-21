@@ -20,6 +20,7 @@
 3. Resolver el problema de inconsistencia en nombres de archivos con mayúsculas/minúsculas (`AlTaS.xlsx` &rarr; `Altas.xlsx`).
 4. Modernizar la interfaz y la seguridad de datos del procesador de planillas de altas `CargaAltasDeExcelaBD.php`.
 5. Modernizar la pantalla de emisión del lote bancario `GenerarNovedadAltas.php` respetando estrictamente el formato fijo de 128 bytes por registro Cabal, con botón de copia con CRLF, salto de línea reglamentario al final y descarga directa HTTP `ALTAUSUCBPRE.782`.
+6. Implementar y habilitar de forma predeterminada el Modo Oscuro (Dark Mode) con diseño institucional de alto contraste, transiciones fluidas, persistencia en localStorage y botón de alternancia en la barra de navegación.
 
 ---
 
@@ -83,15 +84,39 @@
   - **Creación de `docs/Github.md`:** Documento de referencia con el inventario completo de acciones Git ejecutadas (commits `e4bae2d`, `789af68`, push forzado inicial y reconfiguración de tracking).
   - **Actualización de `GEMINI.md`:** Incorporación de la regla obligatoria que exige registrar cualquier cambio futuro de código en `docs/BITACORA_CAMBIOS.md` y toda acción Git en `docs/Github.md`.
 
+#### 2.6. Habilitación y Arquitectura del Modo Oscuro (Dark Mode)
+- **Archivos Creados / Afectados:**
+  - `css/dashboard.css` (Ampliación con paleta de tokens `[data-theme="dark"]`, botón interactivo, transiciones y controles)
+  - `js/theme.js` (Creado: gestor de tema con ejecución inmediata anti-FOUC, persistencia en `localStorage` e inyección automática en `.nav-actions`)
+  - `index.php` (Integración de script y botón de alternancia en header)
+  - `ayuda.html` (Integración de `js/theme.js`)
+  - `ConsultarBeneficiario.php` (Integración de `js/theme.js` y adaptación de variables CSS de fondo e inputs)
+  - `ConsultaBenefiario2.php` (Integración de `js/theme.js` y badge de tarjeta adaptable)
+  - `SubirArchivo.html` (Integración de `js/theme.js`)
+  - `CargaAltasDeExcelaBD.php` (Integración de `js/theme.js`)
+  - `ExportarExcelBeneficiarios.php` (Integración de `js/theme.js`)
+  - `GenerarNovedadAltas.php` (Integración de `js/theme.js`)
+- **Características Técnicas Implementadas:**
+  - **Paleta de Tokens Oscuros:** Fondo profundo `#080d1a`, superficies de tarjetas en `#0f172a`, bordes sutiles traslúcidos `rgba(255, 255, 255, 0.09)`, tipografía en slate/blanco de alto contraste (`#f8fafc`), y acentos vibrantes con resplandor moderno (glow).
+  - **Activación Predeterminada:** El sistema inicia en Modo Oscuro (`data-theme="dark"`), satisfaciendo de inmediato el requerimiento del operador.
+  - **Botón de Alternancia (Theme Toggle):** Botón estilizado tipo píldora en la barra de navegación con micro-interacción, iconos Sol / Luna y estado accesible (`aria-pressed`).
+  - **Prevención de Parpadeo Blanco (Zero FOUC):** Script ligero ejecutado antes del renderizado del body para fijar el atributo `data-theme` sin saltos visuales.
+  - **Persistencia:** Almacenamiento de preferencia en `localStorage.getItem('cabal-theme')`.
+
 ---
 
 ### 3. Matriz de Verificación y Pruebas Ejecutadas (21/10/2026)
 
 | Prueba | Comando Ejecutado | Resultado Obtenido | Estado |
-| :--- | :--- | :--- | :---: |
-| **Sintaxis PHP 5.6** | `/opt/lampp/bin/php -l GenerarNovedadAltas.php` | `No syntax errors detected` | ✅ PASÓ |
-| **Sintaxis PHP 5.6** | `/opt/lampp/bin/php -l CargaAltasDeExcelaBD.php` | `No syntax errors detected` | ✅ PASÓ |
-| **Sintaxis PHP 5.6** | `/opt/lampp/bin/php -l upload.php` | `No syntax errors detected` | ✅ PASÓ |
+| :--- | :--- | :--- | :--- |
+| **Sintaxis PHP 5.6 (index)** | `/opt/lampp/bin/php -l index.php` | `No syntax errors detected` | ✅ PASÓ |
+| **Sintaxis PHP 5.6 (ConsultarBeneficiario)** | `/opt/lampp/bin/php -l ConsultarBeneficiario.php` | `No syntax errors detected` | ✅ PASÓ |
+| **Sintaxis PHP 5.6 (ConsultaBenefiario2)** | `/opt/lampp/bin/php -l ConsultaBenefiario2.php` | `No syntax errors detected` | ✅ PASÓ |
+| **Sintaxis PHP 5.6 (Altas)** | `/opt/lampp/bin/php -l GenerarNovedadAltas.php` | `No syntax errors detected` | ✅ PASÓ |
+| **Sintaxis PHP 5.6 (CargaAltas)** | `/opt/lampp/bin/php -l CargaAltasDeExcelaBD.php` | `No syntax errors detected` | ✅ PASÓ |
+| **Sintaxis PHP 5.6 (Upload)** | `/opt/lampp/bin/php -l upload.php` | `No syntax errors detected` | ✅ PASÓ |
+| **Recursos HTTP 200 (theme.js)** | `curl -I http://localhost/cabal-Gemini/js/theme.js` | `HTTP/1.1 200 OK` | ✅ PASÓ |
+| **Recursos HTTP 200 (dashboard.css)** | `curl -I http://localhost/cabal-Gemini/css/dashboard.css` | `HTTP/1.1 200 OK` | ✅ PASÓ |
 | **Longitud Registros Cabal** | `curl -s "...?descargar=1" \| tr -d '\r' \| awk '{print length}'` | `128, 128, 128` (bytes exactos por registro) | ✅ PASÓ |
 | **Salto de Línea Final** | `curl -s "..." \| grep -A 2 "batch-terminal-output"` | Termina en `<br><br></div>` y `\r\n` | ✅ PASÓ |
 | **Auto-renombrado en Upload** | Inspección lógica de `upload.php` | Coincidencia en minúsculas reescribe a `Altas.xlsx` | ✅ PASÓ |

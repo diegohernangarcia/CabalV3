@@ -8,6 +8,8 @@
     <link rel="icon" href="img/favicon.png">
     <!-- Estilos del Tablero de Operaciones -->
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Gestor de Modo Oscuro / Claro -->
+    <script src="js/theme.js"></script>
     <style>
         .search-card-container {
             max-width: 680px;
@@ -21,7 +23,7 @@
 
         .search-card-header {
             padding: 24px 32px;
-            background: linear-gradient(180deg, #ffffff 0%, var(--surface-subtle) 100%);
+            background: var(--card-header-bg);
             border-bottom: 1px solid var(--border-light);
             display: flex;
             align-items: center;
@@ -82,8 +84,8 @@
             font-size: 1.1rem;
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 600;
-            color: var(--navy-900);
-            background: #ffffff;
+            color: var(--text-main);
+            background: var(--input-bg);
             border: 2px solid var(--border-light);
             border-radius: var(--radius-md);
             outline: none;
