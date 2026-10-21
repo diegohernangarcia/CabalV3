@@ -74,6 +74,15 @@
   - **Portapapeles Puro (`#texto-puro-lote`):** Textarea oculto que concatena los registros planos con saltos CRLF Windows (`\r\n`) y añade el salto final (`implode("\r\n", $lineas_txt) . "\r\n"`), habilitado mediante el botón *"Copiar Lote al Portapapeles"*.
   - **Descarga Directa HTTP:** Parámetro `?descargar=1` que envía cabeceras `Content-Type: text/plain; charset=ISO-8859-1` y `Content-Disposition: attachment; filename="ALTAUSUCBPRE.782"`, eliminando la necesidad de copiar manualmente a Notepad++.
 
+#### 2.5. Transición al Repositorio CabalV3 y Documentación de Procesos Git
+- **Archivos Afectados:**
+  - `docs/Github.md` (Creado)
+  - `GEMINI.md` (Actualizado con Sección 5: Directivas de Registro Mandatorio)
+- **Modificaciones:**
+  - **Reconfiguración de Remotes:** El alias `origin` se reconfiguró formalmente para apuntar a `git@github.com:diegohernangarcia/CabalV3.git` (`https://github.com/diegohernangarcia/CabalV3.git`), reservando el repositorio anterior bajo el alias `cabal_v1`.
+  - **Creación de `docs/Github.md`:** Documento de referencia con el inventario completo de acciones Git ejecutadas (commits `e4bae2d`, `789af68`, push forzado inicial y reconfiguración de tracking).
+  - **Actualización de `GEMINI.md`:** Incorporación de la regla obligatoria que exige registrar cualquier cambio futuro de código en `docs/BITACORA_CAMBIOS.md` y toda acción Git en `docs/Github.md`.
+
 ---
 
 ### 3. Matriz de Verificación y Pruebas Ejecutadas (21/10/2026)

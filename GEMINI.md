@@ -80,3 +80,16 @@
 
 3. **Prueba en Modo Solo Lectura:**
    No realizar pruebas que alteren la base de datos de producción local (`cabal`) con datos de prueba ficticios sin previa autorización o sin respaldo de las tablas afectadas (`beneficiario`, `movimientos`).
+
+---
+
+## 5. Registro Obligatorio de Cambios y Procesos Git
+
+1. **Registro Incondicional en Bitácora (`docs/BITACORA_CAMBIOS.md`):**
+   - Cualquier cambio en el código fuente, sea una nueva funcionalidad, refactorización, corrección de bug o modificación visual, **debe registrarse obligatoriamente en `docs/BITACORA_CAMBIOS.md`**.
+   - Cada entrada debe detallar la fecha, archivos modificados, objetivos de la intervención, respaldos creados (`*_original.*`) y los resultados de las pruebas técnicas ejecutadas.
+
+2. **Registro de Procesos GitHub (`docs/Github.md`):**
+   - El repositorio oficial activo del sistema es **`https://github.com/diegohernangarcia/CabalV3.git`**.
+   - Toda operación relevante con Git o GitHub (creación de commits, cambios de configuración de remotes, ramas, etiquetas o pushes) debe quedar documentada en `docs/Github.md`.
+
