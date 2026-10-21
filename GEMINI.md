@@ -91,5 +91,5 @@
 
 2. **Registro de Procesos GitHub (`docs/Github.md`):**
    - El repositorio oficial activo del sistema es **`https://github.com/diegohernangarcia/CabalV3.git`**.
-   - Toda operación relevante con Git o GitHub (creación de commits, cambios de configuración de remotes, ramas, etiquetas o pushes) debe quedar documentada en `docs/Github.md`.
+   - Toda operación relevante con Git o GitHub (creación de commits, cambios de configuración de remotes, ramas, etiquetas o pushes) debe quedar documentada en `docs/Github.md`, indicando obligatoriamente si la operación fue **exitosa o arrojó algún error** y la resolución técnica aplicada.
 

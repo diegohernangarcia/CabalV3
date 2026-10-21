@@ -23,96 +23,155 @@ A partir de la jornada del 21 de Octubre de 2026, el repositorio oficial y activ
 
 ## 2. Historial de Acciones y Procesos Git Ejecutados
 
-### Acción 01: Creación del Repositorio CabalV3 en GitHub
-- **Fecha:** 21 de Octubre de 2026 (12:53:08)
-- **Operación:** Creación de un nuevo repositorio remoto en la plataforma GitHub bajo la cuenta `diegohernangarcia`: `https://github.com/diegohernangarcia/CabalV3.git`.
-- **Commit Inicial Remoto:** `982adea` (*"Initial commit"* con archivo `README.md`).
-
-### Acción 02: Transición de Versión y Descarte de V2
-- **Fecha:** 21 de Octubre de 2026 (12:55:20)
-- **Hash de Commit:** `e4bae2d`
-- **Mensaje:** `Primer commit: Estructura inicial del proyecto CabalV3 - Abandono Total de la V2`
-- **Contenido:** Consolidación de la estructura base del proyecto CabalV3 y saneamiento de dependencias y archivos innecesarios.
-
-### Acción 03: Confirmación de Regularización de Altas y Documentación
-- **Fecha:** 21 de Octubre de 2026 (13:04:52)
-- **Hash de Commit:** `789af68`
-- **Mensaje:** `Version 3 de Cabal, se frena el desarrollo de V2 por complejidad alta`
-- **Contenido del Commit:**
-  - `docs/BITACORA_CAMBIOS.md` (Creación de bitácora oficial de jornadas del 20 y 21 de Octubre).
-  - `docs/MODULOS.md` (Actualización de estados en Módulos de Altas y Acreditaciones).
-  - `docs/PENDIENTES_Y_BACKLOG.md` (Incorporación de tareas `SPR-21-01` a `SPR-21-05`).
-  - `docs/ARQUITECTURA.md` (Actualización de especificaciones y fechas de revisión).
-
-### Acción 04: Reconfiguración de Remotos Locales
-- **Fecha:** 21 de Octubre de 2026 (13:11:46)
-- **Diagnóstico del Problema:**
-  El repositorio local tenía configurado el alias `origin` apuntando al repositorio viejo (`cabal.git`) y el nuevo repositorio `CabalV3` había sido añadido erróneamente con el alias `main`.
-- **Comandos Ejecutados:**
-  ```bash
-  # 1. Preservar repositorio anterior como referencia histórica
-  git remote rename origin cabal_v1
-
-  # 2. Eliminar el alias redundante 'main'
-  git remote remove main
-
-  # 3. Establecer 'origin' apuntando al nuevo repositorio CabalV3
-  git remote add origin git@github.com:diegohernangarcia/CabalV3.git
-  ```
-- **Resultado:**
-  ```text
-  origin      git@github.com:diegohernangarcia/CabalV3.git (fetch)
-  origin      git@github.com:diegohernangarcia/CabalV3.git (push)
-  cabal_v1    git@github.com:diegohernangarcia/cabal.git (fetch)
-  cabal_v1    git@github.com:diegohernangarcia/cabal.git (push)
-  ```
-
-### Acción 05: Publicación Inicial Forzada (Push Initial) a CabalV3
-- **Fecha:** 21 de Octubre de 2026 (13:12:30)
-- **Comando Ejecutado:**
-  ```bash
-  git push -u origin main --force
-  ```
-- **Resultado:**
-  - Sustitución del commit inicial dummy de GitHub (`982adea`) por la totalidad de la historia y código fuente del proyecto (`789af68`).
-  - Configuración permanente del rastreo: `main` &rarr; `origin/main`.
-  - El repositorio en `https://github.com/diegohernangarcia/CabalV3` quedó 100% actualizado.
+Cada operación realizada en el repositorio debe documentar de forma explícita el comando ejecutado, su estado final (**EXITOSA** o **CON ERROR**) y la resolución técnica aplicada en caso de incidencias.
 
 ---
 
-## 3. Protocolos Operativos y Comandos Estándar
+### Acción 01: Creación del Repositorio CabalV3 en GitHub
+- **Fecha y Hora:** 21 de Octubre de 2026 (12:53:08 -0300)
+- **Operación:** Creación de repositorio remoto en GitHub bajo `diegohernangarcia/CabalV3`.
+- **Estado:** ✅ **EXITOSA**
+- **Resultado:** Repositorio remoto inicializado con commit `982adea` (*"Initial commit"* conteniendo archivo `README.md`).
 
-### 3.1. Flujo Obligatorio para Realizar Commits
-Cada vez que se complete una tarea técnica o modificación funcional:
+---
 
-1. **Documentar el cambio:** Actualizar `docs/BITACORA_CAMBIOS.md` detallando archivos, propósito y pruebas.
-2. **Verificar estado:**
-   ```bash
-   git status
-   ```
-3. **Añadir archivos al stage:**
-   ```bash
-   git add <archivo1> <archivo2> docs/BITACORA_CAMBIOS.md
-   ```
-4. **Crear commit con mensaje descriptivo e institucional:**
-   ```bash
-   git commit -m "Descripción concisa y clara de la tarea realizada"
-   ```
+### Acción 02: Transición de Versión y Descarte de V2
+- **Fecha y Hora:** 21 de Octubre de 2026 (12:55:20 -0300)
+- **Comando:** `git commit -m "Primer commit: Estructura inicial del proyecto CabalV3 - Abandono Total de la V2"`
+- **Hash de Commit:** `e4bae2d`
+- **Estado:** ✅ **EXITOSA**
+- **Resultado:** 927 archivos procesados, saneamiento de temporales antiguos y consolidación de la estructura base V3.
 
-### 3.2. Flujo para Enviar Cambios a GitHub (Push)
-```bash
-# Enviar commits locales a la rama main del repositorio oficial CabalV3
-git push origin main
+---
+
+### Acción 03: Confirmación de Regularización de Altas y Documentación
+- **Fecha y Hora:** 21 de Octubre de 2026 (13:04:52 -0300)
+- **Comando:** `git commit -m "Version 3 de Cabal, se frena el desarrollo de V2 por complejidad alta"`
+- **Hash de Commit:** `789af68`
+- **Estado:** ✅ **EXITOSA**
+- **Resultado:** 4 archivos confirmados (`docs/BITACORA_CAMBIOS.md`, `docs/MODULOS.md`, `docs/PENDIENTES_Y_BACKLOG.md`, `docs/ARQUITECTURA.md`) con 210 inserciones y 11 supresiones.
+
+---
+
+### Acción 04: Intento de Push Inadvertido al Repositorio Anterior (Incidencia de Remote)
+- **Fecha y Hora:** 21 de Octubre de 2026 (13:08:27 -0300)
+- **Comando:** `git push origin main`
+- **Estado:** ⚠️ **ERROR DE ENRUTAMIENTO (Inadvertido)**
+- **Diagnóstico del Error:**
+  El comando fue técnicamente exitoso a nivel de red, pero **el alias `origin` apuntaba erróneamente al repositorio histórico `cabal.git`** (`git@github.com:diegohernangarcia/cabal.git`), debido a que el nuevo repositorio `CabalV3` había sido añadido localmente con el alias `main` en lugar de `origin`.
+- **Salida Observada:**
+  ```text
+  To github.com:diegohernangarcia/cabal.git
+     e4bae2d..789af68  main -> main
+  ```
+- **Resolución Aplicada:**
+  El operador alertó que el destino correcto era `CabalV3.git`. Se procedió de inmediato a reconfigurar los remotes locales en la Acción 05.
+
+---
+
+### Acción 05: Reconfiguración de Remotes Locales
+- **Fecha y Hora:** 21 de Octubre de 2026 (13:11:46 -0300)
+- **Comandos Ejecutados:**
+  ```bash
+  git remote rename origin cabal_v1
+  git remote remove main
+  git remote add origin git@github.com:diegohernangarcia/CabalV3.git
+  ```
+- **Estado:** ✅ **EXITOSA**
+- **Resultado:**
+  El alias `origin` quedó enlazado a `CabalV3.git` y el repositorio histórico quedó resguardado bajo el alias `cabal_v1`:
+  ```text
+  origin      git@github.com:diegohernangarcia/CabalV3.git (fetch / push)
+  cabal_v1    git@github.com:diegohernangarcia/cabal.git (fetch / push)
+  ```
+
+---
+
+### Acción 06: Rechazo de Push por Falta de Avance Rápido (Non-Fast-Forward)
+- **Fecha y Hora:** 21 de Octubre de 2026 (13:11:58 -0300)
+- **Comando:** `git push -u origin main`
+- **Estado:** ❌ **OPERACIÓN RECHAZADA POR GITHUB (Error Previsto)**
+- **Diagnóstico del Error:**
+  GitHub rechazó la subida con error `non-fast-forward` porque el repositorio remoto `CabalV3` contenía el commit inicial `982adea` (`README.md`), el cual no formaba parte del historial de la rama local `main`.
+- **Salida del Error:**
+  ```text
+  To github.com:diegohernangarcia/CabalV3.git
+   ! [rejected]        main -> main (non-fast-forward)
+  error: falló el empuje de algunas referencias a 'github.com:diegohernangarcia/CabalV3.git'
+  hint: Updates were rejected because the tip of your current branch is behind
+  hint: its remote counterpart.
+  ```
+- **Resolución Aplicada:**
+  Dado que el commit remoto `982adea` era únicamente la inicialización automática de GitHub con una sola línea (`# CabalV3`), se aplicó una actualización forzada (`--force`) en la Acción 07 para establecer el árbol completo de la Versión 3 como rama base.
+
+---
+
+### Acción 07: Push Forzado Inicial y Vinculación de Rama Principal
+- **Fecha y Hora:** 21 de Octubre de 2026 (13:12:30 -0300)
+- **Comando:** `git push -u origin main --force`
+- **Estado:** ✅ **EXITOSA**
+- **Resultado:**
+  ```text
+  To github.com:diegohernangarcia/CabalV3.git
+   + 982adea...789af68 main -> main (forced update)
+  rama 'main' configurada para rastrear 'origin/main'.
+  ```
+  La totalidad de la historia, archivos fuente y documentación de CabalV3 quedó publicada exitosamente en GitHub.
+
+---
+
+### Acción 08: Confirmación y Envío de `docs/Github.md` y Directivas `GEMINI.md`
+- **Fecha y Hora:** 21 de Octubre de 2026 (13:23:50 -0300)
+- **Comandos Ejecutados:**
+  ```bash
+  git add GEMINI.md docs/BITACORA_CAMBIOS.md docs/Github.md
+  git commit -m "docs: Creacion de Github.md y directivas obligatorias de registro en GEMINI.md"
+  git push origin main
+  ```
+- **Hash de Commit:** `39ecbc2`
+- **Estado:** ✅ **EXITOSA**
+- **Resultado:**
+  ```text
+  To github.com:diegohernangarcia/CabalV3.git
+     789af68..39ecbc2  main -> main
+  ```
+  Sincronización remota completada sin errores.
+
+---
+
+### Acción 09: Estandarización de Auditoría de Éxito y Error en Documentación
+- **Fecha y Hora:** 21 de Octubre de 2026 (13:28:15 -0300)
+- **Operación:** Incorporación del desglose explícito de estados de éxito (✅) e incidencias/errores (❌ / ⚠️) con diagnósticos y resoluciones técnicas en `docs/Github.md` y actualización de directivas en `GEMINI.md`.
+- **Estado:** ✅ **EXITOSA**
+- **Resultado:** Documentación actualizada y regla de trazabilidad consolidada en `GEMINI.md:L94`.
+
+---
+
+## 3. Protocolos Operativos y Estándar Obligatorio de Registro
+
+Para cumplir con la directiva permanente fijada en `GEMINI.md`:
+
+### 3.1. Formato Obligatorio para Registrar Futuras Acciones
+Toda nueva acción con Git o GitHub debe incorporarse en este archivo siguiendo la siguiente plantilla:
+
+```markdown
+### Acción NN: [Descripción Breve de la Tarea]
+- **Fecha y Hora:** [AAAA-MM-DD HH:MM:SS]
+- **Comando Ejecutado:** `git ...`
+- **Hash de Commit (si aplica):** `[hash]`
+- **Estado:** ✅ **EXITOSA** / ❌ **CON ERROR** / ⚠️ **ADVERTENCIA**
+- **Salida / Mensaje de Git:**
+  ```text
+  [Salida textual del comando o error emitido]
+  ```
+- **Resolución Aplicada (si hubo error):** [Explicación técnica de la corrección]
 ```
 
-### 3.3. Verificación de Sincronización Remota
-```bash
-# Comprobar ramas y commits de desfase
-git branch -vv
-
-# Comprobar estado limpio
-git status
-```
+### 3.2. Comandos Frecuentes
+- **Comprobar estado local:** `git status`
+- **Comprobar sincronización con GitHub:** `git branch -vv`
+- **Enviar cambios:** `git push origin main`
+- **Obtener cambios del remoto:** `git pull origin main`
 
 ---
 
