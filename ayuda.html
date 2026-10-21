@@ -1,95 +1,385 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayuda Sistema Cabal - FRS</title>
-    <link href="Bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/estilos2.css" />
+    <title>Ayuda y Manual Operativo — Sistema Cabal | SeNAF Río Negro</title>
+    <meta name="description" content="Manual de procedimientos y guía de procesamiento de archivos Cabal FSR">
     <link rel="icon" href="img/favicon.png">
-
+    <!-- Estilos del Tablero de Operaciones -->
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <div class="ayuda">
-        <h1> AYUDA</h1>
-        <a class="titular"> GENERAR ALTAS NUEVAS </a>
-        <br>
-        <ol>
-            <li>Subir el archivo Altas.xlsx.</li>
-            <li>Menu - Beneficiarios - Procesar Excel (Altas.xls)</li>
-            <Li>El mismo posee el siguiente formato</Li>
-            <li>Apellido-Nombre-Domicilio-Calle Domicilio-Numero Domicilio-Piso Domicilio-Departamento-Localidad-Provincia-Sexo-Codigo-Postal-Telefono Caracteristica-Telefono Numero-Estado Civil-Fecha Nacimiento-Tipo Documento-Numero Documento-Prov. Documento-CUIT/CUIL
-            </li>
-            <li> Respetando el Formato del <b>Anexo 1 - Novedades de Altas de Tarjetas Precargadas </b> Del Manual Cabal</li>
-            <li>Menu - Beneficiarios Generar ALTAUSUCBPRE</li>
-            <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
-            <li>Subir ese archivo a la plataforma de cabal con el nombre ALTAUSUCBPRE.782</li>
-            <li>La plataforma responde con un archivo del tipo 782_out_altas_tpc_202207XX_XXXX_XXXXXX Que se procesa en el siguiente paso</li>
-        </ol>
-        <br>
-        <a class="titular">PROCESAR NOV. ALTAS </a>
-        <ol>
-            <li>En este archivo se encuentran los datos de la nueva tarjeta, incluyendo Numero Cuenta y Numero Tarjeta</li>
-            <li>Descargar desde plataforma el archivo 782_out_altas_tpc_202207XX_XXXX_XXXXXX </li>
-            <li>Renombrar el mismo a MovAltas.txt</li>
-            <li>Subir el archivo MovAltas.txt</li>
-            <li>Menu - Beneficiarios - Procesar MovAltas.txt (Dev. Banco)</li>
-            <li>Se cargan los beneficiarios en la BD, se debe de exportar desde phpmyadmin a excel. </li>
-        </ol>
-        
-        <a class="titular">GENERAR ACREDITACIONES DE SALDO (Este archivo con este formato lo envian desde Suministros con pequeños cambios) </a>
-        <ol>
-            <li>Modificacr y Generar el archivo Acreditaciones.xlsx</li>
-            <li>El Mismo debe de Tener el siguiente formato</li>
-            <li>Id-Apellido-Nombre-Localidad-DNI-CUIT-Monto a Acreditar</li>
-            <li>Subir el archivo Acreditaciones.xlsx - En el formato de abajo, no lleva el total en la ultima fila</li>
-            <!-- <img id="foto"src="./img/acreditacion.png" alt=""> -->
-            <li>ASI ES EL ARCHIVO FINAL</li>
-            <img id="foto"src="./img/acreditacion2.png" alt="">
-            <li>Menu - Acreditaciones - Procesar Excel (Acreditaciones.xlsx)</li>
-            <li>Menu - Acreditaciones - Generar NOVCAR</li>
-            <li>Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
-            <li>Subir ese archivo a la plataforma de cabal con el nombre NOVCAR.782</li>
-            <li>La plataforma responde con un archivo del tipo 782_RCAR_20220731_1841_324794.txt Que se procesa en Procesar Respuesta Acreditaciones</li>
-        </ol>
-        
-        <a  class="titular">PROCESAR RESPUESTA DE ACREDITACIONES</a>
-        <ol>
-            <li>Descargar desde Plataforma Archivo del tipo 782_RCAR_20220731_1841_324794.txt</li>
-            <li>Este archivo se el dia que se realiza la acreditacion en las cuentas de los beneficiarios</li>
-            <li>Renombarar el archivo descargado a RespuestaCargas.txt</li>
-            <li>Subir el archivo RespuestaCargas.txt</li>
-            <li>Menu - Procesar RespuestaCargas.txt  (Dev. Banco)</li>
-            <li>se Mostrara en Pantalla las Cargas de Credito Realizadas</li>
-        </ol>
-        <a  class="titular">PROCESAR MOVIMIENTO DE CUENTAS</a>
-        <ol>
-            <li>Descargar desde Plataforma Archivo del tipo 782_Nacion_20220731_1841_324794.txt</li>
-            <li>Este archivo se sube a la misma El ultimo dia Habil de Cada Mes (o El 1er Dia Del Mes Siguiente</li>
-            <li>Renombrar el archivo descargado a Movimientos.txt</li>
-            <li>Subir el archivo Movimientos.txt</li>
-            <li>Menu - Movimientos - Procesar Movimientos.txt</li>
-            <li>Seleccionar el Mes al que corresponden los movimientos</li>
-            <li>Si el mes seleccionado ya esta cargado, genera un mensaje de error y no permite nuevamente la carga</li>
-            <li>Se graban los datos a la tabla movimientos, exportar la misma a CSV For Ms excel</li>
-        </ol>
-        <a  class="titular">PROCESAR MAESTRO PLASTICOS</a>
-        <ol>
-            <li>Descargar el Archvio MAESPLASXXXXX.txt desde la plataforma</li>
-            <li>Subir el archivo con el nombre MAESPLA.txt</li>
-            <li>Copiar el Nombre de Archivo, ya que se solicitara el nombre original para poder realizar la carga</li>
-            <li>Ir al Menu Maestros Tarjetas - Procesar Maestro Tarjetas</li>
-        </ol>
-        <a  class="titular">Descarga Saldos Cuentas</a>
-        <ol>
-            <li>Subir el archivo con el nombre DescargaSaldos.xlsx</li>
-            <li>El Archivo debe de contener las siguientes filas 1 - id    2 - CUIT 3 - DNI 7 - Nombre 5 - Monto a Descargar  </li>
-            <li>Ir al Menu Descarga Saldos - Procesar Descargas</li>
 
-        </ol>
+<!-- =======================================================================
+     BARRA DE NAVEGACIÓN INSTITUCIONAL
+     ======================================================================= -->
+<header class="top-nav">
+    <div class="top-nav-inner">
+        <a href="index.php" class="brand-group" id="brand-link">
+            <div class="brand-logo-wrap">
+                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+            </div>
+            <div class="brand-text">
+                <h1>
+                    CABAL FSR
+                    <span class="brand-badge">Entidad 782</span>
+                </h1>
+                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="index.php" class="btn-nav-action primary" id="btn-volver-tablero">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver al Tablero
+            </a>
+
+            <a href="https://transmisiones.cabal.coop/webclient/Login.xhtml" target="_blank" rel="noopener noreferrer" class="btn-nav-action" id="btn-portal-cabal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                Portal Cabal
+            </a>
+
+            <a href="docs/ARQUITECTURA.md" target="_blank" class="btn-nav-action" id="btn-docs">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Documentación
+            </a>
+        </div>
     </div>
-    
-</body>
-</html> 
+</header>
+
+<!-- =======================================================================
+     CONTENEDOR PRINCIPAL DE AYUDA
+     ======================================================================= -->
+<main class="dashboard-container">
+
+    <!-- HERO BANNER DE AYUDA -->
+    <section class="help-hero-banner">
+        <div class="help-hero-text">
+            <h2>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-500);">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                AYUDA
+            </h2>
+            <p>
+                Manual de usuario y guía operativa de procedimientos para la generación, intercambio y procesamiento de archivos batch con la plataforma bancaria Cabal.
+            </p>
+        </div>
+        <div>
+            <a href="index.php" class="btn-nav-action primary" style="padding: 10px 20px; font-size: 0.88rem;">
+                Ir al Inicio
+            </a>
+        </div>
+    </section>
+
+    <!-- ÍNDICE RÁPIDO DE SECCIONES (TOC) -->
+    <nav class="help-quick-toc" aria-label="Índice de Ayuda">
+        <h4>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            Acceso Rápido por Procedimiento
+        </h4>
+        <div class="toc-tags-wrap">
+            <a href="#sec-altas-nuevas" class="toc-tag-link">&bull; GENERAR ALTAS NUEVAS</a>
+            <a href="#sec-procesar-nov-altas" class="toc-tag-link">&bull; PROCESAR NOV. ALTAS</a>
+            <a href="#sec-acreditaciones-saldo" class="toc-tag-link">&bull; GENERAR ACREDITACIONES DE SALDO</a>
+            <a href="#sec-respuesta-acreditaciones" class="toc-tag-link">&bull; PROCESAR RESPUESTA DE ACREDITACIONES</a>
+            <a href="#sec-movimiento-cuentas" class="toc-tag-link">&bull; PROCESAR MOVIMIENTO DE CUENTAS</a>
+            <a href="#sec-maestro-plasticos" class="toc-tag-link">&bull; PROCESAR MAESTRO PLASTICOS</a>
+            <a href="#sec-descarga-saldos" class="toc-tag-link">&bull; Descarga Saldos Cuentas</a>
+        </div>
+    </nav>
+
+    <!-- PILA DE SECCIONES DE PROCEDIMIENTO -->
+    <div class="help-sections-stack">
+
+        <!-- 1. GENERAR ALTAS NUEVAS -->
+        <article class="help-guide-card" id="sec-altas-nuevas">
+            <header class="help-card-header">
+                <div class="help-card-title-group">
+                    <div class="help-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>GENERAR ALTAS NUEVAS</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Procedimiento de carga y emisión de lote de titulares nuevos</span>
+                    </div>
+                </div>
+                <span class="badge-tag accent">Lote ALTAUSUCBPRE.782</span>
+            </header>
+            <div class="help-card-body">
+                <ol class="help-step-list">
+                    <li>Subir el archivo Altas.xlsx.</li>
+                    <li>Menu - Beneficiarios - Procesar Excel (Altas.xls)</li>
+                    <li>
+                        El mismo posee el siguiente formato
+                        <div class="help-format-spec">
+                            Apellido-Nombre-Domicilio-Calle Domicilio-Numero Domicilio-Piso Domicilio-Departamento-Localidad-Provincia-Sexo-Codigo-Postal-Telefono Caracteristica-Telefono Numero-Estado Civil-Fecha Nacimiento-Tipo Documento-Numero Documento-Prov. Documento-CUIT/CUIL
+                        </div>
+                    </li>
+                    <li>Respetando el Formato del <b>Anexo 1 - Novedades de Altas de Tarjetas Precargadas </b> Del Manual Cabal</li>
+                    <li>Menu - Beneficiarios Generar ALTAUSUCBPRE</li>
+                    <li class="highlight-step">Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+                    <li>Subir ese archivo a la plataforma de cabal con el nombre ALTAUSUCBPRE.782</li>
+                    <li>La plataforma responde con un archivo del tipo 782_out_altas_tpc_202207XX_XXXX_XXXXXX Que se procesa en el siguiente paso</li>
+                </ol>
+                <a href="#brand-link" class="help-back-top">&uarr; Volver arriba</a>
+            </div>
+        </article>
+
+        <!-- 2. PROCESAR NOV. ALTAS -->
+        <article class="help-guide-card" id="sec-procesar-nov-altas">
+            <header class="help-card-header">
+                <div class="help-card-title-group">
+                    <div class="help-icon-wrap" style="background: var(--emerald-50); color: var(--emerald-700);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>PROCESAR NOV. ALTAS</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Asignación de cuentas y tarjetas devueltas por el banco</span>
+                    </div>
+                </div>
+                <span class="badge-tag success">Devolución Banco</span>
+            </header>
+            <div class="help-card-body">
+                <ol class="help-step-list">
+                    <li>En este archivo se encuentran los datos de la nueva tarjeta, incluyendo Numero Cuenta y Numero Tarjeta</li>
+                    <li>Descargar desde plataforma el archivo 782_out_altas_tpc_202207XX_XXXX_XXXXXX</li>
+                    <li>Renombrar el mismo a MovAltas.txt</li>
+                    <li>Subir el archivo MovAltas.txt</li>
+                    <li>Menu - Beneficiarios - Procesar MovAltas.txt (Dev. Banco)</li>
+                    <li>Se cargan los beneficiarios en la BD, se debe de exportar desde phpmyadmin a excel.</li>
+                </ol>
+                <a href="#brand-link" class="help-back-top">&uarr; Volver arriba</a>
+            </div>
+        </article>
+
+        <!-- 3. GENERAR ACREDITACIONES DE SALDO -->
+        <article class="help-guide-card" id="sec-acreditaciones-saldo">
+            <header class="help-card-header">
+                <div class="help-card-title-group">
+                    <div class="help-icon-wrap" style="background: #e0f2fe; color: #0284c7;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>GENERAR ACREDITACIONES DE SALDO (Este archivo con este formato lo envian desde Suministros con pequeños cambios)</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Generación y control del lote de carga NOVCAR.782</span>
+                    </div>
+                </div>
+                <span class="badge-tag accent">Lote NOVCAR.782</span>
+            </header>
+            <div class="help-card-body">
+                <ol class="help-step-list">
+                    <li>Modificacr y Generar el archivo Acreditaciones.xlsx</li>
+                    <li>
+                        El Mismo debe de Tener el siguiente formato
+                        <div class="help-format-spec">
+                            Id-Apellido-Nombre-Localidad-DNI-CUIT-Monto a Acreditar
+                        </div>
+                    </li>
+                    <li>Subir el archivo Acreditaciones.xlsx - En el formato de abajo, no lleva el total en la ultima fila</li>
+                    
+                    <!-- IMAGEN 1: Acreditaciones Formato Alternativo / Referencia -->
+                    <div class="help-image-box">
+                        <img src="./img/acreditacion.png" alt="Formato de archivo Acreditaciones" id="foto-ref" style="max-height: 120px; object-fit: contain;">
+                        <span class="help-image-caption">Estructura del archivo de Acreditaciones</span>
+                    </div>
+
+                    <li>ASI ES EL ARCHIVO FINAL</li>
+
+                    <!-- IMAGEN 2: Acreditaciones Archivo Final -->
+                    <div class="help-image-box">
+                        <img src="./img/acreditacion2.png" alt="ASI ES EL ARCHIVO FINAL" id="foto">
+                        <span class="help-image-caption">Captura de muestra: Columnas y filas del archivo final sin totales</span>
+                    </div>
+
+                    <li>Menu - Acreditaciones - Procesar Excel (Acreditaciones.xlsx)</li>
+                    <li>Menu - Acreditaciones - Generar NOVCAR</li>
+                    <li class="highlight-step">Copiar los datos generados en pantalla a un archivo de texto (notepad++) y agregar un salto de linea al final. Debe de hacerce en windows ya que son diferentes los archivos generados entre Linux/Windows.</li>
+                    <li>Subir ese archivo a la plataforma de cabal con el nombre NOVCAR.782</li>
+                    <li>La plataforma responde con un archivo del tipo 782_RCAR_20220731_1841_324794.txt Que se procesa en Procesar Respuesta Acreditaciones</li>
+                </ol>
+                <a href="#brand-link" class="help-back-top">&uarr; Volver arriba</a>
+            </div>
+        </article>
+
+        <!-- 4. PROCESAR RESPUESTA DE ACREDITACIONES -->
+        <article class="help-guide-card" id="sec-respuesta-acreditaciones">
+            <header class="help-card-header">
+                <div class="help-card-title-group">
+                    <div class="help-icon-wrap" style="background: var(--amber-50); color: var(--amber-600);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>PROCESAR RESPUESTA DE ACREDITACIONES</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Confirmación de acreditación efectiva en cuentas</span>
+                    </div>
+                </div>
+                <span class="badge-tag warning">Archivo RCAR</span>
+            </header>
+            <div class="help-card-body">
+                <ol class="help-step-list">
+                    <li>Descargar desde Plataforma Archivo del tipo 782_RCAR_20220731_1841_324794.txt</li>
+                    <li>Este archivo se el dia que se realiza la acreditacion en las cuentas de los beneficiarios</li>
+                    <li>Renombarar el archivo descargado a RespuestaCargas.txt</li>
+                    <li>Subir el archivo RespuestaCargas.txt</li>
+                    <li>Menu - Procesar RespuestaCargas.txt  (Dev. Banco)</li>
+                    <li>se Mostrara en Pantalla las Cargas de Credito Realizadas</li>
+                </ol>
+                <a href="#brand-link" class="help-back-top">&uarr; Volver arriba</a>
+            </div>
+        </article>
+
+        <!-- 5. PROCESAR MOVIMIENTO DE CUENTAS -->
+        <article class="help-guide-card" id="sec-movimiento-cuentas">
+            <header class="help-card-header">
+                <div class="help-card-title-group">
+                    <div class="help-icon-wrap" style="background: var(--purple-50); color: var(--purple-600);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>PROCESAR MOVIMIENTO DE CUENTAS</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Liquidación mensual de compras, extracciones y autorizaciones</span>
+                    </div>
+                </div>
+                <span class="badge-tag" style="background: var(--purple-50); color: var(--purple-600);">Mensual</span>
+            </header>
+            <div class="help-card-body">
+                <ol class="help-step-list">
+                    <li>Descargar desde Plataforma Archivo del tipo 782_Nacion_20220731_1841_324794.txt</li>
+                    <li>Este archivo se sube a la misma El ultimo dia Habil de Cada Mes (o El 1er Dia Del Mes Siguiente</li>
+                    <li>Renombrar el archivo descargado a Movimientos.txt</li>
+                    <li>Subir el archivo Movimientos.txt</li>
+                    <li>Menu - Movimientos - Procesar Movimientos.txt</li>
+                    <li>Seleccionar el Mes al que corresponden los movimientos</li>
+                    <li class="highlight-step">Si el mes seleccionado ya esta cargado, genera un mensaje de error y no permite nuevamente la carga</li>
+                    <li>Se graban los datos a la tabla movimientos, exportar la misma a CSV For Ms excel</li>
+                </ol>
+                <a href="#brand-link" class="help-back-top">&uarr; Volver arriba</a>
+            </div>
+        </article>
+
+        <!-- 6. PROCESAR MAESTRO PLASTICOS -->
+        <article class="help-guide-card" id="sec-maestro-plasticos">
+            <header class="help-card-header">
+                <div class="help-card-title-group">
+                    <div class="help-icon-wrap" style="background: #e0e7ff; color: #4338ca;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                            <line x1="2" y1="10" x2="22" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>PROCESAR MAESTRO PLASTICOS</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Padrón de plásticos emitidos, causas y vencimientos</span>
+                    </div>
+                </div>
+                <span class="badge-tag" style="background: #e0e7ff; color: #4338ca;">MAESPLA</span>
+            </header>
+            <div class="help-card-body">
+                <ol class="help-step-list">
+                    <li>Descargar el Archvio MAESPLASXXXXX.txt desde la plataforma</li>
+                    <li>Subir el archivo con el nombre MAESPLA.txt</li>
+                    <li>Copiar el Nombre de Archivo, ya que se solicitara el nombre original para poder realizar la carga</li>
+                    <li>Ir al Menu Maestros Tarjetas - Procesar Maestro Tarjetas</li>
+                </ol>
+                <a href="#brand-link" class="help-back-top">&uarr; Volver arriba</a>
+            </div>
+        </article>
+
+        <!-- 7. Descarga Saldos Cuentas -->
+        <article class="help-guide-card" id="sec-descarga-saldos">
+            <header class="help-card-header">
+                <div class="help-card-title-group">
+                    <div class="help-icon-wrap" style="background: #fee2e2; color: #b91c1c;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="19" x2="12" y2="5"></line>
+                            <polyline points="5 12 12 19 19 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Descarga Saldos Cuentas</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Débito de fondos y reverso de saldos remanentes</span>
+                    </div>
+                </div>
+                <span class="badge-tag" style="background: #fee2e2; color: #b91c1c;">Débito</span>
+            </header>
+            <div class="help-card-body">
+                <ol class="help-step-list">
+                    <li>Subir el archivo con el nombre DescargaSaldos.xlsx</li>
+                    <li>
+                        El Archivo debe de contener las siguientes filas 1 - id    2 - CUIT 3 - DNI 7 - Nombre 5 - Monto a Descargar  
+                        <div class="help-format-spec">
+                            1 - id    2 - CUIT    3 - DNI    7 - Nombre    5 - Monto a Descargar
+                        </div>
+                    </li>
+                    <li>Ir al Menu Descarga Saldos - Procesar Descargas</li>
+                </ol>
+                <a href="#brand-link" class="help-back-top">&uarr; Volver arriba</a>
+            </div>
+        </article>
+
+    </div>
+
+</main>
+
+<!-- =======================================================================
+     FOOTER INSTITUCIONAL
+     ======================================================================= -->
+<footer class="footer-main">
+    <div class="footer-inner">
+        <div>
+            <strong>Sistema CABAL FSR</strong> — Secretaría de Niñez, Adolescencia y Familia (SeNAF)
+            <div style="font-size: 0.75rem; margin-top: 4px; color: #64748b;">
+                Gobierno de la Provincia de Río Negro • Entidad Financiera 782 • Sucursal 000
+            </div>
+        </div>
+        <div class="footer-links">
+            <a href="index.php">Inicio</a>
+            <a href="https://transmisiones.cabal.coop/webclient/Login.xhtml" target="_blank" rel="noopener noreferrer">Plataforma Cabal</a>
+            <a href="docs/ARQUITECTURA.md" target="_blank">Arquitectura</a>
+            <a href="GEMINI.md" target="_blank">Normas Técnicas</a>
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>

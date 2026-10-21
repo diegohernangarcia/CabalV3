@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Informática - Opción 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #185FA5;
+            --primary-light: #378ADD;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --text-tertiary: #999;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .header-section {
+            background: #f3f4f6;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header-section h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .header-section p {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-title i {
+            font-size: 18px;
+            color: var(--primary-light);
+        }
+
+        .section-title h2 {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin: 0;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-white);
+            border-left: 3px solid var(--primary-light);
+            margin-bottom: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .link-item:hover {
+            background: #f3f4f6;
+            padding-left: 18px;
+        }
+
+        .link-item i {
+            font-size: 16px;
+            color: var(--primary-light);
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
+        }
+
+        .link-item-text {
+            flex: 1;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .header-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .header-section h1 {
+                font-size: 20px;
+            }
+
+            .link-item {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .link-item i {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-section">
+    <h1>Entorno de Trabajo</h1>
+    <p>Panel centralizado de acceso</p>
+</div>
+
+<div class="container">
+    
+    <div class="section-group">
+        <div class="section-title">
+            <i class="fas fa-play"></i>
+            <h2>RUN & Gestión</h2>
+        </div>
+        <a href="https://taiga.altec.com.ar/project/aguarino-run-senaf/timeline" target="_blank" class="link-item">
+            <i class="fas fa-diagram-project"></i>
+            <span class="link-item-text">Taiga PHP</span>
+        </a>
+        <a href="https://run-senaf.rionegro.gov.ar/" target="_blank" class="link-item">
+            <i class="fas fa-server"></i>
+            <span class="link-item-text">RUN Producción</span>
+            <span class="badge">PROD</span>
+        </a>
+        <a href="https://run-test3.rionegro.gov.ar/" target="_blank" class="link-item">
+            <i class="fas fa-flask"></i>
+            <span class="link-item-text">RUN Test</span>
+            <span class="badge">TEST</span>
+        </a>
+        <a href="https://run-senaf-java.rionegro.gov.ar/run/login" target="_blank" class="link-item">
+            <i class="fas fa-code"></i>
+            <span class="link-item-text">RUN Backend</span>
+            <span class="badge">JAVA</span>
+        </a>
+        <a href="https://pentaho-test.rionegro.gov.ar/pentaho/Login" target="_blank" class="link-item">
+            <i class="fas fa-chart-line"></i>
+            <span class="link-item-text">Pentaho</span>
+        </a>
+    </div>
+
+    <div class="section-group">
+        <div class="section-title">
+            <i class="fas fa-folder-open"></i>
+            <h2>Legajos y Local</h2>
+        </div>
+        <a href="http://10.114.85.21/inventario_app/" target="_blank" class="link-item">
+            <i class="fas fa-link"></i>
+            <span class="link-item-text">Sitia</span>
+        </a>
+        <a href="http://10.114.85.21:8090/" target="_blank" class="link-item">
+            <i class="fas fa-server"></i>
+            <span class="link-item-text">Docker Server</span>
+            <span class="badge">LOCAL</span>
+        </a>
+        <a href="http://localhost/EstadoLegajos/index.html" target="_blank" class="link-item">
+            <i class="fas fa-folder"></i>
+            <span class="link-item-text">Estado Legajos V1</span>
+        </a>
+        <a href="http://localhost/EstadoLegajos/V2/index.html" target="_blank" class="link-item">
+            <i class="fas fa-folder-plus"></i>
+            <span class="link-item-text">Estado Legajos V2</span>
+        </a>
+        <a href="http://localhost/relevamiento" target="_blank" class="link-item">
+            <i class="fas fa-clipboard-list"></i>
+            <span class="link-item-text">Relevamiento Local</span>
+        </a>
+        <a href="http://localhost/phpmyadmin/" target="_blank" class="link-item">
+            <i class="fas fa-database"></i>
+            <span class="link-item-text">PHPMyAdmin</span>
+        </a>
+        <a href="http://localhost/vinculos/index.php" target="_blank" class="link-item">
+            <i class="fas fa-arrows-alt-h"></i>
+            <span class="link-item-text">Migración Vínculos</span>
+        </a>
+    </div>
+
+    <div class="section-group">
+        <div class="section-title">
+            <i class="fas fa-briefcase"></i>
+            <h2>Institucional y Otros</h2>
+        </div>
+        <a href="https://intranet.altec.com.ar/" target="_blank" class="link-item">
+            <i class="fas fa-ticket-alt"></i>
+            <span class="link-item-text">Incidentes</span>
+        </a>
+        <a href="https://eu.gde.rionegro.gov.ar" target="_blank" class="link-item">
+            <i class="fas fa-file-contract"></i>
+            <span class="link-item-text">GDE</span>
+        </a>
+        <a href="http://10.114.85.21/Senaf/" target="_blank" class="link-item">
+            <i class="fas fa-users"></i>
+            <span class="link-item-text">Senaf (IP)</span>
+        </a>
+        <a href="http://10.114.85.21/MovExpedientes/" target="_blank" class="link-item">
+            <i class="fas fa-dolly"></i>
+            <span class="link-item-text">Movimiento Expedientes</span>
+        </a>
+        <a href="http://localhost/cabal/index.php" target="_blank" class="link-item">
+            <i class="fas fa-credit-card"></i>
+            <span class="link-item-text">Cabal Local</span>
+        </a>
+        <a href="https://transmisiones.cabal.coop/webclient/Login.xhtml" target="_blank" class="link-item">
+            <i class="fas fa-exchange-alt"></i>
+            <span class="link-item-text">Transmisiones Cabal</span>
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
