@@ -1,0 +1,9 @@
+# Ignorar archivos generados temporales con datos sensibles (PII)
+Beneficiarios*.xlsx
+*.tmp
+*.log
+uploads/*.xlsx
+uploads/*.xls
+uploads/*.txt
+uploads/*.782
+!uploads/.gitkeep

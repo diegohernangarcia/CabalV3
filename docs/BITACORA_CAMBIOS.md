@@ -103,6 +103,19 @@
   - **Prevención de Parpadeo Blanco (Zero FOUC):** Script ligero ejecutado antes del renderizado del body para fijar el atributo `data-theme` sin saltos visuales.
   - **Persistencia:** Almacenamiento de preferencia en `localStorage.getItem('cabal-theme')`.
 
+#### 2.7. Ajuste de Contraste en Tablas y Etiquetado de Acción del Selector de Tema
+- **Archivos Afectados:**
+  - `ExportarExcelBeneficiarios.php` (Adaptación de estilos `.table-responsive-container`, `input`, `.btn-clear-filters` y `.table-beneficiarios` para heredar variables de tema)
+  - `css/dashboard.css` (Reglas de alta especificidad para tablas con scroll y filas hover en modo oscuro)
+  - `js/theme.js` (Actualización de la función `updateToggleButtons` para reflejar la acción a ejecutar: *"Cambiar a Modo Claro"* en modo oscuro y *"Cambiar a Modo Oscuro"* en modo claro)
+  - `index.php` (Actualización de la etiqueta inicial del botón a *"Cambiar a Modo Claro"*)
+  - `CargaAltasDeExcelaBD.php` (Uso de `var(--surface-subtle)` en hover de tabla y `var(--input-bg)` en inputs)
+  - `GenerarNovedadAltas.php` (Uso de `var(--surface-card)` en `.summary-stat-box`)
+  - `upload.php` (Integración de `js/theme.js` y `var(--surface-card)` en `.result-card`)
+- **Problemas Resueltos:**
+  - En `ExportarExcelBeneficiarios.php`, el contenedor con scroll mantenía un fondo blanco (`#ffffff`) sobre el cual el texto claro celeste (`#f1f5f9`) resultaba ilegible. Se reconfiguró el contenedor y las filas para utilizar `var(--surface-card)`, `var(--surface-subtle)` y `var(--text-main)`, asegurando fondo slate oscuro y tipografía nítida en blanco/slate.
+  - El botón de tema reflejaba el estado actual ("Modo Oscuro") en lugar de la acción a ejecutar. Se modificó para indicar explícitamente *"Cambiar a Modo Oscuro"* al encontrarse en modo claro, y *"Cambiar a Modo Claro"* al estar en modo oscuro.
+
 ---
 
 ### 3. Matriz de Verificación y Pruebas Ejecutadas (21/10/2026)

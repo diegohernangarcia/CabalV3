@@ -109,6 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['subir_archivo'])) {
     <title><?php echo $exito ? "Archivo Recibido" : "Error en la Carga"; ?> | Sistema Cabal FSR</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Gestor de Modo Oscuro / Claro -->
+    <script src="js/theme.js"></script>
     <style>
         .result-container {
             max-width: 680px;
@@ -116,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['subir_archivo'])) {
             padding: 0 20px;
         }
         .result-card {
-            background: #ffffff;
+            background: var(--surface-card);
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border-light);

@@ -279,7 +279,7 @@ if (isset($_GET['descargar']) && $_GET['descargar'] == '1' && !$error_dni && cou
         }
 
         .summary-stat-box {
-            background: #ffffff;
+            background: var(--surface-card);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             padding: 16px 20px;

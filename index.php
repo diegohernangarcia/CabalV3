@@ -65,7 +65,7 @@ try {
         </a>
 
         <div class="nav-actions">
-            <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Cambiar tema (Claro / Oscuro)" aria-label="Alternar modo claro u oscuro">
+            <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Cambiar a Modo Claro" aria-label="Cambiar a Modo Claro">
                 <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="5"></circle>
                     <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -80,7 +80,7 @@ try {
                 <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
-                <span class="theme-toggle-label">Modo Oscuro</span>
+                <span class="theme-toggle-label">Cambiar a Modo Claro</span>
             </button>
 
             <div class="system-pill" id="status-pill">

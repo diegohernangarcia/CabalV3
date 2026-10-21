@@ -1202,6 +1202,46 @@ html.theme-transition *::after {
   background-color: rgba(255, 255, 255, 0.035);
 }
 
+/* Tabla de Beneficiarios y Contenedores con Scroll (ExportarExcelBeneficiarios.php) */
+[data-theme="dark"] .table-responsive-container {
+  background: var(--surface-card) !important;
+  border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] .table-beneficiarios {
+  color: var(--text-main) !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .table-beneficiarios thead th {
+  background: #172138 !important;
+  color: #f8fafc !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .table-beneficiarios tbody td {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .table-beneficiarios tbody tr:hover td {
+  background: rgba(59, 130, 246, 0.16) !important;
+}
+
+[data-theme="dark"] .table-beneficiarios code,
+[data-theme="dark"] .benef-code {
+  background: #172138 !important;
+  color: #93c5fd !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .benef-id-badge {
+  background: #172138 !important;
+  color: #cbd5e1 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 /* Error / Warning banners & audit tables */
 [data-theme="dark"] .errors-card {
   background: #171115;

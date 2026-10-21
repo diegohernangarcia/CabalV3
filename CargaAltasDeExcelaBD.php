@@ -448,7 +448,7 @@ if (!$archivo_existe) {
             border-radius: var(--radius-sm);
             font-size: 0.88rem;
             color: var(--text-main);
-            background: #ffffff;
+            background: var(--input-bg);
             outline: none;
             transition: all var(--transition-fast);
         }
@@ -510,7 +510,7 @@ if (!$archivo_existe) {
         }
 
         .altas-data-table tr:hover {
-            background: #f1f5f9;
+            background: var(--surface-subtle);
         }
 
         .altas-data-table tr.row-invalid:hover {

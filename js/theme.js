@@ -45,18 +45,23 @@
     }
 
     /**
-     * Sincroniza la etiqueta y accesibilidad de los botones de alternancia
+     * Sincroniza la etiqueta y accesibilidad de los botones de alternancia.
+     * La etiqueta indica expresamente la ACCIÓN que se ejecutará al pulsar el botón:
+     * - Si el sistema está en Modo Oscuro -> "Cambiar a Modo Claro"
+     * - Si el sistema está en Modo Claro  -> "Cambiar a Modo Oscuro"
      */
     function updateToggleButtons(theme) {
         var buttons = document.querySelectorAll('.theme-toggle-btn, #btn-theme-toggle');
+        var actionText = theme === 'dark' ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro';
+
         for (var i = 0; i < buttons.length; i++) {
             var btn = buttons[i];
             var label = btn.querySelector('.theme-toggle-label');
             if (label) {
-                label.textContent = theme === 'dark' ? 'Modo Oscuro' : 'Modo Claro';
+                label.textContent = actionText;
             }
             btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-            btn.setAttribute('title', theme === 'dark' ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro');
+            btn.setAttribute('title', actionText);
         }
     }
 
@@ -73,7 +78,10 @@
      * Inicializa o inyecta el botón de tema en la barra de navegación si no existe
      */
     function initThemeUI() {
+        var currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        var actionText = currentTheme === 'dark' ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro';
         var existingBtn = document.getElementById('btn-theme-toggle');
+
         if (!existingBtn) {
             var navActions = document.querySelector('.nav-actions');
             if (navActions) {
@@ -81,7 +89,8 @@
                 btn.type = 'button';
                 btn.id = 'btn-theme-toggle';
                 btn.className = 'theme-toggle-btn';
-                btn.setAttribute('aria-label', 'Alternar modo claro u oscuro');
+                btn.setAttribute('aria-label', actionText);
+                btn.setAttribute('title', actionText);
                 btn.innerHTML =
                     '<svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
                     '<circle cx="12" cy="12" r="5"></circle>' +
@@ -97,7 +106,7 @@
                     '<svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
                     '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>' +
                     '</svg>' +
-                    '<span class="theme-toggle-label">Modo Oscuro</span>';
+                    '<span class="theme-toggle-label">' + actionText + '</span>';
 
                 btn.addEventListener('click', window.toggleCabalTheme);
                 navActions.insertBefore(btn, navActions.firstChild);
@@ -106,7 +115,7 @@
             existingBtn.addEventListener('click', window.toggleCabalTheme);
         }
 
-        updateToggleButtons(document.documentElement.getAttribute('data-theme') || 'dark');
+        updateToggleButtons(currentTheme);
     }
 
     // Ejecución inmediata para prevenir destellos blancos (FOUC)

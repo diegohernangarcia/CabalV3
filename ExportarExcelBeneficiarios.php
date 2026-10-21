@@ -321,11 +321,11 @@ if ($conexion->connect_error) {
         .filter-input-wrap input {
             width: 100%;
             padding: 10px 12px 10px 36px;
-            background: #ffffff;
+            background: var(--input-bg);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
             font-size: 0.88rem;
-            color: var(--navy-800);
+            color: var(--text-main);
             outline: none;
             transition: all var(--transition-fast);
         }
@@ -336,13 +336,13 @@ if ($conexion->connect_error) {
         }
 
         .filter-input-wrap input::placeholder {
-            color: #94a3b8;
+            color: var(--text-light);
             font-size: 0.82rem;
         }
 
         .btn-clear-filters {
             padding: 10px 18px;
-            background: #ffffff;
+            background: var(--surface-card);
             border: 1px solid var(--border-light);
             color: var(--text-muted);
             border-radius: var(--radius-sm);
@@ -368,7 +368,7 @@ if ($conexion->connect_error) {
             overflow-y: auto;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
-            background: #ffffff;
+            background: var(--surface-card);
             box-shadow: var(--shadow-sm);
         }
 
@@ -377,12 +377,13 @@ if ($conexion->connect_error) {
             border-collapse: collapse;
             font-size: 0.85rem;
             text-align: left;
+            background: transparent;
         }
 
         .table-beneficiarios thead th {
             position: sticky;
             top: 0;
-            background: #f8fafc;
+            background: var(--surface-subtle);
             color: var(--navy-800);
             font-weight: 700;
             padding: 12px 16px;
@@ -393,8 +394,8 @@ if ($conexion->connect_error) {
 
         .table-beneficiarios tbody td {
             padding: 11px 16px;
-            border-bottom: 1px solid #f1f5f9;
-            color: var(--navy-800);
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-main);
             vertical-align: middle;
         }
 
@@ -409,12 +410,24 @@ if ($conexion->connect_error) {
             border-radius: var(--radius-sm);
             background: var(--surface-subtle);
             color: var(--text-muted);
+            border: 1px solid var(--border-light);
         }
 
         .benef-code {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
             background: var(--surface-subtle);
+            color: var(--text-main);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-light);
+        }
+
+        .table-beneficiarios code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            background: var(--surface-subtle);
+            color: var(--primary-700);
             padding: 2px 6px;
             border-radius: 4px;
             border: 1px solid var(--border-light);
