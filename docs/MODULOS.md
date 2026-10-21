@@ -2,6 +2,7 @@
 
 **Proyecto:** Sistema Cabal - Familia Rionegrina Solidaria (FSR / SeNAF)  
 **Fecha de Auditoría:** 20 de Octubre de 2026  
+**Última Actualización:** 21 de Octubre de 2026 (Sprint Mejoras de Altas y Subida Centralizada)  
 **Criterio de Evaluación:** Inspección de rutas activas en `index.php`, consistencia de base de datos, lógica de negocio y ejecución segura.
 
 ---
@@ -9,11 +10,11 @@
 ## 1. Resumen de Madurez y Estado Funcional
 
 ```text
-[██████████████████░░░░░░░░░░] 60% Estado Global del Sistema
-- Flujos Operativos Batch (Generación/Lectura de Archivos): 75% Funcional
-- Robustez, Manejo de Errores y Validaciones: 40% Funcional
-- Seguridad, Autenticación y Autorización: 0% Implementado
-- Consolidación y Limpieza de Código (Deuda Técnica): 30% Limpio
+[████████████████████░░░░░░░░] 68% Estado Global del Sistema
+- Flujos Operativos Batch (Generación/Lectura de Archivos): 85% Funcional
+- Robustez, Manejo de Errores y Validaciones: 55% Funcional
+- Seguridad, Autenticación y Autorización: 10% Implementado (Subidas blindadas en upload.php)
+- Consolidación y Limpieza de Código (Deuda Técnica): 35% Limpio
 ```
 
 ---
@@ -25,9 +26,9 @@ Permite enrolar nuevos beneficiarios de planes sociales, generar el lote de alta
 
 | Submódulo / Acción | Archivos Involucrados | Responsabilidad / Descripción | Estado | Observación / Bloqueante |
 | :--- | :--- | :--- | :---: | :--- |
-| **Cargar Archivo de Altas** | `SubirArchivo.html` (centralizado), `subir_excel_altas.php` (legado) | Interfaz unificada para subir `Altas.xlsx`. Lo almacena en `archivos/Altas.xlsx`. | **Completado** | Requiere permisos de escritura en `archivos/`. |
-| **Procesar Excel (Altas.xls)** | `CargaAltasDeExcelaBD.php`, `LeerAltasaBD.php` | Lee filas con PHPExcel e inserta en tabla de paso `altas`. | **Completado** | Dependencia con librería PHPExcel en desuso. |
-| **Generar ALTAUSUCBPRE** | `GenerarNovedadAltas.php` | Lee `altas` y genera formato texto fijo Anexo 1 Cabal (3 registros por usuario). | **Incompleto** | **Imprime HTML en pantalla** (`&nbsp;`, `<br>`). Obliga a copiar manualmente a Notepad++ en Windows. |
+| **Cargar Archivo de Altas** | `SubirArchivo.html` (centralizado), `upload.php` | Interfaz unificada con normalización inteligente (case-insensitive: ej. `AlTaS.xlsx` &rarr; `Altas.xlsx`). | **Completado** | Validación estricta de extensiones y guardado protegido en `archivos/`. |
+| **Procesar Excel (Altas.xlsx)** | `CargaAltasDeExcelaBD.php`, `LeerAltasaBD.php` | Lee filas de `archivos/Altas.xlsx` con validación exhaustiva y carga atómica en tabla `altas`. | **Completado** | **Modernizado:** Diseño Tablero Institucional, métricas, tabla de auditoría y transacciones PDO (21/10/2026). Respaldo en `CargaAltasDeExcelaBD_original.php`. |
+| **Generar ALTAUSUCBPRE** | `GenerarNovedadAltas.php` | Emite lote bancario Anexo 1 Cabal (3 registros posicionales de 128 bytes por usuario). | **Completado** | **Modernizado:** Tablero institucional, visor terminal monospace, botón de copia pura con CRLF, salto de línea reglamentario final y botón de descarga directa HTTP (`ISO-8859-1`). Respaldo en `GenerarNovedadAltas_original.php`. |
 | **Generador ALTAUSUCBPRE V2** | `V2/Altas.php` | Lee CSV y genera el archivo 128 bytes por usuario con descarga directa (`.782`). | **En progreso** | Desarrollado de forma moderna pero **no está enlazado en el menú principal**. |
 | **Procesar MovAltas (Devolución)** | `ProcesaNovedadesAltas.php`, `RespuestaAltas.php` | Lee archivo de respuesta bancaria `MovAltas.txt` y vuelca a `beneficiario`. | **Completado** | Funcional, pero no previene duplicados en `beneficiario`. |
 | **Exportar Beneficiarios** | `ExportarExcelBeneficiarios.php` | Genera y descarga un Excel con el padrón completo de `beneficiario`. | **Completado** | Utiliza PHPExcel y oculta números de tarjeta (`formatearTarjetaCredito`). |
@@ -40,13 +41,13 @@ Procesa los montos a depositar en las tarjetas de los beneficiarios según los a
 
 | Submódulo / Acción | Archivos Involucrados | Responsabilidad / Descripción | Estado | Observación / Bloqueante |
 | :--- | :--- | :--- | :---: | :--- |
-| **Subir Archivo Acreditaciones** | `SubirArchivo.html` (centralizado), `subir_excel_acreditaciones.php` (legado) | Recibe `Acreditaciones.xlsx` y lo guarda en `archivos/`. | **Completado** | Enlazado desde menú principal hacia interfaz unificada. |
-| **Procesar Excel Acreditaciones (2026)** | `AcreditarSaldos2026.php`, `AcreditarSaldo2026.php` | Trunca `acreditar2`, cruza CUIL del Excel con `beneficiario` para obtener `NumeroCuenta`. | **Oculto en Menú** | Ocultado en menú principal a solicitud; se mantiene archivo para compatibilidad. |
+| **Subir Archivo Acreditaciones** | `SubirArchivo.html` (centralizado), `upload.php` | Recibe `Acreditaciones.xlsx` con normalización automática de mayúsculas/minúsculas y guarda en `archivos/`. | **Completado** | Enlazado directamente desde el menú principal hacia la interfaz unificada. |
+| **Procesar Excel Acreditaciones (2026)** | `AcreditarSaldos2026.php`, `AcreditarSaldo2026.php` | Trunca `acreditar2`, cruza CUIL del Excel con `beneficiario` para obtener `NumeroCuenta`. | **Oculto en Menú** | Ocultado en menú principal a solicitud para evitar ejecuciones destructivas no supervisadas. |
 | **Procesar Excel (Versión 2023)** | `AcreditarSaldos-2023.php`, `AcreditarSaldos.php` | Versión anterior que operaba sobre la tabla `acreditar`. | **Incompleto** | Código duplicado mantenido por compatibilidad histórica. |
 | **Generar NOVCAR 2026** | `GenerarCargaCredito2026.php` | Lee `acreditar2` y escribe lote en `Novcar/novcar.782` (cabecera, detalle `6339`, trailer). | **Completado** | Graba en disco pero advierte incompatibilidad con Linux por saltos de línea LF vs CRLF. |
 | **Generar NOVCAR (Legado)** | `GenerarCargaCredito2.php`, `GenerarCargaCredito.php` | Generador anterior para la tabla `acreditar`. | **Incompleto** | Huérfano; superado por la versión 2026. |
 | **Subir y Verificar NOVCAR** | `subir_novcar.php`, `VerificarNovcar.php` | Permite subir y auditar en pantalla la integridad posicional de `novcar.782`. | **Completado** | Valida campos posicionales de longitud y montos. |
-| **Subir y Procesar Resp. Cargas** | `SubirArchivo.html` (centralizado), `subir_respuesta_cargas.php` (legado), `ProcesarCarga.php` | Recibe `RespuestaCargas.txt` (782_RCAR) y muestra confirmación en pantalla. | **Completado** | Interfaz de solo lectura de resultados del banco. |
+| **Subir y Procesar Resp. Cargas** | `SubirArchivo.html` (centralizado), `upload.php`, `ProcesarCarga.php` | Recibe `RespuestaCargas.txt` (782_RCAR) y muestra confirmación en pantalla. | **Completado** | Enlace del menú principal redirigido a `SubirArchivo.html`. |
 
 ---
 

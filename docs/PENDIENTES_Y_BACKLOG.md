@@ -157,3 +157,15 @@ gantt
 2. Proteger todos los formularios con tokens anti-CSRF.
 3. Registrar auditoría (logs) de quién y cuándo procesa lotes bancarios y acreditaciones.
 4. Unificar las interfaces con el diseño de `AcreditarSaldos2026.php` y `reporte_tarjetas.php`.
+
+---
+
+## 4. Registro de Avances y Tareas Completadas (Sprint 21 de Octubre de 2026)
+
+| Código | Tarea / Módulo | Archivos Afectados | Descripción y Resultado | Estado |
+| :--- | :--- | :--- | :--- | :---: |
+| **SPR-21-01** | Centralización de Subidas | `index.php`, `index_menu_original.php` | Redirección de los enlaces "Cargar Archivo de Altas" (en Beneficiarios) y "Cargar Archivo de Altas" / "Subir respusta carga" (en Acreditación de Saldo) hacia la interfaz centralizada `SubirArchivo.html`. | **COMPLETADO** |
+| **SPR-21-02** | Ocultamiento de Acción de Riesgo | `index.php`, `index_menu_original.php` | Ocultamiento del botón "Procesar Excel (Versión 2026)" en el menú de Acreditación de Saldo para evitar truncados accidentales de `acreditar2`. | **COMPLETADO** |
+| **SPR-21-03** | Normalización Case-Insensitive | `SubirArchivo.html`, `upload.php` | Detección y normalización automática de nombres de archivo ignorando mayúsculas/minúsculas (ej. `AlTaS.xlsx` &rarr; `Altas.xlsx`). Mapeo con nombres canónicos bancarios y validación estricta de extensiones. | **COMPLETADO** |
+| **SPR-21-04** | Rediseño y Transacciones en Altas | `CargaAltasDeExcelaBD.php` | Modernización completa con el diseño del Tablero Institucional (`dashboard.css`), métricas en tiempo real, tabla de auditoría de registros y transacciones atómicas PDO (`beginTransaction` / `commit`). Respaldo en `CargaAltasDeExcelaBD_original.php`. | **COMPLETADO** |
+| **SPR-21-05** | Emisión Lote ALTAUSUCBPRE.782 | `GenerarNovedadAltas.php` | Maquetación con Tablero Institucional, preservación matemática de los 128 bytes posicionales Cabal, terminal monospace, botón de copiado con CRLF y salto de línea final reglamentario (`<br><br>` y `\r\n`). Descarga directa HTTP `ISO-8859-1`. Respaldo en `GenerarNovedadAltas_original.php`. | **COMPLETADO** |

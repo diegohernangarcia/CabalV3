@@ -4,6 +4,7 @@
 **Ubicación en Servidor:** `/opt/lampp/htdocs/cabal-Gemini`  
 **Entorno de Ejecución:** Servidor local Linux (Ubuntu x86_64) sobre stack XAMPP/LAMPP  
 **Fecha de Auditoría:** 20 de Octubre de 2026  
+**Última Actualización:** 21 de Octubre de 2026 (Sprint Mejoras de Altas y Subida Centralizada)  
 **Auditoría y Diagnóstico:** Arquitectura de Software y Seguridad  
 
 ---
