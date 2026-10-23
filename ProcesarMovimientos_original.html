@@ -1,0 +1,60 @@
+<!--
+Lee archivo con los movimientos mensuales de las tarjetas cabal
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="Bootstrap/bootstrap.min.css" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="css/estilos.css" />
+    <title>Importar Altas A Base De Datos</title>
+    <link rel="icon" href="img/favicon.png">
+</head>
+<body>
+    <BR>
+    <h2 class="display-2">PROCESAR MOVIMIENTOS TARJETAS </h2>
+    <BR><BR>
+        <form action="ProcesarMovimientos2.php" method="post">
+            
+            <label for="lang">Mes&nbsp;&nbsp;</label>
+            <select name="Mes" id="lang">
+              <option value="Enero">Enero</option>
+              <option value="Febrero">Febrero</option>
+              <option value="Marzo">Marzo</option>
+              <option value="Abril">Abril</option>
+              <option value="Mayo">Mayo</option>
+              <option value="Junio">Junio</option>
+              <option value="Julio">Julio</option>
+              <option value="Agosto">Agosto</option>
+              <option value="Septiembre">Septiembre</option>
+              <option value="Octubre">Octubre</option>
+              <option value="Noviembre">Noviembre</option>
+              <option value="Diciembre">Diciembre</option>
+            </select>
+            <label for="Anio">&nbsp;&nbsp;Año&nbsp;&nbsp;</label>
+            <select name="Anio" id="lang">
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2020</option>              
+            </select>
+            <label for="Archivo">&nbsp;&nbsp;Archivo Numero&nbsp;&nbsp;</label>
+            <select name="Archivo" id="lang">
+              <option value="1">01</option>
+              <option value="2">02</option>
+              <option value="3">03</option>
+              <option value="4">04</option>
+              <option value="5">05</option>
+            </select>
+        </center>
+            <input type="submit" value="Enviar" />
+      </form>
+      <a href="javascript:history.back()" class="btn-flotante">Volver Atras</a>  
+

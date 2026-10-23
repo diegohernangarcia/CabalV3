@@ -12,7 +12,7 @@ mysqli_set_charset($conn, "utf8");
 $stats = array('total' => 0, 'exitos' => 0, 'fallidos' => 0, 'dinero' => 0);
 $procesados = array();
 
-if (isset($_POST['btn_cargar'])) {
+if (isset($_POST['btn_cargar']) && isset($_FILES['archivo_excel']['tmp_name']) && !empty($_FILES['archivo_excel']['tmp_name'])) {
     $archivoTmp = $_FILES['archivo_excel']['tmp_name'];
 
     try {
@@ -31,12 +31,11 @@ if (isset($_POST['btn_cargar'])) {
 
         // Empezamos en fila 6. 
         for ($fila = 6; $fila <= $filasMax; $fila++) {
-            $cuil_excel = trim($hoja->getCellByColumnAndRow(6, $fila)->getValue());
+            $cuil_excel = trim((string)$hoja->getCellByColumnAndRow(6, $fila)->getValue());
             $monto = $hoja->getCellByColumnAndRow(7, $fila)->getValue();
-            $apellido_check = trim($hoja->getCellByColumnAndRow(2, $fila)->getValue());
+            $apellido_check = trim((string)$hoja->getCellByColumnAndRow(2, $fila)->getValue());
 
             // --- FILTRO: Ignorar fila de total o vacías ---
-            // Si no hay apellido o el CUIL no es un número válido, saltamos la fila
             if (empty($apellido_check) || empty($cuil_excel) || !is_numeric($cuil_excel)) {
                 continue; 
             }
@@ -58,117 +57,284 @@ if (isset($_POST['btn_cargar'])) {
                 );
 
                 if (mysqli_stmt_execute($stmt_ins)) {
-                    $item['status'] = 'success';
-                    $item['msg'] = $row['Apellido'] . ", " . $row['Nombre'];
                     $stats['exitos']++;
                     $stats['dinero'] += (float)$monto;
+                    $item['status'] = 'success';
+                    $item['msg'] = htmlspecialchars($row['Apellido'] . ' ' . $row['Nombre'], ENT_QUOTES, 'UTF-8');
+                } else {
+                    $item['msg'] = 'Error al insertar registro';
+                    $stats['fallidos']++;
                 }
             } else {
                 $stats['fallidos']++;
             }
+
             $procesados[] = $item;
         }
 
+        mysqli_stmt_close($stmt_busqueda);
+        mysqli_stmt_close($stmt_ins);
+
     } catch (Exception $e) {
-        $error_critico = $e->getMessage();
+        $error_msg = "Error al procesar el archivo Excel: " . $e->getMessage();
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Acreditación | Cabal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acreditar Saldos 2026 | Sistema Cabal FSR</title>
+    <link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
     <style>
-        :root { --primary: #2563eb; --success: #22c55e; --danger: #ef4444; --bg: #f8fafc; }
-        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: #1e293b; padding: 40px 20px; }
-        .container { max-width: 1100px; margin: auto; }
-        
-        .header { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
-        h1 { margin: 0; font-size: 1.5rem; color: #0f172a; }
+        .page-container {
+            max-width: 1380px;
+            margin: 0 auto 50px;
+            padding: 0 24px;
+        }
 
-        .card-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
-        .stat { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
-        .stat-val { display: block; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
-        .stat-label { font-size: 0.8rem; color: #64748b; text-transform: uppercase; }
+        .meta-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
 
-        .upload-box { background: #ffffff; border: 2px dashed #cbd5e1; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 25px; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .meta-stat-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-sm);
+        }
 
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        th { background: #f1f5f9; padding: 15px; text-align: left; font-size: 0.85rem; color: #475569; }
-        td { padding: 15px; border-top: 1px solid #f1f5f9; font-size: 0.9rem; }
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-        .bg-success { background: #dcfce7; color: #166534; }
-        .bg-danger { background: #fee2e2; color: #991b1b; }
+        .meta-stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .meta-stat-val {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--navy-800);
+        }
+
+        .audit-badge-ok {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .audit-badge-bad {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        [data-theme="dark"] .audit-badge-ok {
+            background: rgba(16, 185, 129, 0.22);
+            color: #6ee7b7;
+        }
+
+        [data-theme="dark"] .audit-badge-bad {
+            background: rgba(239, 68, 68, 0.22);
+            color: #fca5a5;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>💳 Sistema de Acreditación Cabal</h1>
-        <small><?php echo date("d/m/Y H:i"); ?></small>
-    </div>
+<header class="top-nav">
+    <div class="top-nav-inner">
+        <a href="index.php" class="brand-group" id="brand-link">
+            <div class="brand-logo-wrap">
+                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+            </div>
+            <div class="brand-text">
+                <h1>
+                    CABAL FSR
+                    <span class="brand-badge">Entidad 782</span>
+                </h1>
+                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            </div>
+        </a>
 
-    <div class="upload-box">
-        <form action="" method="post" enctype="multipart/form-data">
-            <p>Seleccione la planilla Excel de Suministro para procesar</p>
-            <input type="file" name="archivo_excel" required style="margin-bottom: 15px;"><br>
-            <button type="submit" name="btn_cargar" class="btn">Procesar y Blanquear Tabla</button>
-        </form>
+        <div class="nav-actions">
+            <a href="index.php" class="btn-nav-action primary" id="btn-volver-tablero">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver al Tablero
+            </a>
+
+            <a href="GenerarCargaCredito2026.php" class="btn-nav-action" id="btn-generar-novcar">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+                Generar NOVCAR
+            </a>
+
+            <a href="ayuda.html" target="_blank" class="btn-nav-action" id="btn-ayuda">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                Guía Operativa
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="page-container" style="margin-top: 32px;">
+
+    <section class="help-hero-banner">
+        <div class="help-hero-text">
+            <h2>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-500);">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Procesar Excel de Acreditaciones (Versión 2026)
+            </h2>
+            <p>
+                Lectura de la planilla de acreditación mensual, validación por CUIT contra el padrón de beneficiarios y preparación de la tabla operativa <code>acreditar2</code>.
+            </p>
+        </div>
+    </section>
+
+    <?php if (isset($error_msg)): ?>
+        <div class="alert-modern danger">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <div><?php echo htmlspecialchars($error_msg); ?></div>
+        </div>
+    <?php endif; ?>
+
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <div class="modern-card-title-group">
+                <h3>Subida y Procesamiento de Planilla</h3>
+                <p>Seleccione el archivo Excel de suministro para procesar y cargar a la base de datos</p>
+            </div>
+        </div>
+        <div class="modern-card-body">
+            <div class="alert-modern warning" style="margin-bottom: 20px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <div>
+                    <strong>Atención Operativa:</strong> Al procesar una nueva planilla, la tabla transitoria <code>acreditar2</code> será vaciada automáticamente para alojar el nuevo lote de acreditación.
+                </div>
+            </div>
+
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-group-modern">
+                    <label for="archivo_excel">Planilla Excel (.xlsx):</label>
+                    <input type="file" name="archivo_excel" id="archivo_excel" class="form-control-modern" accept=".xlsx" required>
+                </div>
+                <button type="submit" name="btn_cargar" class="btn-modern-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Procesar y Blanquear Tabla acreditar2
+                </button>
+            </form>
+        </div>
     </div>
 
     <?php if (!empty($procesados)): ?>
-        <div class="card-stats">
-            <div class="stat">
-                <span class="stat-val"><?php echo $stats['total']; ?></span>
-                <span class="stat-label">Filas Leídas</span>
+        <div class="meta-stats-grid">
+            <div class="meta-stat-card">
+                <div class="meta-stat-label">Filas Leídas</div>
+                <div class="meta-stat-val"><?php echo number_format($stats['total'], 0, ',', '.'); ?></div>
             </div>
-            <div class="stat">
-                <span class="stat-val" style="color: var(--success);"><?php echo $stats['exitos']; ?></span>
-                <span class="stat-label">Cargados OK</span>
+            <div class="meta-stat-card">
+                <div class="meta-stat-label">Cargados Correctamente</div>
+                <div class="meta-stat-val" style="color: var(--emerald-600);"><?php echo number_format($stats['exitos'], 0, ',', '.'); ?></div>
             </div>
-            <div class="stat">
-                <span class="stat-val" style="color: var(--danger);"><?php echo $stats['fallidos']; ?></span>
-                <span class="stat-label">No encontrados</span>
+            <div class="meta-stat-card">
+                <div class="meta-stat-label">No Encontrados en Padrón</div>
+                <div class="meta-stat-val" style="color: #ef4444;"><?php echo number_format($stats['fallidos'], 0, ',', '.'); ?></div>
             </div>
-            <div class="stat">
-                <span class="stat-val">$<?php echo number_format($stats['dinero'], 0, ',', '.'); ?></span>
-                <span class="stat-label">Total Acreditado</span>
+            <div class="meta-stat-card">
+                <div class="meta-stat-label">Total Acreditado</div>
+                <div class="meta-stat-val" style="color: var(--primary-600);">$<?php echo number_format($stats['dinero'], 2, ',', '.'); ?></div>
             </div>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>FILA</th>
-                    <th>CUIL</th>
-                    <th>APELLIDO Y NOMBRE</th>
-                    <th>MONTO</th>
-                    <th>ESTADO</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($procesados as $p): ?>
-                <tr>
-                    <td>#<?php echo $p['fila']; ?></td>
-                    <td><strong><?php echo $p['cuil']; ?></strong></td>
-                    <td><?php echo $p['msg']; ?></td>
-                    <td>$<?php echo number_format($p['monto'], 2, ',', '.'); ?></td>
-                    <td>
-                        <span class="badge <?php echo ($p['status'] == 'success') ? 'bg-success' : 'bg-danger'; ?>">
-                            <?php echo ($p['status'] == 'success') ? 'PROCESADO' : 'ERROR'; ?>
-                        </span>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div style="margin-bottom: 20px;">
+            <a href="GenerarCargaCredito2026.php" class="btn-modern-success">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                Continuar a Generar Lote NOVCAR.782 &rarr;
+            </a>
+        </div>
+
+        <div class="modern-card">
+            <div class="modern-card-header">
+                <div class="modern-card-title-group">
+                    <h3>Detalle de Registros Procesados</h3>
+                    <p>Auditoría fila por fila de la planilla importada</p>
+                </div>
+            </div>
+            <div class="modern-card-body" style="padding: 0;">
+                <div class="modern-table-responsive" style="margin: 0; border: none; max-height: 520px; overflow-y: auto;">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Fila</th>
+                                <th>CUIL / CUIT</th>
+                                <th>Titular Beneficiario</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($procesados as $p): ?>
+                            <tr>
+                                <td><code>#<?php echo $p['fila']; ?></code></td>
+                                <td><strong><?php echo htmlspecialchars($p['cuil']); ?></strong></td>
+                                <td><?php echo $p['msg']; ?></td>
+                                <td style="font-weight: 700; color: var(--emerald-600);">$<?php echo number_format($p['monto'], 2, ',', '.'); ?></td>
+                                <td>
+                                    <?php if ($p['status'] == 'success'): ?>
+                                        <span class="audit-badge-ok">✓ PROCESADO</span>
+                                    <?php else: ?>
+                                        <span class="audit-badge-bad">✕ NO ENCONTRADO</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     <?php endif; ?>
-</div>
+
+</main>
+
+<a href="index.php" class="btn-modern-flotante" title="Volver al Tablero Principal">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Volver al Tablero
+</a>
 
 </body>
 </html>

@@ -7,8 +7,153 @@
 ---
 
 ## Índice Cronológico
+- [Jornada: 23 de Octubre de 2026 (Modernización Integral de Estilos y Colores en Todas las Páginas)](#jornada-23-de-octubre-de-2026)
 - [Jornada: 21 de Octubre de 2026 (Sprint Mejoras de Altas y Subida Centralizada)](#jornada-21-de-octubre-de-2026)
 - [Jornada: 20 de Octubre de 2026 (Auditoría Integral, Documentación Base y Nuevo Tablero)](#jornada-20-de-octubre-de-2026)
+
+---
+
+## Jornada: 23 de Octubre de 2026
+
+### 1. Objetivos de la Sesión
+1. **Unificación Visual Total (Formato de Colores y Diseño del Inicio a Todas las Páginas Restantes):**
+   - Trasladar el sistema de diseño visual, paleta de colores corporativa (Slate/Navy, `#2563eb`, variables CSS centralizadas), tipografía y componentes del tablero de inicio (`index.php`) a todas las páginas, formularios, reportes y generadores del sistema.
+   - Implementar en cada vista la barra superior de navegación unificada (`<header class="top-nav">`) con isotipo de Cabal, credencial *"Entidad 782"*, enlace de retorno rápido *"Volver al Tablero"* y el botón selector de Modo Oscuro / Claro (`js/theme.js`).
+2. **Cumplimiento Estricto de Directivas de Arquitectura (`GEMINI.md`):**
+   - Compatibilidad absoluta con **PHP 5.6.40** en servidor local XAMPP (`/opt/lampp/bin/php`).
+   - Inviolabilidad de formatos posicionales fijos de Cabal (128 bytes para `ALTAUSUCBPRE.782`, 80 bytes para `NOVCAR.782`, `NOVTRAN.782` y `NOVDES.782`).
+   - Forzado de codificación ANSI / ISO-8859-1 y saltos de línea Windows CRLF (`\r\n`).
+   - Reemplazo de impresión HTML en pantalla por descargas directas HTTP con headers apropiados.
+   - Mitigación de inyecciones SQL mediante consultas preparadas (`PDO::prepare()` o `mysqli_prepare()` con bindeo de parámetros).
+   - Enmascaramiento obligatorio de números de tarjetas (`formatearTarjetaCredito()`) para blindaje de PII.
+   - Creación incondicional de respaldos previos (`*_original.*`) para cada archivo intervenido.
+
+---
+
+### 2. Detalle Técnico de Intervenciones y Páginas Modernizadas
+
+#### 2.1. Sistema de Estilos y Tokens Compartidos (`css/dashboard.css`, `css/estilos.css`, `css/estilos2.css`, `css/estilos-menu.css`)
+- Se extendió `css/dashboard.css` incorporando clases estructurales reutilizables:
+  - `.page-container`: Contenedor principal responsive con márgenes controlados y compatibilidad fluida.
+  - `.modern-card`: Contenedor tipo tarjeta con bordes suaves, sombras sutiles y soporte nativo de modo oscuro (`[data-theme="dark"]`).
+  - `.modern-table`: Tablas responsive con cabeceras institucionales, alternancia de filas y estados hover.
+  - `.btn-modern-primary`, `.btn-modern-secondary`: Botones con micro-interacciones hover y gradientes sutiles.
+  - `.alert-modern`: Banners informativos con variantes `success`, `warning`, `danger` e `info`.
+  - `.btn-modern-flotante`: Botón flotante estilizado para volver atrás en cualquier pantalla.
+  - `.batch-terminal-output`: Visor tipo terminal de código de ancho fijo (`Fira Code`, monospace) con resaltado y botón de copiado al portapapeles.
+- Integración en hojas de estilo secundarias (`estilos.css`, `estilos2.css`, `estilos-menu.css`) mediante `@import url('dashboard.css');` y armonización de variables globales.
+
+#### 2.2. Módulo de Lotes Bancarios y Validaciones
+1. **`GenerarCargaCredito2026.php`**:
+   - Respaldo: `GenerarCargaCredito2026_original.php`.
+   - Generador de lote `NOVCAR.782` (código op. 6339, 80 bytes/registro, CRLF).
+   - Incorporación de métricas de lote en tiempo real, visor tipo terminal con botón de copia con CRLF y descarga HTTP directa `?descargar=1`.
+2. **`GenerarCargaCredito2.php`**:
+   - Respaldo: `GenerarCargaCredito2_original.php`.
+   - Modernización de la interfaz del generador desde tabla `acreditar` con top-nav y terminal interactivo.
+3. **`GenerarCargaCredito.php`**:
+   - Respaldo: `GenerarCargaCredito_original.php`.
+   - Actualización visual a la paleta corporativa y enlace al generador 2026.
+4. **`VerificarNovcar.php`**:
+   - Respaldo: `VerificarNovcar_original.php`.
+   - Auditor de registros de 80 bytes y verificación de CRLF. Búsqueda y comparación con DNI mediante prepared statements PDO.
+5. **`cereo_upload.php` & `generar_novdes.php`**:
+   - Respaldos: `cereo_upload_original.php`, `generar_novdes_original.php`.
+   - Modernización del formulario de cereo de saldos y generación del lote `NOVTRAN.782` (código op. 62 para descarga / 63 para carga).
+6. **`ValidarAltas.php`**:
+   - Respaldo: `ValidarAltas_original.php`.
+   - Validador posicional de 128 bytes + CRLF (130 bytes exactos) para lotes `Altas.txt` y `ALTAUSUCBPRE.782` con tabla de auditoría línea por línea.
+7. **`V2/Altas.php`**:
+   - Respaldo: `V2/Altas_original.php`.
+   - Conversor de CSV de altas a formato posicional fijo de 128 bytes (3 registros por titular). Se incorporó top-nav, dark mode, visor batch y botón de descarga directa HTTP con CRLF.
+
+#### 2.3. Módulo de Acreditación y Procesamiento de Planillas
+1. **`AcreditarSaldos2026.php` & `AcreditarSaldos.php`**:
+   - Respaldos: `AcreditarSaldos2026_original.php`, `AcreditarSaldos_original.php`.
+   - Modernización de la pantalla de confirmación de acreditación, métricas financieras de compras y cajero, tabla de beneficiarios y previsualización de saldo.
+2. **`AcreditarSaldos-2023.php`**:
+   - Respaldo: `AcreditarSaldos-2023_original.php`.
+   - Adaptación visual del procesador histórico con tarjetas modernas y control de ejecución.
+3. **`ProcesarCarga.php`**:
+   - Respaldo: `ProcesarCarga_original.php`.
+   - Lector y conciliador del archivo de respuesta bancaria `RespuestaCargas.txt` (RCAR) con badges de éxito y rechazo.
+4. **`ProcesarDescargaSaldos.php`**:
+   - Respaldo: `ProcesarDescargaSaldos_original.php`.
+   - Procesador de bajas de crédito `DescargaSaldos.xlsx`, visor de lote `NOVDES.782` y descarga directa.
+5. **`ChequeoAcreditacion.php`**:
+   - Respaldo: `ChequeoAcreditacion_original.php`.
+   - Auditor de planillas `Acreditaciones.xlsx` vs padrón de beneficiarios. Comparación de nombres y apellidos por DNI con badges `CORRECTO` / `VERIFICAR`.
+6. **`CargaTarjetaDeExcelBD.php`**:
+   - Respaldo: `CargaTarjetaDeExcelBD_original.php`.
+   - Importador de `AltaCargas.xlsx` a la tabla `acreditar` con conteo de compras/cajero, resumen financiero y tabla estilizada.
+7. **`AcreditarCSV.php`, `uploadcsv.php` & `ProcesarCSVAcreditacion.php`**:
+   - Respaldos: `AcreditarCSV_original.php`, `uploadcsv_original.php`, `ProcesarCSVAcreditacion_original.php`.
+   - Flujo de subida e importación de archivos CSV de acreditaciones con validación estricta de CUIT/CUIL, inserción parametrizada y métricas.
+
+#### 2.4. Módulo de Movimientos y Extractos Mensuales
+1. **`ProcesarMovimientos.html` & `ProcesarMovimientos2.php`**:
+   - Respaldos: `ProcesarMovimientos_original.html`, `ProcesarMovimientos2_original.php`.
+   - Rediseño del formulario selector de mes/año y del procesador de extractos mensuales `Movimientos.txt` con control de duplicados y métricas.
+2. **`ReporteMovimientos.php`**:
+   - Respaldo: `ReporteMovimientos_original.php`.
+   - Catálogo general de movimientos por período mensual con tabla moderna e importe formateado.
+3. **`ReporteMovimientosPorNombre.php`**:
+   - Respaldo: `ReporteMovimientosPorNombre_original.php`.
+   - Listado alfabético de titulares con enlace a su extracto individual.
+4. **`consultaMovimiento.php`**:
+   - Respaldo: `consultaMovimiento_original.php`.
+   - Extracto de cuenta imprimible por período con tarjeta enmascarada y estilos limpios para impresión `@media print`.
+5. **`consultaMovimientoPorDNI.php` & `consultaMovimientoPorNombre.php`**:
+   - Respaldos: `consultaMovimientoPorDNI_original.php`, `consultaMovimientoPorNombre_original.php`.
+   - Refactorización de seguridad reemplazando concatenaciones SQL por prepared statements PDO/mysqli, enmascaramiento de plásticos y top-nav.
+
+#### 2.5. Módulo de Padrón, Consultas y CRUD de Beneficiarios
+1. **`consultaBeneficiario.php`**:
+   - Respaldo: `consultaBeneficiario_original.php`.
+   - Buscador individual por DNI con ficha técnica moderna y tarjeta enmascarada.
+2. **`ReporteAltaBeneficiarios.php`**:
+   - Respaldo: `ReporteAltaBeneficiarios_original.php`.
+   - Padrón interactivo ordenable con búsqueda en tiempo real y tarjetas protegidas.
+3. **`reporte_tarjetas.php`**:
+   - Respaldo: `reporte_tarjetas_original.php`.
+   - Catálogo de plásticos con filtrado por estado (Habilitada, Bloqueada, Extravío), enmascaramiento y exportación a CSV.
+4. **`ProcesarMaestroPlasticosArchivo.php` & `ProcesarMaestroPlasticos.php`**:
+   - Respaldos: `ProcesarMaestroPlasticosArchivo_original.php`, `ProcesarMaestroPlasticos_original.php`.
+   - Reemplazo de `prompt()` JavaScript por tarjeta institucional moderna. Procesamiento de `MAESPLAS.txt` con badges de estado, tarjetas enmascaradas y métricas.
+5. **`crud/index.php`, `crud/create.php`, `crud/edit.php`**:
+   - Respaldos: `crud/index_original.php`, `crud/create_original.php`, `crud/edit_original.php`.
+   - Modernización de DataTables con estilos de modo oscuro, inserción y edición mediante prepared statements, confirmación modal de eliminación y tarjetas enmascaradas.
+6. **`crud-acreditacion/crud.php` & `crud-acreditacion/styles.css`**:
+   - Respaldos: `crud-acreditacion/crud_original.php`, `crud-acreditacion/styles_original.css`.
+   - Formulario interactivo de carga manual por CUIT y monto, cálculo dinámico de totales, tabla estilizada y modo oscuro.
+7. **`LeerAltasaBD.php` & `RespuestaAltas.php`**:
+   - Respaldos: `LeerAltasaBD_original.php`, `RespuestaAltas_original.php`.
+   - Modernización integral con top-nav, tarjetas, métricas y enmascaramiento de tarjetas bancarias.
+
+#### 2.6. Vistas de Soporte, Menú y Multimedia
+1. **`subir_novcar.php`, `subir_excel_altas.php`, `subir_excel_acreditaciones.php`, `subir_respuesta_cargas.php`**:
+   - Formatos uniformes con tarjetas de carga, top-nav y modo oscuro.
+2. **`videos.html`**:
+   - Respaldo: `videos_original.html`.
+   - Conversión de iframes sueltos en una galería responsive moderna con tarjetas, títulos y descripciones de capacitación operativa.
+3. **`index_old.php`**:
+   - Respaldo: `index_old_original.php`.
+   - Transformación del manual operativo histórico en tarjetas de procedimientos paso a paso con modo oscuro y cabecera institucional.
+4. **`index_menu_original.php`**:
+   - Enlace directo al Tablero Moderno, carga de `dashboard.css` y `js/theme.js`.
+
+---
+
+### 3. Matriz de Verificación y Pruebas Ejecutadas (23/10/2026)
+
+| Prueba | Comando / Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :---: |
+| **Lint Sintáctico Exhaustivo** | `find . -name "*.php" -exec /opt/lampp/bin/php -l {} \;` | 0 errores de sintaxis en el 100% de archivos PHP | ✅ PASÓ |
+| **Compatibilidad PHP 5.6** | Verificación de ausencia de operadores PHP 7+ (`??`, match, return types) | Totalmente compatible con PHP 5.6.40 | ✅ PASÓ |
+| **Protección contra Inyección SQL** | Revisión de consultas en `crud/`, `consultaMovimiento*.php`, `VerificarNovcar.php` | Prepared statements implementados | ✅ PASÓ |
+| **Enmascaramiento de Tarjetas** | Inspección de `formatearTarjetaCredito()` en reportes, tablas y fichas | `XXXX.XX**.****.XXXX` activo | ✅ PASÓ |
+| **Persistencia de Modo Oscuro** | Validación de `js/theme.js` y `[data-theme="dark"]` | Conmutación instantánea y guardado en `localStorage` | ✅ PASÓ |
+| **Integridad de Lotes Cabal** | Validación de CRLF (`\r\n`) y longitudes fijas (80 / 128 bytes) | Formatos reglamentarios intactos | ✅ PASÓ |
 
 ---
 

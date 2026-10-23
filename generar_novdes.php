@@ -108,45 +108,130 @@ if (isset($_POST['submit']) && isset($_FILES['archivo_csv'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador NOVDES - Vista Previa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador NOVDES.782 | Sistema Cabal FSR</title>
+    <link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
     <style>
-        body { font-family: 'Courier New', Courier, monospace; background: #f0f2f5; padding: 20px; color: #333; }
-        .container { background: white; max-width: 900px; margin: 0 auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { font-family: sans-serif; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .preview-box { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; white-space: pre; font-size: 13px; margin-top: 20px; border: 1px solid #000; }
-        .btn-process { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-download { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1.1em; margin-top: 20px; }
-        .alert { padding: 10px; margin-bottom: 20px; border-radius: 4px; font-family: sans-serif; }
-        .info { font-family: sans-serif; font-size: 0.9em; color: #666; margin-bottom: 20px; }
+        .page-container {
+            max-width: 1000px;
+            margin: 32px auto 50px;
+            padding: 0 20px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Generador de Novedades (NOVDES)</h2>
-    
-    <?php if (!$contenido_final): ?>
-        <p class="info">Sube el archivo CSV para procesar y ver la vista previa antes de exportar.</p>
-        <?php echo $mensaje; ?>
-        <form action="" method="post" enctype="multipart/form-data">
-            <input type="file" name="archivo_csv" accept=".csv" required style="margin-bottom: 20px; display: block;">
-            <button type="submit" name="submit" class="btn-process">PROCESAR CSV</button>
-        </form>
-    <?php else: ?>
-        <div class="alert" style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; font-family: sans-serif;">
-            ✓ CSV Procesado con éxito. Revisa el contenido abajo.
+<header class="top-nav">
+    <div class="top-nav-inner">
+        <a href="index.php" class="brand-group" id="brand-link">
+            <div class="brand-logo-wrap">
+                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+            </div>
+            <div class="brand-text">
+                <h1>
+                    CABAL FSR
+                    <span class="brand-badge">Entidad 782</span>
+                </h1>
+                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="index.php" class="btn-nav-action primary" id="btn-volver-tablero">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver al Tablero
+            </a>
+
+            <a href="ayuda.html" target="_blank" class="btn-nav-action" id="btn-ayuda">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                Guía Operativa
+            </a>
         </div>
+    </div>
+</header>
 
-        <h3 style="font-family: sans-serif;">Vista Previa del Archivo (Ancho fijo 80 car.)</h3>
-        <div class="preview-box"><?php echo htmlspecialchars($contenido_final); ?></div>
+<main class="page-container">
 
-        <form action="" method="post">
-            <input type="hidden" name="contenido_archivo" value="<?php echo htmlspecialchars($contenido_final); ?>">
-            <button type="submit" name="descargar_archivo" class="btn-download">DESCARGAR ARCHIVO NOVDES.782</button>
-            <a href="" style="margin-left: 20px; font-family: sans-serif; color: #e74c3c;">Cancelar y subir otro</a>
-        </form>
-    <?php endif; ?>
-</div>
+    <section class="help-hero-banner" style="margin-bottom: 24px;">
+        <div class="help-hero-text">
+            <h2>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--amber-500);">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                Generador de Novedades de Descarga (NOVDES.782)
+            </h2>
+            <p>
+                Procesamiento de CSV y generación de lote de débito / descarga con vista previa posicional de 80 bytes.
+            </p>
+        </div>
+    </section>
+
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <div class="modern-card-title-group">
+                <h3><?php echo !$contenido_final ? 'Subir Planilla CSV' : 'Vista Previa del Lote Generado'; ?></h3>
+                <p>Ancho reglamentario posicional de 80 caracteres por fila</p>
+            </div>
+        </div>
+        <div class="modern-card-body">
+            <?php if (!$contenido_final): ?>
+                <div class="alert-modern info">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <div>Sube el archivo CSV para procesar y ver la vista previa antes de exportar al mainframe Cabal.</div>
+                </div>
+
+                <?php if($mensaje) echo $mensaje; ?>
+
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="form-group-modern">
+                        <label for="archivo_csv">Archivo CSV (.csv):</label>
+                        <input type="file" name="archivo_csv" id="archivo_csv" class="form-control-modern" accept=".csv" required>
+                    </div>
+                    <button type="submit" name="submit" class="btn-modern-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Procesar CSV y Ver Vista Previa
+                    </button>
+                </form>
+            <?php else: ?>
+                <div class="alert-modern success">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <div>
+                        <strong>✓ CSV Procesado con éxito.</strong> Revisa el contenido posicional del lote en el visor inferior.
+                    </div>
+                </div>
+
+                <div class="batch-terminal-output"><?php echo htmlspecialchars($contenido_final); ?></div>
+
+                <form action="" method="post" style="margin-top: 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                    <input type="hidden" name="contenido_archivo" value="<?php echo htmlspecialchars($contenido_final); ?>">
+                    <button type="submit" name="descargar_archivo" class="btn-modern-success">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Descargar Archivo NOVDES.782
+                    </button>
+                    <a href="generar_novdes.php" class="btn-modern-secondary">Procesar otro archivo</a>
+                </form>
+            <?php endif; ?>
+        </div>
+    </div>
+</main>
+
+<a href="index.php" class="btn-modern-flotante" title="Volver al Tablero Principal">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Volver al Tablero
+</a>
 
 </body>
 </html>

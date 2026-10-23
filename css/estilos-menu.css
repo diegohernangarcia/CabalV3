@@ -1,92 +1,116 @@
-nav {
-    &.primary-navigation {
-      margin: 0 auto;
-      display: block;
-    
-      padding: 10px 0 0 0;  
-      text-align: center;
-      font-size: 16px;
-  
-      ul li {
-        list-style: none;
-        margin: 0 auto;
-        border-left: 2px solid #25619B;
-        display: inline-block;
-        padding: 0 30px;
-        position: relative;
-        text-decoration: none;
-        text-align: center;
-        font-family: arvo;
-      }
-  
-      li a {
-        color: black;
-      }
-  
-      li a:hover {
-        color: #25619B;
-      }
-  
-      li:hover {
-        cursor: pointer;
-      }
-  
-      ul li ul {
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-  padding-left: 0;
-        left: 0;
-        display: none;
-        background: white;
-      }
-  
-      ul li:hover > ul,
-      ul li ul:hover {
-        visibility: visible;
-        opacity: 1;
-        display: block;
-        min-width: 250px;
-        text-align: left;
-        padding-top: 20px;
-        box-shadow: 0px 3px 5px -1px #ccc;
-      }
-  
-      ul li ul li {
-        clear: both;
-        width: 100%;
-        text-align: left;
-        margin-bottom: 20px;
-        border-style: none;
-      }
-  
-      ul li ul li a:hover {
-        padding-left: 10px;
-        border-left: 2px solid #25619B;
-        transition: all 0.3s ease;
-      }
-    }
-  }
-  
-  a {
-  
-      text-decoration: none;
-  
-      &:hover {
-          color: #25619B;
-      }
-   
-  }
-  
-   ul li ul li a { transition: all 0.5s ease; }
-  
-   div {
-    /* text-align: center; */
-    display: flex;
+/**
+ * CABAL FSR - Menú Clásico Armonizado
+ * Integrado con el Sistema de Diseño Institucional (dashboard.css)
+ */
+@import url('dashboard.css');
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+nav.primary-navigation {
+  margin: 0 auto;
+  display: block;
+  padding: 16px 0;
+  text-align: center;
+  font-size: 15px;
+  background: var(--top-nav-bg);
+  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+nav.primary-navigation ul {
+  padding: 0;
+  margin: 0;
+}
+
+nav.primary-navigation ul li {
+  list-style: none;
+  margin: 0 auto;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  display: inline-block;
+  padding: 0 24px;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+}
+
+nav.primary-navigation li a {
+  color: #f1f5f9;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+nav.primary-navigation li a:hover {
+  color: var(--primary-500);
+}
+
+nav.primary-navigation li:hover {
+  cursor: pointer;
+}
+
+nav.primary-navigation ul li ul {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  padding: 12px 0;
+  left: 0;
+  top: 100%;
+  display: none;
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xl);
+  z-index: 100;
+}
+
+nav.primary-navigation ul li:hover > ul,
+nav.primary-navigation ul li ul:hover {
+  visibility: visible;
+  opacity: 1;
+  display: block;
+  min-width: 260px;
+  text-align: left;
+}
+
+nav.primary-navigation ul li ul li {
+  clear: both;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+  padding: 8px 18px;
+  border-left: none;
+}
+
+nav.primary-navigation ul li ul li a {
+  color: var(--text-main);
+  display: block;
+  font-size: 0.88rem;
+  transition: all var(--transition-fast);
+}
+
+nav.primary-navigation ul li ul li a:hover {
+  color: var(--primary-600);
+  padding-left: 6px;
+}
+
+.menu-fondo-wrap {
+  display: flex;
   justify-content: center;
   align-items: center;
-  height: 800px;
+  min-height: calc(100vh - 120px);
+  padding: 40px 20px;
+}
 
-
-
-   }
+.menu-fondo-wrap img.fondo {
+  max-width: 800px;
+  width: 90%;
+  height: auto;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-light);
+}

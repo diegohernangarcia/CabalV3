@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="css/estilos-menu.css">
     <!-- <link rel="stylesheet" type="text/css" href="css/estilos2.css" /> -->
     <link rel="icon" href="img/favicon.png">
-
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/estilos-menu.css">
+    <script src="js/theme.js"></script>
 </head>
 <body>
     
-<link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
 <nav role="navigation" class="primary-navigation" >
-    <!-- <img id="logo" src="img/cabal2.png"> -->
     <ul>
+    <li><a href="index.php" style="color: var(--primary-500); font-weight: bold;">&larr; Tablero Principal</a></li>
     <li><a href="#">Beneficiarios &dtrif;</a>
         <ul class="dropdown">
             <li><a href="SubirArchivo.html">Cargar Archivo de Altas</a></li>
@@ -79,8 +80,8 @@
     <li><a href="ayuda.html" target="_blank">Ayuda</a></li>
   </ul>
 </nav>
-<div>
-<img src="img/Cabal_fondo2.jpg" class="fondo" alt="">
+<div class="menu-fondo-wrap">
+<img src="img/Cabal_fondo2.jpg" class="fondo" alt="Fondo Cabal">
 </div>
 </body>
 </html>

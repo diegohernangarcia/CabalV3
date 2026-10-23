@@ -111,36 +111,114 @@ if (isset($_POST['submit']) && isset($_FILES['archivo_csv'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador NOVTRAN.782</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador NOVTRAN.782 | Sistema Cabal FSR</title>
+    <link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 40px; text-align: center; }
-        .box { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; width: 100%; max-width: 400px; }
-        .specs { text-align: left; font-size: 0.85em; background: #fffde7; padding: 10px; border: 1px solid #fff59d; margin-bottom: 20px; }
-        input[type="file"] { margin: 20px 0; display: block; width: 100%; }
-        button { background: #1b5e20; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
-        button:hover { background: #2e7d32; }
+        .page-container {
+            max-width: 680px;
+            margin: 32px auto 50px;
+            padding: 0 20px;
+        }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h3>Cereo Cabal - NOVTRAN.782</h3>
-    <div class="specs">
-        <b>Formato de archivo:</b><br>
-        • Todos los registros inician con: <b>TE04</b><br>
-        • Carga: <b>63</b> / Descarga: <b>62</b><br>
-        • Largo de línea: <b>80 car.</b><br>
-        • Salto de línea al final del trailer: <b>SÍ</b>
+<header class="top-nav">
+    <div class="top-nav-inner">
+        <a href="index.php" class="brand-group" id="brand-link">
+            <div class="brand-logo-wrap">
+                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+            </div>
+            <div class="brand-text">
+                <h1>
+                    CABAL FSR
+                    <span class="brand-badge">Entidad 782</span>
+                </h1>
+                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="index.php" class="btn-nav-action primary" id="btn-volver-tablero">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver al Tablero
+            </a>
+
+            <a href="ayuda.html" target="_blank" class="btn-nav-action" id="btn-ayuda">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                Guía Operativa
+            </a>
+        </div>
     </div>
+</header>
 
-    <?php if($mensaje) echo $mensaje; ?>
+<main class="page-container">
 
-    <form action="" method="post" enctype="multipart/form-data">
-        <label>Subir CSV para procesar:</label>
-        <input type="file" name="archivo_csv" accept=".csv" required>
-        <button type="submit" name="submit">GENERAR Y DESCARGAR</button>
-    </form>
-</div>
+    <section class="help-hero-banner" style="margin-bottom: 24px;">
+        <div class="help-hero-text">
+            <h2>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--emerald-500);">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                Cereo Cabal - NOVTRAN.782
+            </h2>
+            <p>
+                Generador y descarga directa de transferencias y débitos específicos bajo formato posicional reglamentario.
+            </p>
+        </div>
+    </section>
+
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <div class="modern-card-title-group">
+                <h3>Subir CSV y Emitir Lote</h3>
+                <p>Procese su archivo CSV con CUIT, Monto y Tipo (C = Carga, D = Descarga)</p>
+            </div>
+        </div>
+        <div class="modern-card-body">
+            <div class="alert-modern info" style="margin-bottom: 20px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <div>
+                    <strong>Especificación Técnica Cabal:</strong><br>
+                    • Prefijo de registro: <code>TE04</code><br>
+                    • Operaciones: <code>63</code> (Carga) / <code>62</code> (Descarga)<br>
+                    • Ancho fijo: <code>80 caracteres</code> por fila con salto final CRLF
+                </div>
+            </div>
+
+            <?php if($mensaje) echo $mensaje; ?>
+
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-group-modern">
+                    <label for="archivo_csv">Archivo CSV (.csv):</label>
+                    <input type="file" name="archivo_csv" id="archivo_csv" class="form-control-modern" accept=".csv" required>
+                </div>
+                <button type="submit" name="submit" class="btn-modern-primary" style="width: 100%;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Generar y Descargar NOVTRAN.782
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<a href="index.php" class="btn-modern-flotante" title="Volver al Tablero Principal">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Volver al Tablero
+</a>
 
 </body>
 </html>

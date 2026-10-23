@@ -1,173 +1,237 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/estilos.css" />
-    <link rel="icon" href="img/favicon.png">
-    <title>Cabal</title>
-</head>
-<body>
-    
 <?php
+/**
+ * CABAL - Familia Rionegrina Solidaria (FSR / SeNAF)
+ * Consulta de Movimientos por Período
+ */
 
 require_once("BD/Funciones.php");
 require_once("BD/BD.php");
+
 $servername = "localhost";
 $username = "pucho";
 $password = "78900";
 $dbname = "cabal";
 
-// Obtener parámetros del formulario
-$mes = $_GET['mes'];
-$anio = $_GET['anio'];
-$archivo = $_GET['archivo'];
+$mes = isset($_GET['mes']) ? $_GET['mes'] : '';
+$anio = isset($_GET['anio']) ? $_GET['anio'] : '';
+$archivo = isset($_GET['archivo']) ? $_GET['archivo'] : '';
 
-// Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
+$conn->set_charset("utf8");
 
-// Verificar conexión
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
 $sql = "SELECT * FROM movimientos WHERE Mes = ? AND Anio = ? AND Archivo = ?";
-//echo $sql;
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("sis", $mes, $anio, $archivo);
 $stmt->execute();
 $result = $stmt->get_result();
-
+$total_movimientos = $result ? $result->num_rows : 0;
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Resultados de Movimientos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extracto de Movimientos — <?php echo htmlspecialchars($mes . " " . $anio); ?> | Sistema Cabal FSR</title>
+    <link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .page-container {
+            max-width: 1500px;
+            margin: 0 auto 50px;
+            padding: 0 24px;
         }
-        table, th, td {
-            border: 1px solid black;
+
+        .op-badge-initial {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+            font-weight: 700;
+            font-size: 0.75rem;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+
+        .op-badge-cargas {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: rgba(59, 130, 246, 0.15);
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 0.75rem;
         }
-        th {
-            background-color: #f2f2f2;
+
+        .op-badge-autoriz {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+            font-weight: 700;
+            font-size: 0.75rem;
         }
+
+        .op-badge-final {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: rgba(126, 34, 206, 0.15);
+            color: #7e22ce;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        [data-theme="dark"] .op-badge-initial { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; }
+        [data-theme="dark"] .op-badge-cargas  { background: rgba(59, 130, 246, 0.25); color: #93c5fd; }
+        [data-theme="dark"] .op-badge-autoriz { background: rgba(245, 158, 11, 0.25); color: #fde68a; }
+        [data-theme="dark"] .op-badge-final   { background: rgba(168, 85, 247, 0.25); color: #d8b4fe; }
     </style>
 </head>
 <body>
 
-<h2>Resultados de Movimientos para Año: <?php echo htmlspecialchars($anio); ?>, Mes: <?php echo htmlspecialchars($mes); ?>, Archivo: <?php echo htmlspecialchars($archivo); ?></h2>
-<a href="javascript:window.print()" >Imprimir (Seleccionar Escala 70%)</a>  <br>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Banco</th>
-        <th>Sucursal</th>
-        <th>Cuenta</th>
-        <th>Tarjeta</th>
-        <th>Tipo Documento</th>
-        <th>Documento</th>
-        <th>Nombre y Apellido</th>
-        <th>Cod. Operacion</th>
-        <th>Fecha</th>
-        <th>Comercio</th>
-        <th>Importe</th>
-        <th>Signo</th>
-        <th>Importe2</th>
-        <th>Signo2</th>
-        <th>Mes</th>
-        <th>Año</th>
-        <th>Archivo</th>
-        <!-- Añade más encabezados de columna según los campos de tu tabla -->
-    </tr>
+<header class="top-nav">
+    <div class="top-nav-inner">
+        <a href="index.php" class="brand-group" id="brand-link">
+            <div class="brand-logo-wrap">
+                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+            </div>
+            <div class="brand-text">
+                <h1>
+                    CABAL FSR
+                    <span class="brand-badge">Entidad 782</span>
+                </h1>
+                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            </div>
+        </a>
 
-    <?php
-    if ($result->num_rows > 0) {
-        // Salida de los datos de cada fila
-        while($row = $result->fetch_assoc()) {
-            switch ($row["CodigoOperacion"])
-            {         
-                case "SALDO INICIAL" : 
-                    echo "<tr class='back-green'>";
-                    
-                    break;
-                case "SALDO FINAL":
-                    echo "<tr class='back-red   '>";
-                    break;
-                case "CARGA/DESCARGA":
-                    echo "<tr class='back-yellow'>";
-                    break;
-                case "AUTORIZACIONES":
-                    echo "<tr class='back-blue'>";
-                    break;
-                default :
-                    echo "<tr>"; 
+        <div class="nav-actions">
+            <a href="ReporteMovimientos.php" class="btn-nav-action primary" id="btn-volver-reporte">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver a Reportes
+            </a>
 
-            }
-            
-            //echo "<tr>";
-            echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Banco"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Sucursal"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Cuenta"]) . "</td>";
-            echo "<td>" . htmlspecialchars(formatearTarjetaCredito($row["Tarjeta"])) . "</td>";
-            echo "<td>" . htmlspecialchars(DevueltoTipoDoc($row["TipoDocumento"])) . "</td>";
-            echo "<td>" . EliminarCerosIzquierda(htmlspecialchars($row["Documento"])) . "</td>";
-            echo "<td>" . htmlspecialchars($row["NombreApellido"]) . "</td>";
-           // echo "<td>" . htmlspecialchars($row["CodigoOperacion"]) . "</td>";
-            // switch ($row["CodigoOperacion"])
-            // {         
-            //     case "SALDO INICIAL" : 
-            //         echo "<td class='texto-verde'>" . htmlspecialchars($row["CodigoOperacion"]) . "</td>";
-                    
-            //         break;
-            //     case "SALDO FINAL":
-            //         echo "<td class='texto-rojo'>" . htmlspecialchars($row["CodigoOperacion"]) . "</td>";
-            //         break;
-            //     default :
-            //         echo "<td>" . htmlspecialchars($row["CodigoOperacion"]) . "</td>";
+            <button type="button" class="btn-nav-action" onclick="window.print()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Imprimir
+            </button>
 
-            // }
-            echo "<td>" . htmlspecialchars($row["CodigoOperacion"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Fecha"]) . "</td>";
-     
+            <a href="ayuda.html" target="_blank" class="btn-nav-action" id="btn-ayuda">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                Guía Operativa
+            </a>
+        </div>
+    </div>
+</header>
 
+<main class="page-container" style="margin-top: 32px;">
 
+    <section class="help-hero-banner">
+        <div class="help-hero-text">
+            <h2>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--purple-600);">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                Extracto de Movimientos: <?php echo htmlspecialchars($mes . " " . $anio); ?> (Archivo #<?php echo htmlspecialchars($archivo); ?>)
+            </h2>
+            <p>
+                Listado consolidado de movimientos, consumos y recargas de plásticos Cabal.
+            </p>
+        </div>
+    </section>
 
-            echo "<td>" . htmlspecialchars($row["Comercio"]) . "</td>";
-            echo "<td>" . htmlspecialchars(formatCurrency2($row["Importe"])) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Signo"]) . "</td>";
-            echo "<td>" . htmlspecialchars(formatCurrency2($row["Importe2"])) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Signo2"]) . "</td>";
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <div class="modern-card-title-group">
+                <h3>Detalle de Operaciones</h3>
+                <p>Total de registros: <?php echo $total_movimientos; ?></p>
+            </div>
+            <div>
+                <button type="button" class="btn-modern-secondary" onclick="window.print()" style="padding: 8px 16px; font-size: 0.84rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    Imprimir Informe
+                </button>
+            </div>
+        </div>
+        <div class="modern-card-body" style="padding: 0;">
+            <div class="modern-table-responsive" style="margin: 0; border: none; max-height: 580px; overflow-y: auto;">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cuenta</th>
+                            <th>Tarjeta</th>
+                            <th>Documento</th>
+                            <th>Titular</th>
+                            <th>Operación</th>
+                            <th>Fecha</th>
+                            <th>Comercio</th>
+                            <th>Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($result && $result->num_rows > 0): ?>
+                            <?php while ($row = $result->fetch_assoc()): 
+                                $codOp = $row["CodigoOperacion"];
+                                $badgeClass = 'op-badge-initial';
+                                if ($codOp == 'SALDO FINAL') $badgeClass = 'op-badge-final';
+                                elseif ($codOp == 'CARGA/DESCARGA') $badgeClass = 'op-badge-cargas';
+                                elseif ($codOp == 'AUTORIZACIONES') $badgeClass = 'op-badge-autoriz';
+                            ?>
+                            <tr>
+                                <td><code>#<?php echo htmlspecialchars($row["id"]); ?></code></td>
+                                <td><strong><?php echo htmlspecialchars($row["Cuenta"]); ?></strong></td>
+                                <td><code><?php echo htmlspecialchars(formatearTarjetaCredito($row["Tarjeta"])); ?></code></td>
+                                <td><?php echo htmlspecialchars(DevueltoTipoDoc($row["TipoDocumento"])) . " " . EliminarCerosIzquierda(htmlspecialchars($row["Documento"])); ?></td>
+                                <td><strong><?php echo htmlspecialchars($row["NombreApellido"]); ?></strong></td>
+                                <td><span class="<?php echo $badgeClass; ?>"><?php echo htmlspecialchars($codOp); ?></span></td>
+                                <td><?php echo htmlspecialchars($row["Fecha"]); ?></td>
+                                <td><?php echo htmlspecialchars($row["Comercio"]); ?></td>
+                                <td style="font-weight: 700; color: <?php echo ($row["Signo"] == '-' ? '#ef4444' : 'var(--emerald-600)'); ?>;">
+                                    <?php echo $row["Signo"] . "$" . number_format((float)$row["Importe"], 2, ',', '.'); ?>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="9" style="text-align: center; padding: 32px; color: var(--text-muted);">
+                                    No se encontraron movimientos registrados para este período.
+                                </td>
+                            </tr>
+                        <?php endif; 
+                        $stmt->close();
+                        $conn->close();
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
+</main>
 
-
-            echo "<td>" . htmlspecialchars($row["Mes"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Anio"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["Archivo"]) . "</td>";
-            // Añade más celdas según los campos de tu tabla
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='4'>No se encontraron resultados</td></tr>";
-    }
-    // echo $sql."<br>";
-    $consulta= "SELECT * FROM movimientos WHERE Mes = '$mes' AND Anio = $anio AND Archivo = $archivo";
-    
-    $conn->close();
-    ExportaraExcelMovimientosPorMes($consulta);
-    
-    ?>
-</table>
-<a href="javascript:history.back()" class="btn-flotante">Volver Atras</a>  
-
+<a href="ReporteMovimientos.php" class="btn-modern-flotante" title="Volver al Reporte General">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Volver a Reportes
+</a>
 
 </body>
 </html>

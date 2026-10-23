@@ -15,29 +15,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["file"])) {
 
     // Nombre final fijo
     $targetFilePath = $targetDir . "RespuestaCargas.txt";
-    //$targetFilePath = strtolower ($targetFilePath);
+
     // Validar extensión
     if ($fileType === "txt") {
         if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)) {
             $mensaje = "
-            <div class='alert alert-success'>
-                ✅ El archivo fue subido correctamente como <b>RespuestaCargas.txt</b>.
-                <div class='mt-3'>
-                    <a href='index.php' class='btn btn-primary'>Volver al inicio</a>
+            <div class='alert-modern success'>
+                <div>
+                    ✅ El archivo fue subido correctamente como <b>RespuestaCargas.txt</b>.
+                    <div style='margin-top: 12px;'>
+                        <a href='ProcesarCarga.php' class='btn-modern-primary'>Procesar Respuesta Cargas</a>
+                        <a href='index.php' class='btn-modern-secondary' style='margin-left: 8px;'>Volver al inicio</a>
+                    </div>
                 </div>
             </div>";
         } else {
-            $mensaje = "<div class='alert alert-danger'>❌ Error al mover el archivo.</div>";
+            $mensaje = "<div class='alert-modern danger'>❌ Error al mover el archivo al servidor.</div>";
         }
-    } elseif ($fileType === "xls" || $fileType === "ods" || $fileType === "xlsx"){
-        $mensaje = "
-        <div class='alert alert-warning'>
-            ⚠️ Solo se admite archivo <b>RespuestaCargas.txt</b> <br>
-            
-        </div>";
     } else {
         $mensaje = "
-        <div class='alert alert-danger'>
+        <div class='alert-modern danger'>
             ❌ Formato de archivo no permitido. Solo se acepta <b>.txt</b>.
         </div>";
     }
@@ -47,34 +44,76 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["file"])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Subir Excel</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Respuesta de Cargas | Sistema Cabal FSR</title>
+    <link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
+    <style>
+        .page-container {
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Subir archivo Excel</h4>
-                    </div>
-                    <div class="card-body">
-                        <?php if (!empty($mensaje)) { echo $mensaje; } ?>
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <label for="file" class="form-label">Seleccionar archivo:</label>
-                                <input type="file" name="file" id="file" class="form-control" accept="*.txt" required>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100">Subir Archivo</button>
-                        </form>
-                    </div>
-                </div>
+<body>
+
+<header class="top-nav">
+    <div class="top-nav-inner">
+        <a href="index.php" class="brand-group">
+            <div class="brand-logo-wrap">
+                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
             </div>
+            <div class="brand-text">
+                <h1>
+                    CABAL FSR
+                    <span class="brand-badge">Entidad 782</span>
+                </h1>
+                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="index.php" class="btn-nav-action primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver al Tablero
+            </a>
+            <a href="SubirArchivo.html" class="btn-nav-action">Centro de Subidas</a>
         </div>
     </div>
+</header>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<main class="page-container">
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <div class="modern-card-title-group">
+                <h3>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-600);">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Subir Respuesta de Cargas (RespuestaCargas.txt)
+                </h3>
+                <p>Carga del archivo de devolución devuelto por la plataforma Cabal</p>
+            </div>
+        </div>
+        <div class="modern-card-body">
+            <?php if (!empty($mensaje)) { echo $mensaje; } ?>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-group-modern">
+                    <label for="file">Seleccionar archivo de texto (.txt):</label>
+                    <input type="file" name="file" id="file" class="form-control-modern" accept=".txt" required>
+                </div>
+                <button type="submit" class="btn-modern-primary" style="width: 100%;">Subir Respuesta de Cargas</button>
+            </form>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>

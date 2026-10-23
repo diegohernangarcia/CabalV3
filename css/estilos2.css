@@ -1,14 +1,22 @@
+/**
+ * CABAL FSR - Estilos Complementarios
+ * Integrado con el Sistema de Diseño Institucional (dashboard.css)
+ */
+@import url('dashboard.css');
+
 .nav-link {
-    color: beige;
-    font-size:smaller;
-    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    height: 50px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
 }
 
 h1 {
     text-align: center;
-    color: #2C3E50;
-    font-weight: bolder;
+    color: var(--navy-800);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    margin-bottom: 20px;
 }
 
 .nav-item {
@@ -17,55 +25,82 @@ h1 {
     font-size: 14px;
 }
 .nav-item:hover {
-    background-color: #0074CC;
-    font-size: 16px; 
-    border-radius:7%;
-      
-}
-img {
-    height: 50px;
-    padding-right: 5px;
-}
-a {
-    color: #2C3E50;
-    font-size: 22px;
-    font-weight: bolder;
-    text-decoration: underline black;
-}
-.titular:hover {
-    font-size:30px;
-    text-align: center;
+    background-color: var(--primary-600);
+    color: #ffffff;
+    border-radius: var(--radius-sm);
 }
 
-#foto{
-    height: 75%;
-    width: 75%;
+img {
+    height: auto;
+    max-height: 50px;
 }
-.cabecera {
-    font-weight: bold;
+
+a {
+    color: var(--primary-600);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--primary-500);
     text-decoration: underline;
 }
 
-table,td,th {
-    margin: 0 auto;
+.cabecera {
+    font-weight: 700;
+    color: var(--navy-800);
+}
 
-	border: 1px solid black;
-    text-align: center;
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 95%;
+    max-width: 1200px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
 }
+
+table, td, th {
+    border: 1px solid var(--border-light);
+    text-align: left;
+    padding: 12px 16px;
+}
+
+th {
+    background-color: var(--surface-subtle);
+    color: var(--navy-800);
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+tr:hover td {
+    background-color: var(--primary-50);
+}
+
 caption {
-    font-size: large;
-    color: cornflowerblue;
-    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--primary-600);
+    font-weight: 700;
+    padding: 10px;
+    caption-side: top;
 }
+
 .h4-ok {
-    color: green;
-    font-size: larger;
+    color: var(--emerald-600);
+    font-size: 1.1rem;
     text-align: center;
-    font-weight: bolder;
+    font-weight: 700;
 }
+
 .h4-bad {
-    color: red;
-    font-size: larger;
+    color: #ef4444;
+    font-size: 1.1rem;
     text-align: center;
-    font-weight: bolder;
+    font-weight: 700;
 }
