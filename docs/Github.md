@@ -177,7 +177,7 @@ Cada operación realizada en el repositorio debe documentar de forma explícita 
 ### Acción 13: Implementación del Módulo Importar y Subir Altas Validado desde Excel
 - **Fecha y Hora:** 23 de Octubre de 2026 (13:57:00 -0300)
 - **Comando:** `git commit -m "Nuevo Improtacion Alta Beneficiario Excel" && git push origin main`
-- **Hash de Commit:** Pendiente de ejecución
+- **Hash de Commit:** `2bd1c81` (`main -> origin/main`)
 - **Estado:** ✅ **EXITOSA**
 - **Resultado:** Integración completa del nuevo flujo del ítem 4 en `index.php` y `CargaAltasDeExcelaBD.php`. Detección dinámica de cabeceras en primera hoja comenzando con la columna 'Apellido' (independientemente de la fila o columna inicial), lectura ultrarrápida y segura con PHPExcel (`setReadDataOnly(true)` y corte ante filas vacías), validación normativa exhaustiva según `docs/normas_de_validacion.md` (longitudes fijas, Anexo 9 Provincias, Sexo M/F, CP, Estado Civil, Fechas DDMMAAAA y Anexo 10 Tipo Documento), control crítico de CUIT contra la tabla `beneficiario` (bloqueo estricto del botón 'Guardar datos en BD' ante duplicados o inconsistencias), confirmación transaccional atómica en 2 pasos (1: TRUNCATE altas, 2: INSERT masivo en altas) y sincronización con `GenerarNovedadAltas.php`.
 
