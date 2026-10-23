@@ -93,3 +93,8 @@
    - El repositorio oficial activo del sistema es **`https://github.com/diegohernangarcia/CabalV3.git`**.
    - Toda operación relevante con Git o GitHub (creación de commits, cambios de configuración de remotes, ramas, etiquetas o pushes) debe quedar documentada en `docs/Github.md`, indicando obligatoriamente si la operación fue **exitosa o arrojó algún error** y la resolución técnica aplicada.
 
+3. **Prohibición Absoluta de Commit y Push Autónomos:**
+   - **NUNCA ejecutar `git commit` ni `git push` a menos que el USUARIO lo solicite expresamente.**
+   - Todos los cambios deben permanecer en el espacio de trabajo local listos para revisión. Solo se procederá a confirmar o subir al repositorio cuando el usuario dé la orden explícita.
+
+

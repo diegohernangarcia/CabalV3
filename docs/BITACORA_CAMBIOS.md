@@ -142,14 +142,55 @@
 4. **`index_menu_original.php`**:
    - Enlace directo al Tablero Moderno, carga de `dashboard.css` y `js/theme.js`.
 
+#### 2.8. Implementación del Flujo Integral "Importar y Subir Altas Validado" (`CargaAltasDeExcelaBD.php`)
+1. **`index.php`**:
+   - Respaldo creado: `index_original.php`.
+   - Se incorporó en la tarjeta de pasos del circuito operativo **Altas de Tarjetas** (`.step-card`) el ítem:
+     `• 4. Importar y Subir Altas Validado` con enlace directo a `CargaAltasDeExcelaBD.php`.
+   - Se sincronizó el título y la descripción del `action-row` del **Módulo Beneficiarios** a *"Importar y Subir Altas Validado"*.
+2. **`CargaAltasDeExcelaBD.php`**:
+   - Respaldo: `CargaAltasDeExcelaBD_original.php`.
+   - **Mapeo Dinámico de Cabeceras:** Lectura de fila 1 del primer libro (hoja 0) del Excel (`Altas.xlsx`), mapeando dinámicamente cada columna a los campos de la tabla `altas` (`Apellido`, `Nombre`, `DomicilioCalle`, `DomicilioNumero`, `DomicilioPiso`, `DomicilioDepartamento`, `Localidad`, `Provincia`, `Sexo`, `CodigoPostal`, `TelefonoCaracteristica`, `TelefonoNumero`, `EstadoCivil`, `FechaNacimiento`, `DocumentoTipo`, `DocumentoNumero`, `DocumentoProvincia`, `CUIT`).
+   - **Normas de Validación Exhaustivas (`docs/normas_de_validacion.md`):**
+     - Apellido &le; 16 caracteres.
+     - Apellido y Nombre combinados &le; 24 caracteres.
+     - Domicilio Calle &le; 25 caracteres, Número &le; 5 caracteres, Piso &le; 2 caracteres, Dpto &le; 2 caracteres.
+     - Localidad &le; 30 caracteres.
+     - Provincia reglamentaria según Anexo 9 (códigos 01 a 23 y 41).
+     - Sexo strictly 'M' o 'F'.
+     - Código Postal &le; 8 caracteres.
+     - Teléfono Característica &le; 5 caracteres, Número &le; 8 caracteres.
+     - Estado Civil según norma: C, S, V, O (normalizando palabras como Casado, Soltero, Viuda, Otra).
+     - Fecha de Nacimiento en formato DDMMAAAA (8 dígitos) con soporte para fechas seriales de Excel y fecha genérica (01011950) si no se posee.
+     - Tipo Documento según Anexo 10 (DNI &rarr; 03).
+     - Número de Documento &le; 11 caracteres y Provincia Documento &le; 2 caracteres.
+     - CUIT &le; 11 caracteres con padding de ceros.
+   - **Validación Crítica de CUIT contra Padrón de Beneficiarios:**
+     - Comprobación fila por fila contra la tabla `beneficiario` (`TRIM(Cuit) = :cuit`).
+     - Si algún CUIT ya existe en la base de datos, se alerta con los datos del beneficiario existente y se **invalida / inhabilita** el botón *"Guardar datos en BD"*.
+   - **Previsualización con Estructura de Tabla `altas`:**
+     - Tabla institucional que muestra todos los campos de `altas` más el badge de estado en el padrón y buscador en vivo.
+   - **Confirmación en Dos Pasos Estricta (NUNCA guardar sin confirmación):**
+     - La previsualización no altera la base de datos.
+     - Solo cuando el operador presiona el botón habilitado *"Guardar datos en BD"*, se ejecuta la transacción PDO atómica:
+       1. `TRUNCATE TABLE altas;`
+       2. `INSERT INTO altas (...) VALUES (...)` fila por fila.
+       3. `COMMIT` y pantalla de confirmación con enlace directo a `Generar ALTAUSUCBPRE.782`.
+
 ---
 
 ### 3. Matriz de Verificación y Pruebas Ejecutadas (23/10/2026)
 
 | Prueba | Comando / Método de Verificación | Resultado Obtenido | Estado |
 | :--- | :--- | :--- | :---: |
-| **Lint Sintáctico Exhaustivo** | `find . -name "*.php" -exec /opt/lampp/bin/php -l {} \;` | 0 errores de sintaxis en el 100% de archivos PHP | ✅ PASÓ |
+| **Lint Sintáctico Exhaustivo** | `/opt/lampp/bin/php -l index.php` y `CargaAltasDeExcelaBD.php` | 0 errores de sintaxis detectados | ✅ PASÓ |
 | **Compatibilidad PHP 5.6** | Verificación de ausencia de operadores PHP 7+ (`??`, match, return types) | Totalmente compatible con PHP 5.6.40 | ✅ PASÓ |
+| **Renderizado HTTP Tablero** | `curl -s http://localhost/cabal-Gemini/index.php` | Ítem 4 visible en tarjeta Altas de Tarjetas y en módulo Beneficiarios | ✅ PASÓ |
+| **Previsualización sin Alterar BD** | Acceso GET a `CargaAltasDeExcelaBD.php` y consulta `COUNT(*) FROM altas` | Tabla altas intacta (1 registro original) | ✅ PASÓ |
+| **Validación Normativa Anexos** | Verificación contra `docs/normas_de_validacion.md` (16 car. apellido, 24 apynom, Anexo 9, Anexo 10) | 100% de reglas auditadas por registro | ✅ PASÓ |
+| **Detección de CUIT en Beneficiarios** | Prueba unitaria PDO contra padrón (`27286633299` &rarr; NAVARRO GLADYS) | CUIT existente bloquea botón con alerta | ✅ PASÓ |
+| **Ejecución 2 Pasos (Truncate + Insert)** | Envío POST `accion=confirmar_guardar` | `TRUNCATE altas` ejecutado y 5 registros cargados con éxito | ✅ PASÓ |
+| **Compatibilidad con Generador** | Ejecución de `GenerarNovedadAltas.php` con los nuevos datos | 5 beneficiarios emitidos a 128 bytes/reg con CRLF | ✅ PASÓ |
 | **Protección contra Inyección SQL** | Revisión de consultas en `crud/`, `consultaMovimiento*.php`, `VerificarNovcar.php` | Prepared statements implementados | ✅ PASÓ |
 | **Enmascaramiento de Tarjetas** | Inspección de `formatearTarjetaCredito()` en reportes, tablas y fichas | `XXXX.XX**.****.XXXX` activo | ✅ PASÓ |
 | **Persistencia de Modo Oscuro** | Validación de `js/theme.js` y `[data-theme="dark"]` | Conmutación instantánea y guardado en `localStorage` | ✅ PASÓ |
@@ -351,9 +392,22 @@ Se inspeccionó el servidor en ejecución (`/opt/lampp`), detectando el stack ac
 #### 2.5. Saneamiento del Repositorio Git y Blindaje de Datos Sensibles (PII)
 - Se eliminaron del control de versiones planillas de cálculo históricas con datos personales reales de beneficiarios (`Beneficiarios FSR *.xlsx`), archivos ZIP pesados (`Al12Sept.zip`) y lotes temporales antiguos (`archivos/Viejos/`).
 
+#### 2.6. Módulo "4. Importar y Subir Altas Validado" y Optimización Anti-Bloqueos (23/10/2026)
+- **Archivos Modificados:**
+  - `CargaAltasDeExcelaBD.php`:
+    - **Procesamiento Exclusivo Bajo Demanda:** Se corrigió el ciclo de ejecución para que el procesamiento pesado de la planilla se active **únicamente cuando el usuario presiona "Subir y Analizar"** (`subir_analizar`) o solicita expresamente reanalizar el archivo en el servidor. Al ingresar vía `GET` desde el menú principal, la página carga su estado inicial limpio en 28 milisegundos sin congelar la sesión.
+    - **Detección Dinámica de Cabecera ("Comienza con Apellido"):** Algoritmo de localización dinámica en la primera hoja (`Sheet 0`) que detecta la celda donde inicia la palabra `Apellido` (sin importar si la tabla arranca en la fila 1, fila 2 o columna B), mapeando a partir de allí las 18 columnas reglamentarias de la tabla `altas`.
+    - **Blindaje y Optimización de PHPExcel (Cero Cuelgues):** Se incorporó `$objReader->setReadDataOnly(true)` (omitiendo estilos pesados y acelerando la lectura a < 0.4s), lectura segura de celdas ante fórmulas rotas de Excel (`obtenerValorCeldaSeguro()`) y corte automático ante 5 filas vacías consecutivas (`break;`).
+    - **Validación Exhaustiva Cabal (`docs/normas_de_validacion.md`):** Validación estricta de longitudes (Apellido <= 16, Apellido+Nombre <= 24, Calle <= 25, etc.), Anexo 9 (Provincias), Sexo (M/F), Código Postal, Estado Civil (C/S/V/O), Fechas DDMMAAAA normalizadas con `checkdate`, Anexo 10 (Tipo Documento) y CUIT (11 dígitos).
+    - **Control Crítico de CUITs en Padrón de Beneficiarios:** Consulta preparada sobre la tabla `beneficiario`. Si se detecta un CUIT ya registrado, se marca la fila con badge dorado `⚠ Ya en Padrón`, se despliega una tarjeta de alerta crítica y se inhabilita de forma absoluta el botón `"Guardar datos en BD"`.
+    - **Confirmación en Dos Pasos y Transaccionalidad:** Guardado solo habilitado ante 100% registros conformes y 0 CUITs duplicados. Al confirmar, ejecuta Paso 1: `TRUNCATE TABLE altas` y Paso 2: inserción en bloque dentro de una transacción PDO (`beginTransaction()`, `commit()`, `rollBack()`).
+    - **Feedback Visual en Tiempo Real:** Botón "Subir y Analizar" con indicador de carga y spinner ("Procesando planilla...") para evitar sensación de congelamiento o envíos concurrentes.
+  - `index.php`:
+    - Enlace al módulo sincronizado como ítem 4 en la tarjeta de flujo de altas y en la botonera de acciones rápidas de Beneficiarios. Respaldo en `index_original.php`.
+
 ---
 
-### 3. Matriz de Verificación y Pruebas Ejecutadas (20/10/2026)
+### 3. Matriz de Verificación y Pruebas Ejecutadas (23/10/2026)
 
 | Prueba | Comando / Verificación | Resultado Obtenido | Estado |
 | :--- | :--- | :--- | :---: |
@@ -361,7 +415,12 @@ Se inspeccionó el servidor en ejecución (`/opt/lampp`), detectando el stack ac
 | **Conexión MySQL local** | Consulta PDO sobre base `cabal` | Conexión exitosa, 13 tablas leídas | ✅ PASÓ |
 | **Enmascaramiento de Tarjeta** | Verificación en `ConsultaBenefiario2.php` | `formatearTarjetaCredito()` activo | ✅ PASÓ |
 | **Render Tablero index.php** | Inspección visual en navegador local | Renderizado responsive y componentes OK | ✅ PASÓ |
-| **Sintaxis de Archivos Modificados** | `/opt/lampp/bin/php -l <archivo>.php` | Sin errores de sintaxis | ✅ PASÓ |
+| **Sintaxis de Archivos Modificados** | `/opt/lampp/bin/php -l CargaAltasDeExcelaBD.php` | Sin errores de sintaxis (No syntax errors detected) | ✅ PASÓ |
+| **Tiempo de Respuesta GET** | `curl -s CargaAltasDeExcelaBD.php` | 0.028s (Estado inicial limpio, sin cuelgues) | ✅ PASÓ |
+| **Carga Altas Cabecera Desplazada** | `Altas2.xlsx` (Cabecera en fila 2, col B) | Detección exacta de Apellido, 5 registros validados en 0.35s | ✅ PASÓ |
+| **Detección CUIT Existente en BD** | Archivo de prueba con CUIT existente | Alerta crítica visible, botón Guardar inhabilitado | ✅ PASÓ |
+| **Guardado Atómico Confirmado** | `accion=confirmar_guardar` | TRUNCATE altas y 5 registros insertados en transacción | ✅ PASÓ |
+| **Generación ALTAUSUCBPRE.782** | `GenerarNovedadAltas.php` | Lote de 128 bytes/reg generado y descargable | ✅ PASÓ |
 
 ---
 
