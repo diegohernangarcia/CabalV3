@@ -183,6 +183,27 @@ Cada operación realizada en el repositorio debe documentar de forma explícita 
 
 ---
 
+### Acción 14: Validación Estricta por Archivo Adjunto, Normativa Cabal y Reestructuración de Altas
+- **Fecha y Hora:** 28 de Octubre de 2026 (12:38:00 -0300)
+- **Comando Ejecutado:** `git commit -m "feat: estandarizacion de validacion estricta por archivo adjunto, integracion normativa Cabal y reestructuracion de flujo de altas" && git push origin main`
+- **Hash de Commit:** `b819a8b` (`966cd49..b819a8b` hacia `origin/main`)
+- **Estado:** ✅ **EXITOSA**
+- **Detalle de la Operación:**
+  - 53 archivos modificados o creados con 10.498 inserciones y 938 supresiones.
+  - Estandarización transversal de validación estricta: sólo se procesan y auditan los datos subidos por el operador en el componente superior (Dropzone) en `ValidarAltas.php`, `VerificarNovcar.php`, `ProcesarCarga.php`, `CargaAltasDeExcelaBD.php`, `ImportarAcreditacionesValidado.php` y `ProcesaNovedadesAltas.php`, eliminando lecturas automáticas o botones de análisis sobre archivos residuales del servidor.
+  - Incorporación de especificaciones oficiales y normativas en `docs/Cabal.md`, `docs/NOVCAR.md` y `docs/rcar.md`.
+  - Reestructuración canónica del circuito de Altas de Tarjetas en 3 pasos ordenados y enriquecimiento del Módulo Beneficiarios en `index.php` e `index_menu_original.php`.
+  - Creación del catálogo centralizado de códigos de respuesta Cabal (`BD/CabalErrores.php`).
+  - Sustitución de popups de JavaScript nativo por ventana emergente modal estilizada con los colores de la aplicación en `CargaAltasDeExcelaBD.php`.
+  - Configuración estricta en `.gitattributes` para asegurar preservación inalterada de saltos de línea Windows CRLF (`\r\n`) en todos los archivos de lote `.782` y texto Cabal.
+- **Salida Observada:**
+  ```text
+  To github.com:diegohernangarcia/CabalV3.git
+     966cd49..b819a8b  main -> main
+  ```
+
+---
+
 ## 3. Protocolos Operativos y Estándar Obligatorio de Registro
 
 Para cumplir con la directiva permanente fijada en `GEMINI.md`:
