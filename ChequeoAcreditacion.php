@@ -78,7 +78,7 @@ if ($archivo_existe) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditoría de Acreditaciones vs Padrón — Cabal FSR</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/theme.js"></script>

@@ -5,6 +5,7 @@
  */
 
 require_once("BD/BD.php");
+require_once("BD/Funciones.php");
 require_once("BD/UsarGestion.php");
 
 $mes = isset($_POST['Mes']) ? htmlspecialchars($_POST['Mes']) : '';
@@ -117,7 +118,7 @@ if (!$ya_procesado) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procesamiento de Movimientos | Sistema Cabal FSR</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/theme.js"></script>
@@ -295,7 +296,7 @@ if (!$ya_procesado) {
                             <tr>
                                 <td><?php echo htmlspecialchars($d['fecha']); ?></td>
                                 <td><strong><?php echo htmlspecialchars($d['cuenta']); ?></strong></td>
-                                <td><code><?php echo htmlspecialchars($d['tarjeta']); ?></code></td>
+                                <td><code><?php echo htmlspecialchars(formatearTarjetaCredito($d['tarjeta'])); ?></code></td>
                                 <td><?php echo htmlspecialchars($d['nombre']); ?></td>
                                 <td><span class="badge-tag accent"><?php echo htmlspecialchars($d['codigo']); ?></span></td>
                                 <td><?php echo htmlspecialchars($d['comercio']); ?></td>

@@ -19,9 +19,14 @@
     <li><a href="#">Beneficiarios &dtrif;</a>
         <ul class="dropdown">
             <li><a href="SubirArchivo.html">Cargar Archivo de Altas</a></li>
-            <li><a href="CargaAltasDeExcelaBD.php">Procesar Excel (Altas.xls)</a></li>
+            <li><a href="CargaAltasDeExcelaBD.php">Importar Excel Con Altas y Generar ALTASUCBPRE</a></li>
             <li><a href="GenerarNovedadAltas.php">Generar ALTAUSUCBPRE</a></li>
-            <li><a href="ProcesaNovedadesAltas.php">Procesar MovAltas.txt (Dev. Banco)</a></li>
+            <li><a href="ValidarAltas.php">Verificar y Validar ALTASUCBPRE</a></li>
+            <li><a href="ProcesaNovedadesAltas.php">Validar respuesta de Altas</a></li>
+            <li><a href="RespuestaAltas.php">Devolución de Altas Cabal</a></li>
+            <li><a href="ConsultarBeneficiario.php">Consultar Beneficiario por DNI</a></li>
+            <li><a href="crud/index.php">Gestión de Beneficiarios (CRUD)</a></li>
+            <li><a href="ReporteAltaBeneficiarios.php">Reporte de Beneficiarios General</a></li>
             <li><a href="ExportarExcelBeneficiarios.php">Exportar Beneficiarios</a></li>
           </ul>
     </li>
@@ -35,7 +40,7 @@
         <li><a href="subir_novcar.php">Cargar Archivo NOVCAR</a></li>
         <li><a href="VerificarNovcar.php">Verificar NOVCAR</a></li>
         <li><a href="SubirArchivo.html">Subir Respuesta Cargas (Dev. Banco)</a></li>
-        <li><a href="ProcesarCarga.php">Procesar RespuestaCargas<br>.txt  (Dev. Banco)</a></li>
+        <li><a href="ProcesarCarga.php">Verificar Respuesta Carga</a></li>
         
         
       </ul>

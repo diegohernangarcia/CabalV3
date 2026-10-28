@@ -162,7 +162,7 @@ if (isset($_GET['descargar']) && $_GET['descargar'] == '1' && !$error_dni && cou
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar Lote ALTAUSUCBPRE.782 | Sistema Cabal FSR</title>
+    <title>Cabal 2026</title>
     <meta name="description" content="Generador del archivo de novedades de alta bancaria posicional 128 bytes para Cabal Entidad 782">
     <link rel="icon" href="img/favicon.png">
     <!-- Estilos del Tablero de Operaciones -->

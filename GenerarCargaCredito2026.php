@@ -104,7 +104,7 @@ if (isset($_GET['descargar']) && $_GET['descargar'] == '1') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar Lote NOVCAR.782 | Sistema Cabal FSR</title>
+    <title>Cabal 2026</title>
     <meta name="description" content="Generador del archivo de novedades de acreditación NOVCAR.782 para Cabal Entidad 782">
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">

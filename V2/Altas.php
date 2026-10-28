@@ -105,7 +105,7 @@ if (isset($_POST['submit']) && isset($_FILES['excel_file'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Cabal ALTAUSUCBPRE.782 — Entidad 782</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <script src="../js/theme.js"></script>

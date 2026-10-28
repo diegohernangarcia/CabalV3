@@ -7,3 +7,6 @@ uploads/*.xls
 uploads/*.txt
 uploads/*.782
 !uploads/.gitkeep
+archivos/*_subido.*
+archivos/*_adjuntado.*
+archivos/*_verificar.*

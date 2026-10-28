@@ -24,7 +24,7 @@ $resultado = $conexion->query("SELECT * FROM beneficiario ORDER BY Apellido ASC,
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Padrón de Beneficiarios — Gestión CRUD | Cabal FSR</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">

@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Archivos batch bancarios Cabal: deben mantener obligatoriamente saltos CRLF
+*.782 text eol=crlf
+Novcar/*.782 text eol=crlf
+archivos/*.782 text eol=crlf
+archivos/*.txt text eol=crlf

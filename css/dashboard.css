@@ -622,8 +622,8 @@ body {
    ========================================================================== */
 .modules-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 20px;
 }
 
 .module-box {
@@ -766,6 +766,134 @@ body {
 .action-row:hover .action-arrow {
   color: var(--primary-600);
   transform: translateX(3px);
+}
+
+/* ==========================================================================
+   TRIAD COLLAPSIBLE MODULES CONTROL
+   ========================================================================== */
+.triad-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px 24px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.triad-control-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.triad-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--navy-800);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.triad-subheading {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.btn-triad-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--surface-card);
+  color: var(--primary-600);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-triad-toggle:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  color: var(--primary-700);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-triad-toggle.active {
+  background: var(--primary-600);
+  color: #ffffff;
+  border-color: var(--primary-700);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+.btn-triad-toggle.active:hover {
+  background: var(--primary-700);
+}
+
+.module-triad-item.collapsed {
+  box-shadow: var(--shadow-sm);
+}
+
+.module-triad-item.collapsed .module-box-header {
+  border-bottom: none;
+}
+
+.module-triad-item .module-box-header {
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.module-triad-item.collapsed:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-400);
+  box-shadow: var(--shadow-md);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] .triad-heading {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-triad-toggle {
+  background: var(--surface-card);
+  color: #93c5fd;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .btn-triad-toggle:hover {
+  background: rgba(37, 99, 235, 0.18);
+  border-color: var(--primary-500);
+  color: #bfdbfe;
+}
+
+[data-theme="dark"] .btn-triad-toggle.active {
+  background: var(--primary-600);
+  color: #ffffff;
+  border-color: var(--primary-500);
 }
 
 /* ==========================================================================

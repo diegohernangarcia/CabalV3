@@ -160,7 +160,7 @@ if ($archivoExiste) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devolución Altas Cabal — Cabal FSR</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/theme.js"></script>
@@ -203,11 +203,49 @@ if ($archivoExiste) {
                 </svg>
                 Padrón Beneficiarios
             </a>
+            <button type="button" class="btn-nav-action" onclick="toggleCatalogoErrores()" id="btn-toggle-catalogo">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                Ver Catálogo Errores Anexo 12
+            </button>
         </div>
     </div>
 </header>
 
 <main class="page-container" style="max-width: 1300px; padding-top: 24px;">
+
+    <!-- PANEL EXPANDIBLE CON EL DICCIONARIO OFICIAL DE ERRORES DE ALTAS (ANEXO 12) -->
+    <div id="panelCatalogoErrores" class="modern-card" style="display: none; margin-bottom: 24px; border: 2px solid var(--primary-600); background: var(--surface-card);">
+        <div class="modern-card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-light); background: rgba(37, 99, 235, 0.05); display: flex; justify-content: space-between; align-items: center;">
+            <div class="modern-card-title-group">
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--navy-800);">
+                    📖 Catálogo Oficial de Errores de Altas — Anexo 12 (docs/Cabal.md)
+                </h4>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: var(--text-muted);">
+                    Códigos de rechazo emitidos por el Host Central de Cabal en la posición 130 a 165 del archivo de respuesta.
+                </p>
+            </div>
+            <button type="button" onclick="toggleCatalogoErrores()" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--text-muted); line-height: 1;">&times;</button>
+        </div>
+        <div style="padding: 16px 20px; max-height: 380px; overflow-y: auto;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 10px;">
+                <?php foreach (obtenerDiccionarioErroresAltasCabal() as $cErr => $itemErr): ?>
+                    <div style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); background: var(--surface-card);">
+                        <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 2px;">
+                            <span style="font-weight: 800; color: #dc2626; font-size: 0.82rem; font-family: monospace;">
+                                [<?php echo $itemErr['codigo']; ?>]
+                            </span>
+                            <strong style="font-size: 0.82rem; color: var(--navy-800);">
+                                <?php echo htmlspecialchars($itemErr['titulo'], ENT_QUOTES, 'UTF-8'); ?>
+                            </strong>
+                        </div>
+                        <div style="font-size: 0.76rem; color: var(--text-muted); line-height: 1.25;">
+                            <?php echo htmlspecialchars($itemErr['desc'], ENT_QUOTES, 'UTF-8'); ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 
     <?php if ($archivoExiste && $grabados > 0): ?>
     <div class="alert-modern success" style="margin-bottom: 24px;">
@@ -277,13 +315,18 @@ if ($archivoExiste) {
                         <th>N° Tarjeta</th>
                         <th>Localidad</th>
                         <th>Cod. Ingreso</th>
-                        <th>Cod. Rechazo</th>
+                        <th>Respuesta / Motivo de Rechazo (Anexo 12)</th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php if ($totalRegistros > 0): ?>
                     <?php for ($x = 1; $x <= $totalRegistros; $x++): ?>
-                        <?php $tarjetaMask = formatearTarjetaCredito($Beneficiario[$x][13]); ?>
+                        <?php 
+                            $tarjetaMask = formatearTarjetaCredito($Beneficiario[$x][13]); 
+                            $rawRechazo = trim($Beneficiario[$x][24]);
+                            $ingreso = trim($Beneficiario[$x][23]);
+                            $errList = parsearCodigosRechazoAltas($rawRechazo);
+                        ?>
                         <tr>
                             <td style="color: var(--text-muted); font-weight: 600;"><?php echo $x; ?></td>
                             <td style="font-weight: 600;"><?php echo htmlspecialchars($Beneficiario[$x][1] . ' ' . $Beneficiario[$x][2], ENT_QUOTES, 'UTF-8'); ?></td>
@@ -292,8 +335,36 @@ if ($archivoExiste) {
                             <td><code><?php echo htmlspecialchars($Beneficiario[$x][12], ENT_QUOTES, 'UTF-8'); ?></code></td>
                             <td><code><?php echo htmlspecialchars($tarjetaMask, ENT_QUOTES, 'UTF-8'); ?></code></td>
                             <td><?php echo htmlspecialchars($Beneficiario[$x][7], ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars($Beneficiario[$x][23], ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars($Beneficiario[$x][24], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td>
+                                <?php if ($ingreso === '0'): ?>
+                                    <span style="font-size: 0.8rem; font-weight: 700; color: #059669;">0 (Aceptada)</span>
+                                <?php elseif ($ingreso === '1'): ?>
+                                    <span style="font-size: 0.8rem; font-weight: 700; color: #dc2626;">1 (Rechazada)</span>
+                                <?php else: ?>
+                                    <span><?php echo htmlspecialchars($ingreso, ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($ingreso === '0' && empty($errList)): ?>
+                                    <span style="font-size: 0.78rem; padding: 3px 8px; border-radius: var(--radius-full); background: rgba(16, 185, 129, 0.15); color: #059669; font-weight: 700;">✓ Aprobada</span>
+                                <?php else: ?>
+                                    <span style="font-size: 0.78rem; padding: 3px 8px; border-radius: var(--radius-full); background: rgba(220, 38, 38, 0.15); color: #dc2626; font-weight: 700;">✕ Rechazada</span>
+                                    <?php if (!empty($errList)): ?>
+                                        <div style="margin-top: 5px; display: flex; flex-direction: column; gap: 3px;">
+                                            <?php foreach ($errList as $errItem): ?>
+                                                <div style="font-size: 0.72rem; background: rgba(220, 38, 38, 0.08); border-left: 2px solid #dc2626; padding: 3px 6px; border-radius: 2px;" title="<?php echo htmlspecialchars($errItem['desc'], ENT_QUOTES, 'UTF-8'); ?>">
+                                                    <strong style="color: #b91c1c;">Cód. <?php echo htmlspecialchars($errItem['codigo'], ENT_QUOTES, 'UTF-8'); ?>:</strong>
+                                                    <span><?php echo htmlspecialchars($errItem['titulo'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php elseif ($rawRechazo !== ''): ?>
+                                        <div style="font-size: 0.74rem; color: #dc2626; margin-top: 2px;">
+                                            <?php echo htmlspecialchars($rawRechazo, ENT_QUOTES, 'UTF-8'); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endfor; ?>
                 <?php else: ?>
@@ -316,7 +387,21 @@ if ($archivoExiste) {
         <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
     Volver
-</a>
+<script>
+    function toggleCatalogoErrores() {
+        var panel = document.getElementById('panelCatalogoErrores');
+        var btn = document.getElementById('btn-toggle-catalogo');
+        if (!panel) return;
+        if (panel.style.display === 'none' || panel.style.display === '') {
+            panel.style.display = 'block';
+            if (btn) btn.classList.add('active');
+        } else {
+            panel.style.display = 'none';
+            if (btn) btn.classList.remove('active');
+        }
+    }
+</script>
 
 </body>
 </html>
+

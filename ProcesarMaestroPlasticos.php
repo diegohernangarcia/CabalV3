@@ -22,6 +22,10 @@ function convertirFechaMaster($fecha)
 function DevuelveCausa($id)
 {
     $id = trim($id);
+    if (function_exists('interpretarCausaBloqueoCabal')) {
+        $info = interpretarCausaBloqueoCabal($id);
+        return strtoupper($info['descripcion']);
+    }
     switch ($id) {
         case '00':
         case '0':
@@ -34,16 +38,33 @@ function DevuelveCausa($id)
             return "ANULACION POR ENTIDAD";
         case '03':
         case '3':
-            return "ANULACION";
+            return "ANULACION POR ADMINISTRACION";
         case '04':
         case '4':
             return "DENUNCIA POR HURTO";
+        case '05':
+        case '5':
+            return "CIERRE DE CUENTA POR LA ENTIDAD";
+        case '06':
+        case '6':
+            return "CIERRE DE CUENTA POR ADMINISTRACION";
         case '07':
         case '7':
             return "REEMPLAZO";
         case '08':
         case '8':
             return "NO HABILITADA";
+        case '09':
+        case '9':
+            return "RETENCION";
+        case '10':
+            return "DETERIORO";
+        case '11':
+            return "EXTRAVIO DE PIN";
+        case '12':
+            return "CLAVE ERRONEA";
+        case '13':
+            return "FALTA DE RETIRO";
         case '14':
             return "BLOQUEO TRANSITORIO";
         default:
@@ -142,7 +163,7 @@ if ($archivoExiste) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procesar Maestro de Tarjetas — Cabal FSR</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/theme.js"></script>
@@ -200,6 +221,14 @@ if ($archivoExiste) {
         </a>
 
         <div class="nav-actions">
+            <button type="button" class="btn-nav-action" onclick="toggleCatalogoBloqueos()" id="btn-toggle-catalogo-bloqueos" title="Ver Causas Oficiales de Bloqueo Cabal (Anexo 13)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Ver Catálogo Bloqueos (Anexo 13)
+            </button>
             <a href="index.php" class="btn-nav-action primary" id="btn-volver-tablero">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -226,6 +255,61 @@ if ($archivoExiste) {
 </header>
 
 <main class="page-container" style="max-width: 1300px; padding-top: 24px;">
+
+    <!-- PANEL DESPLEGABLE: CATÁLOGO OFICIAL DE CAUSAS DE BLOQUEO CABAL (ANEXO 13) -->
+    <div id="panelCatalogoBloqueos" class="modern-card" style="display: none; margin-bottom: 24px; border: 2px solid #2563eb; background: var(--card-bg, #fff);">
+        <div style="background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 16px 20px; border-radius: var(--radius-md) var(--radius-md) 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.3rem;">📋</span>
+                <div>
+                    <h3 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: #fff;">
+                        Catálogo Oficial de Causas de Bloqueo Cabal — Anexo 13 (docs/Cabal.md)
+                    </h3>
+                    <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: #bfdbfe;">
+                        Valores posicionales informados en columnas 71-72 del archivo MAESPLAS.txt
+                    </p>
+                </div>
+            </div>
+            <button type="button" onclick="toggleCatalogoBloqueos()" style="background: rgba(255,255,255,0.15); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">
+                ✕
+            </button>
+        </div>
+        <div style="padding: 16px; max-height: 400px; overflow-y: auto;">
+            <table class="modern-table" style="font-size: 0.85rem;">
+                <thead>
+                    <tr style="background: var(--bg-table-head, #f8fafc);">
+                        <th style="width: 80px; text-align: center;">Código</th>
+                        <th>Descripción Oficial</th>
+                        <th style="width: 130px; text-align: center;">Categoría</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $diccionarioBloqueos = function_exists('obtenerDiccionarioCausasBloqueoCabal') ? obtenerDiccionarioCausasBloqueoCabal() : array();
+                    foreach ($diccionarioBloqueos as $codB => $datosB): 
+                    ?>
+                        <tr>
+                            <td style="text-align: center;">
+                                <span style="font-family: monospace; font-weight: 800; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 4px;">
+                                    <?php echo htmlspecialchars($codB, ENT_QUOTES, 'UTF-8'); ?>
+                                </span>
+                            </td>
+                            <td style="font-weight: 600; color: var(--navy-800);">
+                                <?php echo htmlspecialchars($datosB['descripcion'], ENT_QUOTES, 'UTF-8'); ?>
+                            </td>
+                            <td style="text-align: center;">
+                                <?php if ($datosB['tipo'] === 'habilitada'): ?>
+                                    <span style="background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">HABILITADA</span>
+                                <?php else: ?>
+                                    <span style="background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">BLOQUEO / BAJA</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <!-- BANNER DE RESULTADO -->
     <div class="alert-modern <?php echo $claseEstado; ?>" style="margin-bottom: 24px;">
@@ -354,6 +438,20 @@ if ($archivoExiste) {
     </svg>
     Volver
 </a>
+
+<script>
+function toggleCatalogoBloqueos() {
+    var p = document.getElementById('panelCatalogoBloqueos');
+    if (p) {
+        if (p.style.display === 'none' || p.style.display === '') {
+            p.style.display = 'block';
+            p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            p.style.display = 'none';
+        }
+    }
+}
+</script>
 
 </body>
 </html>

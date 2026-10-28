@@ -16,7 +16,7 @@ $archivo_existe = file_exists($archivo);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procesar Acreditaciones 2023 | Sistema Cabal FSR</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/theme.js"></script>

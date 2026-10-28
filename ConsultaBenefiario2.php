@@ -27,7 +27,7 @@ if (!empty($dni_limpio)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $encontrado ? htmlspecialchars($Quien[1] . ' ' . $Quien[2]) . ' — Ficha de Beneficiario' : 'Beneficiario no encontrado'; ?> | Sistema Cabal</title>
+    <title>Cabal 2026</title>
     <meta name="description" content="Ficha técnica e individual de beneficiario de tarjeta Cabal FSR">
     <link rel="icon" href="img/favicon.png">
     <!-- Estilos del Tablero de Operaciones -->

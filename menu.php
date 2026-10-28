@@ -8,7 +8,7 @@
     <link href="Bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="img/favicon.png">
     <META HTTP-EQUIV="REFRESH" CONTENT="5;URL=index.php">
-    <title>CABAL</title>
+    <title>Cabal 2026</title>
     <script type="text/javascript">
         function redirect() {
             window.location = "index.php";
@@ -31,7 +31,7 @@ hola
                 <li class="nav-item"> <a class="nav-link" href="AcreditarSaldos.php">Cargar Credito Desde Excel2</a> </li>
 
                 <li class="nav-item"> <a class="nav-link" href="GenerarCargaCredito.php">Generar NOVCAR</a> </li>
-                <li class="nav-item"> <a class="nav-link" href="ProcesarMovimientos.html">Procesar Movimientos</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="ProcesarMovimientos.php">Procesar Movimientos</a> </li>
                 <li class="nav-item"> <a class="nav-link" href="SubirArchivo.html">Subir Archivos A Servidor</a> </li>
                 <li class="nav-item"> <a class="nav-link" href="ayuda.html">Ayuda</a> </li>
                 

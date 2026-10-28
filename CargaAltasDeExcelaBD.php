@@ -228,7 +228,6 @@ if ($accion_solicitada === "subir_analizar") {
 // -----------------------------------------------------------------------------
 $debe_procesar = (
     ($accion_solicitada === "subir_analizar" && $estado_proceso !== 'error_lectura') ||
-    ($accion_solicitada === "analizar_existente" && $archivo_existe) ||
     ($accion_solicitada === "confirmar_guardar" && $archivo_existe)
 );
 
@@ -684,7 +683,7 @@ if ($debe_procesar) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Importar y Subir Altas Validado | Sistema Cabal FSR</title>
+    <title>Cabal 2026</title>
     <meta name="description" content="Módulo de validación de longitud reglamentaria Cabal, control de CUITs en padrón y carga confirmada a la tabla altas">
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -1008,6 +1007,221 @@ if ($debe_procesar) {
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* ==========================================================================
+           VENTANA EMERGENTE MODAL DE CONFIRMACIÓN (COLORES INSTITUCIONALES CABAL FSR)
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.22s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-container {
+            background: var(--surface-card, #ffffff);
+            color: var(--text-main, #0f172a);
+            width: 100%;
+            max-width: 540px;
+            border-radius: var(--radius-xl, 16px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--border-light, rgba(226, 232, 240, 0.8));
+            overflow: hidden;
+            transform: translateY(18px) scale(0.97);
+            transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #ffffff;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .modal-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+
+        .modal-header-text h3 {
+            margin: 0;
+            font-size: 1.12rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .modal-header-text p {
+            margin: 3px 0 0;
+            font-size: 0.80rem;
+            color: #bfdbfe;
+            font-weight: 500;
+        }
+
+        .modal-btn-close {
+            background: rgba(255, 255, 255, 0.14);
+            border: none;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .modal-btn-close:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: scale(1.08);
+        }
+
+        .modal-body {
+            padding: 24px;
+            font-size: 0.90rem;
+            line-height: 1.5;
+        }
+
+        .modal-alert-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: var(--radius-md, 10px);
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: #92400e;
+        }
+
+        [data-theme="dark"] .modal-alert-box {
+            background: #2b1f0c;
+            border-color: #854d0e;
+            color: #fde68a;
+        }
+
+        .modal-detail-list {
+            background: var(--surface-subtle, #f8fafc);
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: var(--radius-md, 10px);
+            padding: 12px 18px;
+            margin-bottom: 18px;
+        }
+
+        .modal-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light, #e2e8f0);
+            font-size: 0.85rem;
+        }
+
+        .modal-detail-row:last-child {
+            border-bottom: none;
+            padding-bottom: 2px;
+        }
+
+        .modal-detail-label {
+            color: var(--text-muted, #64748b);
+            font-weight: 600;
+        }
+
+        .modal-detail-value {
+            font-weight: 700;
+            color: var(--navy-900, #0f172a);
+        }
+
+        [data-theme="dark"] .modal-detail-value {
+            color: #f8fafc;
+        }
+
+        .modal-footer {
+            padding: 16px 24px 20px;
+            border-top: 1px solid var(--border-light, #e2e8f0);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: var(--surface-subtle, #f8fafc);
+            border-radius: 0 0 var(--radius-xl, 16px) var(--radius-xl, 16px);
+        }
+
+        .modal-btn-cancel {
+            padding: 11px 20px;
+            border-radius: var(--radius-md, 8px);
+            font-size: 0.90rem;
+            font-weight: 600;
+            background: transparent;
+            border: 1px solid var(--border-light, #cbd5e1);
+            color: var(--text-main, #334155);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        .modal-btn-cancel:hover {
+            background: var(--border-light, #e2e8f0);
+            color: var(--navy-900, #0f172a);
+        }
+
+        .modal-btn-confirm {
+            padding: 11px 22px;
+            border-radius: var(--radius-md, 8px);
+            font-size: 0.90rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+            transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+
+        .modal-btn-confirm:hover {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.45);
+        }
     </style>
 </head>
 <body>
@@ -1091,20 +1305,7 @@ if ($debe_procesar) {
             </div>
         </form>
 
-        <?php if ($archivo_existe): ?>
-        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-light); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 0.82rem; color: var(--text-muted);">
-            <div>
-                📁 Archivo actual en el servidor: <code>archivos/Altas.xlsx</code> 
-                (Modificado: <?php echo date("d/m/Y H:i:s", filemtime($archivo_excel)); ?> — Tamaño: <?php echo round(filesize($archivo_excel) / 1024, 1); ?> KB)
-            </div>
-            <form action="CargaAltasDeExcelaBD.php" method="POST" style="margin: 0; display: inline;">
-                <input type="hidden" name="accion" value="analizar_existente">
-                <button type="submit" class="btn-nav-action" style="padding: 6px 14px; font-size: 0.80rem; border: 1px solid var(--border-light); cursor: pointer;">
-                    🔄 Re-analizar Archivo del Servidor
-                </button>
-            </form>
-        </div>
-        <?php endif; ?>
+
     </section>
 
     <!-- ESTADO DEL PROCESO & RESULTADO -->
@@ -1210,9 +1411,9 @@ if ($debe_procesar) {
             <?php else: ?>
                 <!-- BOTÓN DE CONFIRMACIÓN CONDICIONAL -->
                 <?php if ($puede_guardar): ?>
-                    <form method="POST" action="CargaAltasDeExcelaBD.php" style="display: inline-block;">
+                    <form id="form-guardar-altas" method="POST" action="CargaAltasDeExcelaBD.php" style="display: inline-block;">
                         <input type="hidden" name="accion" value="confirmar_guardar">
-                        <button type="submit" class="btn-confirmar-guardar" id="btn-guardar-bd" onclick="return confirm('¿Confirma que desea vaciar la tabla altas (TRUNCATE) y cargar los <?php echo count($registros); ?> registros validados?');">
+                        <button type="button" class="btn-confirmar-guardar" id="btn-guardar-bd" onclick="abrirModalConfirmacion();">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                             Guardar datos en BD (Vaciar altas y Guardar <?php echo count($registros); ?> registros)
                         </button>
@@ -1423,6 +1624,91 @@ if ($debe_procesar) {
 
 </main>
 
+<?php if ($puede_guardar): ?>
+<!-- VENTANA EMERGENTE MODAL DE CONFIRMACIÓN (COLORES OFICIALES CABAL FSR) -->
+<div id="modalConfirmarGuardar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal-container">
+        <!-- CABECERA DE LA VENTANA EMERGENTE -->
+        <div class="modal-header">
+            <div class="modal-header-info">
+                <div class="modal-header-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                </div>
+                <div class="modal-header-text">
+                    <h3 id="modal-titulo">Confirmar Grabación en Base de Datos</h3>
+                    <p>Módulo 1.4 — Importar y Subir Altas Validado</p>
+                </div>
+            </div>
+            <button type="button" class="modal-btn-close" onclick="cerrarModalConfirmacion()" aria-label="Cerrar ventana">
+                ✕
+            </button>
+        </div>
+
+        <!-- CUERPO DE LA VENTANA EMERGENTE -->
+        <div class="modal-body">
+            <div class="modal-alert-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <div style="font-size: 0.88rem; line-height: 1.45;">
+                    ¿Confirma que desea <strong>vaciar la tabla altas (TRUNCATE)</strong> y cargar los <strong><?php echo count($registros); ?> registros validados</strong>?
+                </div>
+            </div>
+
+            <div class="modal-detail-list">
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Registros a Ingresar:</span>
+                    <span class="modal-detail-value" style="color: #059669;">
+                        <?php echo count($registros); ?> beneficiarios validados
+                    </span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Tabla de Destino:</span>
+                    <span class="modal-detail-value">
+                        <code>altas</code> (Base de Datos Cabal)
+                    </span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Acción Operativa:</span>
+                    <span class="modal-detail-value" style="color: #b91c1c;">
+                        TRUNCATE (Vaciado atómico previo)
+                    </span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Auditoría Previa:</span>
+                    <span class="modal-detail-value" style="color: #059669;">
+                        ✓ 0 errores • 0 CUITs duplicados
+                    </span>
+                </div>
+            </div>
+
+            <p style="font-size: 0.80rem; color: var(--text-muted); margin: 0; line-height: 1.4;">
+                ℹ️ <em>Los registros ingresados quedarán listos para la emisión del archivo batch <code>ALTAUSUCBPRE.782</code> (Entidad 782).</em>
+            </p>
+        </div>
+
+        <!-- PIE DE LA VENTANA EMERGENTE -->
+        <div class="modal-footer">
+            <button type="button" class="modal-btn-cancel" onclick="cerrarModalConfirmacion()">
+                Cancelar
+            </button>
+            <button type="button" class="modal-btn-confirm" id="btn-modal-confirmar" onclick="confirmarGuardadoBD()">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Sí, Vaciar y Guardar en BD
+            </button>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- PIE DE PÁGINA INSTITUCIONAL -->
 <footer class="app-footer">
     <div class="footer-inner">
@@ -1436,6 +1722,56 @@ if ($debe_procesar) {
 </footer>
 
 <script>
+// Funciones de la Ventana Emergente Modal de Confirmación
+function abrirModalConfirmacion() {
+    var modal = document.getElementById('modalConfirmarGuardar');
+    if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(function() {
+            modal.classList.add('active');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function cerrarModalConfirmacion() {
+    var modal = document.getElementById('modalConfirmarGuardar');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 220);
+    }
+}
+
+function confirmarGuardadoBD() {
+    var btnConf = document.getElementById('btn-modal-confirmar');
+    var formGuardar = document.getElementById('form-guardar-altas');
+    if (btnConf) {
+        btnConf.disabled = true;
+        btnConf.style.opacity = '0.75';
+        btnConf.style.cursor = 'wait';
+        btnConf.innerHTML = '<span class="spinner"></span> Guardando registros en BD...';
+    }
+    if (formGuardar) {
+        formGuardar.submit();
+    }
+}
+
+window.addEventListener('click', function(e) {
+    var modal = document.getElementById('modalConfirmarGuardar');
+    if (e.target === modal) {
+        cerrarModalConfirmacion();
+    }
+});
+
+window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        cerrarModalConfirmacion();
+    }
+});
+
 // Indicador de carga al subir y analizar
 document.addEventListener('DOMContentLoaded', function() {
     var formUpload = document.getElementById('form-upload');

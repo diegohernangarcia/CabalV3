@@ -2,6 +2,8 @@
 $usuario = 'pucho';
 $pass = '78900';
 
+require_once(__DIR__ . "/CabalErrores.php");
+
 function formatearTarjetaCredito($numeroTarjeta)
 {
     // Asegurarse de que la longitud del número de tarjeta sea de 16 dígitos

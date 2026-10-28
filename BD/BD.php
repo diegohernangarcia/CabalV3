@@ -75,25 +75,22 @@
         }
     }   
     
-    function EstaFechaMovimiento ($Mes,$Anio,$Archivo){
-        $usuario='pucho';
-    $pass='78900';
-        require_once("BD/Funciones.php");
-        CompletarNumeroDocumento($DNI);
-        $conn = new PDO('mysql:host=localhost;dbname=cabal',$usuario,$pass);
-        $sentencia = $conn->prepare("SELECT id FROM movimientos WHERE Mes='".$Mes. "' AND Anio='".$Anio."' AND Archivo='".$Archivo."';");
-       // var_dump($sentencia) ;
-        //echo "SELECT id FROM Movimientos WHERE Mes='".$Mes. "' AND Anio='".$Anio."';";die();
-        $sentencia->execute([$DNI]);
-        # Ver cuántas filas devuelve
-        $numeroDeFilas = $sentencia->rowCount();
-        # Si son 0 o menos, significa que no existe
-        if ($numeroDeFilas <= 0) {
-        //echo "El usuario con DNI $DNI NO existe";
-        return false;
-          } else {
-               //echo "El usuario con DNI $DNI SÍ existe";
-               return true;
+    function EstaFechaMovimiento ($Mes, $Anio, $Archivo){
+        $usuario = 'pucho';
+        $pass = '78900';
+        try {
+            $conn = new PDO('mysql:host=localhost;dbname=cabal;charset=utf8', $usuario, $pass);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sentencia = $conn->prepare("SELECT id FROM movimientos WHERE Mes = :mes AND Anio = :anio AND Archivo = :archivo LIMIT 1");
+            $sentencia->execute(array(
+                ':mes' => $Mes,
+                ':anio' => $Anio,
+                ':archivo' => $Archivo
+            ));
+            $fila = $sentencia->fetch(PDO::FETCH_ASSOC);
+            return $fila ? true : false;
+        } catch (Exception $e) {
+            return false;
         }
     }
     function  DevuelvoNumeroCuentaX ($DNI,$CUIT){

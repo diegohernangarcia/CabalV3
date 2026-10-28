@@ -36,7 +36,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CABAL FSR — Tablero de Operaciones | SeNAF Río Negro</title>
+    <title>Cabal 2026</title>
     <meta name="description" content="Sistema de gestión, altas y conciliación de tarjetas sociales Cabal - Familia Rionegrina Solidaria">
     <link rel="icon" href="img/favicon.png">
     <!-- Hojas de Estilo del Nuevo Tablero -->
@@ -131,7 +131,8 @@ try {
             <p>
                 Administración de padrón de beneficiarios, generación de lotes de acreditación mensual <b>NOVCAR.782</b>, altas de tarjetas <b>ALTAUSUCBPRE</b> y auditoría de consumos.
             </p>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <!-- ACCIONES RÁPIDAS (Ocultadas temporalmente por solicitud del usuario - Recuadro Rojo 1) -->
+            <div style="display: none; gap: 12px; flex-wrap: wrap;">
                 <a href="AcreditarSaldos2026.php" class="btn-nav-action primary" style="padding: 10px 18px; font-size: 0.9rem;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -199,7 +200,8 @@ try {
             </div>
         </a>
 
-        <a href="reporte_tarjetas.php" class="stat-card emerald" id="card-stat-tarjetas" title="Ver catálogo de plásticos">
+        <!-- PLÁSTICOS EMITIDOS (Ocultado temporalmente por solicitud del usuario - Recuadro Rojo 2) -->
+        <a href="reporte_tarjetas.php" class="stat-card emerald" id="card-stat-tarjetas" title="Ver catálogo de plásticos" style="display: none;">
             <div class="stat-info">
                 <div class="stat-label">Plásticos Emitidos</div>
                 <div class="stat-value"><?php echo number_format($stat_tarjetas, 0, ',', '.'); ?></div>
@@ -213,7 +215,8 @@ try {
             </div>
         </a>
 
-        <a href="ReporteMovimientos.php" class="stat-card purple" id="card-stat-movimientos" title="Ver liquidaciones mensuales">
+        <!-- MOVIMIENTOS REGISTRADOS (Ocultado temporalmente por solicitud del usuario - Recuadro Rojo 2) -->
+        <a href="ReporteMovimientos.php" class="stat-card purple" id="card-stat-movimientos" title="Ver liquidaciones mensuales" style="display: none;">
             <div class="stat-info">
                 <div class="stat-label">Movimientos Registrados</div>
                 <div class="stat-value"><?php echo number_format($stat_movimientos, 0, ',', '.'); ?></div>
@@ -266,10 +269,9 @@ try {
                 <h4>Altas de Tarjetas</h4>
                 <p>Carga de planilla Excel y emisión del lote de 128 bytes para Cabal.</p>
                 <div class="step-links">
-                    <a href="SubirArchivo.html" class="step-link-item">&bull; 1. Subir Altas.xlsx</a>
-                    <a href="GenerarNovedadAltas.php" class="step-link-item">&bull; 2. Generar ALTAUSUCBPRE</a>
-                    <a href="ProcesaNovedadesAltas.php" class="step-link-item">&bull; 3. Procesar MovAltas (Resp.)</a>
-                    <a href="CargaAltasDeExcelaBD.php" class="step-link-item">&bull; 4. Importar y Subir Altas Validado</a>
+                    <a href="CargaAltasDeExcelaBD.php" class="step-link-item">&bull; 1. Importar Excel Con Altas y Generar ALTASUCBPRE</a>
+                    <a href="ValidarAltas.php" class="step-link-item">&bull; 2. Verificar y Validar ALTASUCBPRE</a>
+                    <a href="ProcesaNovedadesAltas.php" class="step-link-item">&bull; 3. Validar respuesta de Altas</a>
                 </div>
             </div>
 
@@ -279,9 +281,10 @@ try {
                 <p>Procesamiento de montos, verificación y generación del archivo NOVCAR.</p>
                 <div class="step-links">
                     <a href="SubirArchivo.html" class="step-link-item">&bull; 1. Subir Acreditaciones.xlsx</a>
-                    <!-- <a href="AcreditarSaldos2026.php" class="step-link-item">&bull; 2. Procesar Excel 2026</a> -->
-                    <a href="GenerarCargaCredito2026.php" class="step-link-item">&bull; 2. Generar NOVCAR.782</a>
-                    <a href="VerificarNovcar.php" class="step-link-item">&bull; 3. Verificar Lote NOVCAR</a>
+                    <a href="ImportarAcreditacionesValidado.php" class="step-link-item">&bull; 2. Importar y subir Acreditaciones Validado</a>
+                    <a href="GenerarCargaCredito2026.php" class="step-link-item">&bull; 3. Generar NOVCAR.782</a>
+                    <a href="VerificarNovcar.php" class="step-link-item">&bull; 4. Verificar Lote NOVCAR</a>
+                    <a href="ProcesarCarga.php" class="step-link-item">&bull; 5. Verificar Respuesta Carga</a>
                 </div>
             </div>
 
@@ -301,7 +304,7 @@ try {
                 <h4>Cierre y Movimientos</h4>
                 <p>Liquidación mensual de consumos al cierre de cada mes.</p>
                 <div class="step-links">
-                    <a href="ProcesarMovimientos.html" class="step-link-item">&bull; 1. Procesar Movimientos.txt</a>
+                    <a href="ProcesarMovimientos.php" class="step-link-item">&bull; 1. Procesar Movimientos.txt</a>
                     <a href="ReporteMovimientos.php" class="step-link-item">&bull; 2. Reporte Mensual General</a>
                     <a href="ReporteMovimientosPorNombre.php" class="step-link-item">&bull; 3. Reporte por Beneficiario</a>
                 </div>
@@ -309,11 +312,33 @@ try {
         </div>
     </section>
 
+    <!-- BARRA DE CONTROL DE LOS 4 MÓDULOS OPERATIVOS -->
+    <div class="triad-control-bar" id="triad-control-bar">
+        <div class="triad-control-info">
+            <h3 class="triad-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-600);">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Módulos Operativos Principales
+            </h3>
+            <p class="triad-subheading">Padrón de titulares, acreditación de saldos, débitos y herramientas del sistema</p>
+        </div>
+        <button type="button" class="btn-triad-toggle" id="btn-toggle-modulos" aria-expanded="false" title="Desplegar o cerrar las opciones de los 4 módulos">
+            <svg class="triad-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            <span id="btn-toggle-modulos-text">Desplegar los 4 Módulos</span>
+        </button>
+    </div>
+
     <!-- GRILLA BENTO DE MÓDULOS -->
     <section class="modules-grid" id="modules-section">
 
         <!-- MÓDULO 1: BENEFICIARIOS -->
-        <article class="module-box" id="mod-beneficiarios">
+        <article class="module-box module-triad-item collapsed" id="mod-beneficiarios">
             <div class="module-box-header">
                 <div class="module-title-group">
                     <div class="module-icon-wrap">
@@ -331,7 +356,7 @@ try {
                 </div>
                 <span class="module-tag">Padrón</span>
             </div>
-            <div class="module-box-body">
+            <div class="module-box-body" style="display: none;">
                 <a href="SubirArchivo.html" class="action-row">
                     <div class="action-left">
                         <span class="action-icon">
@@ -351,7 +376,7 @@ try {
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
                         </span>
                         <div class="action-texts">
-                            <h5>Importar y Subir Altas Validado</h5>
+                            <h5>Importar Excel Con Altas</h5>
                             <p>Sube o valida planilla Altas.xlsx y vuelca los datos a la tabla altas</p>
                         </div>
                     </div>
@@ -384,14 +409,79 @@ try {
                     <span class="badge-tag accent">Recomendado</span>
                 </a>
 
+                <a href="ValidarAltas.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Verificar y Validar ALTASUCBPRE</h5>
+                            <p>Auditoría posicional de 128 bytes y formato CRLF de lote de altas</p>
+                        </div>
+                    </div>
+                    <span class="action-arrow">&rarr;</span>
+                </a>
+
                 <a href="ProcesaNovedadesAltas.php" class="action-row">
                     <div class="action-left">
                         <span class="action-icon">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                         </span>
                         <div class="action-texts">
-                            <h5>Procesar MovAltas.txt (Devolución)</h5>
-                            <p>Asigna cuentas y números de plástico recibidos de Cabal</p>
+                            <h5>Validar respuesta de Altas (MovAltas.txt)</h5>
+                            <p>Asigna cuentas y números de plástico recibidos de Cabal con Anexo 12</p>
+                        </div>
+                    </div>
+                    <span class="action-arrow">&rarr;</span>
+                </a>
+
+                <a href="RespuestaAltas.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Devolución de Altas Cabal</h5>
+                            <p>Consulta tabular con catálogo de errores oficial Anexo 12</p>
+                        </div>
+                    </div>
+                    <span class="action-arrow">&rarr;</span>
+                </a>
+
+                <a href="ConsultarBeneficiario.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Consultar Beneficiario por DNI</h5>
+                            <p>Ficha individual con opción de impresión</p>
+                        </div>
+                    </div>
+                    <span class="action-arrow">&rarr;</span>
+                </a>
+
+                <a href="crud/index.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Gestión del Padrón (CRUD)</h5>
+                            <p>Búsqueda interactiva, alta, edición y baja de beneficiarios</p>
+                        </div>
+                    </div>
+                    <span class="action-arrow">&rarr;</span>
+                </a>
+
+                <a href="ReporteAltaBeneficiarios.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Reporte de Beneficiarios General</h5>
+                            <p>Resumen tabular de altas y estado de registros</p>
                         </div>
                     </div>
                     <span class="action-arrow">&rarr;</span>
@@ -413,7 +503,7 @@ try {
         </article>
 
         <!-- MÓDULO 2: ACREDITACIONES DE SALDO -->
-        <article class="module-box" id="mod-acreditaciones">
+        <article class="module-box module-triad-item collapsed" id="mod-acreditaciones">
             <div class="module-box-header">
                 <div class="module-title-group">
                     <div class="module-icon-wrap" style="background: var(--emerald-50); color: var(--emerald-700);">
@@ -429,7 +519,7 @@ try {
                 </div>
                 <span class="module-tag" style="background: var(--emerald-50); color: var(--emerald-700);">Crédito</span>
             </div>
-            <div class="module-box-body">
+            <div class="module-box-body" style="display: none;">
                 <a href="SubirArchivo.html" class="action-row">
                     <div class="action-left">
                         <span class="action-icon" style="color: var(--emerald-600);">
@@ -443,20 +533,18 @@ try {
                     <span class="action-arrow">&rarr;</span>
                 </a>
 
-                <!-- Oculto a solicitud: Procesar Excel (Versión 2026)
-                <a href="AcreditarSaldos2026.php" class="action-row featured" style="display: none;">
+                <a href="ImportarAcreditacionesValidado.php" class="action-row featured">
                     <div class="action-left">
                         <span class="action-icon" style="color: var(--emerald-600);">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
                         </span>
                         <div class="action-texts">
-                            <h5>Procesar Excel (Versión 2026)</h5>
-                            <p>Cruza CUIL, calcula montos y carga en acreditar2</p>
+                            <h5>Importar y subir Acreditaciones Validado</h5>
+                            <p>Detecta encabezados, cruza CUIL con Beneficiarios y valida discrepancias</p>
                         </div>
                     </div>
-                    <span class="badge-tag success">Activo 2026</span>
+                    <span class="badge-tag success">Validado</span>
                 </a>
-                -->
 
                 <a href="GenerarCargaCredito2026.php" class="action-row">
                     <div class="action-left">
@@ -503,8 +591,8 @@ try {
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                         </span>
                         <div class="action-texts">
-                            <h5>Procesar RespuestaCargas.txt</h5>
-                            <p>Muestra el resumen de acreditaciones confirmadas</p>
+                            <h5>Verificar Respuesta Carga</h5>
+                            <p>Auditoría y conciliación de devoluciones bancarias (RespuestaCargas.txt)</p>
                         </div>
                     </div>
                     <span class="action-arrow">&rarr;</span>
@@ -513,7 +601,7 @@ try {
         </article>
 
         <!-- MÓDULO 3: DESCARGAS DE SALDO (DÉBITO) -->
-        <article class="module-box" id="mod-descargas">
+        <article class="module-box module-triad-item collapsed" id="mod-descargas">
             <div class="module-box-header">
                 <div class="module-title-group">
                     <div class="module-icon-wrap" style="background: var(--amber-50); color: var(--amber-600);">
@@ -529,7 +617,7 @@ try {
                 </div>
                 <span class="module-tag" style="background: var(--amber-50); color: var(--amber-600);">Débito</span>
             </div>
-            <div class="module-box-body">
+            <div class="module-box-body" style="display: none;">
                 <a href="cereo_upload.php" class="action-row featured">
                     <div class="action-left">
                         <span class="action-icon" style="color: var(--amber-600);">
@@ -571,8 +659,8 @@ try {
             </div>
         </article>
 
-        <!-- MÓDULO 4: MOVIMIENTOS & AUDITORÍA -->
-        <article class="module-box" id="mod-movimientos">
+        <!-- MÓDULO 4: MOVIMIENTOS & AUDITORÍA (Ocultado temporalmente por solicitud del usuario - Recuadro Rojo 3) -->
+        <article class="module-box" id="mod-movimientos" style="display: none;">
             <div class="module-box-header">
                 <div class="module-title-group">
                     <div class="module-icon-wrap" style="background: var(--purple-50); color: var(--purple-600);">
@@ -590,7 +678,7 @@ try {
                 <span class="module-tag" style="background: var(--purple-50); color: var(--purple-600);">Auditoría</span>
             </div>
             <div class="module-box-body">
-                <a href="ProcesarMovimientos.html" class="action-row">
+                <a href="ProcesarMovimientos.php" class="action-row">
                     <div class="action-left">
                         <span class="action-icon" style="color: var(--purple-600);">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
@@ -644,8 +732,8 @@ try {
             </div>
         </article>
 
-        <!-- MÓDULO 5: MAESTRO DE PLÁSTICOS -->
-        <article class="module-box" id="mod-plasticos">
+        <!-- MÓDULO 5: MAESTRO DE PLÁSTICOS (Ocultado temporalmente por solicitud del usuario - Recuadro Rojo 3) -->
+        <article class="module-box" id="mod-plasticos" style="display: none;">
             <div class="module-box-header">
                 <div class="module-title-group">
                     <div class="module-icon-wrap" style="background: #e0f2fe; color: #0369a1;">
@@ -704,7 +792,7 @@ try {
         </article>
 
         <!-- MÓDULO 6: HERRAMIENTAS & ACCESOS DIRECTOS -->
-        <article class="module-box" id="mod-herramientas">
+        <article class="module-box module-triad-item collapsed" id="mod-herramientas">
             <div class="module-box-header">
                 <div class="module-title-group">
                     <div class="module-icon-wrap" style="background: #f1f5f9; color: #475569;">
@@ -720,7 +808,7 @@ try {
                 </div>
                 <span class="module-tag" style="background: #f1f5f9; color: #475569;">Sistema</span>
             </div>
-            <div class="module-box-body">
+            <div class="module-box-body" style="display: none;">
                 <a href="SubirArchivo.html" class="action-row">
                     <div class="action-left">
                         <span class="action-icon" style="color: #475569;">
@@ -797,6 +885,68 @@ try {
         </div>
     </div>
 </footer>
+
+<script>
+// Control unificado para desplegar/cerrar los 3 módulos operativos simultáneamente
+(function() {
+    var btnToggle = document.getElementById('btn-toggle-modulos');
+    var btnText = document.getElementById('btn-toggle-modulos-text');
+    var triadModules = document.querySelectorAll('.module-triad-item');
+    var isExpanded = false; // Por defecto cerrado (solo títulos visibles)
+
+    if (!btnToggle || !triadModules.length) return;
+
+    function setTriadState(expanded) {
+        isExpanded = expanded;
+        btnToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+
+        triadModules.forEach(function(mod) {
+            var body = mod.querySelector('.module-box-body');
+            if (isExpanded) {
+                mod.classList.remove('collapsed');
+                if (body) {
+                    body.style.display = 'flex';
+                    body.style.animation = 'fadeInDown 0.25s ease-out forwards';
+                }
+            } else {
+                mod.classList.add('collapsed');
+                if (body) {
+                    body.style.display = 'none';
+                }
+            }
+        });
+
+        var iconSvg = btnToggle.querySelector('.triad-toggle-icon');
+        if (isExpanded) {
+            btnToggle.classList.add('active');
+            if (btnText) btnText.textContent = 'Cerrar los 4 Módulos';
+            if (iconSvg) iconSvg.innerHTML = '<polyline points="18 15 12 9 6 15"></polyline>';
+        } else {
+            btnToggle.classList.remove('active');
+            if (btnText) btnText.textContent = 'Desplegar los 4 Módulos';
+            if (iconSvg) iconSvg.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
+        }
+    }
+
+    btnToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        setTriadState(!isExpanded);
+    });
+
+    // Permitir clic sobre la cabecera de cualquiera de los 4 módulos para alternar
+    triadModules.forEach(function(mod) {
+        var header = mod.querySelector('.module-box-header');
+        if (header) {
+            header.style.cursor = 'pointer';
+            header.setAttribute('title', 'Clic para desplegar / cerrar los 4 módulos');
+            header.addEventListener('click', function(e) {
+                if (e.target.closest('a') || e.target.closest('button')) return;
+                setTriadState(!isExpanded);
+            });
+        }
+    });
+})();
+</script>
 
 </body>
 </html>

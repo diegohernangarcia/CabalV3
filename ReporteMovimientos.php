@@ -39,7 +39,7 @@ $total_periodos = $result ? $result->num_rows : 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Mensual de Movimientos | Sistema Cabal FSR</title>
+    <title>Cabal 2026</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/theme.js"></script>
@@ -123,7 +123,7 @@ $total_periodos = $result ? $result->num_rows : 0;
                 <p>Total de lotes disponibles: <?php echo $total_periodos; ?></p>
             </div>
             <div>
-                <a href="ProcesarMovimientos.html" class="btn-modern-primary" style="padding: 8px 16px; font-size: 0.84rem;">
+                <a href="ProcesarMovimientos.php" class="btn-modern-primary" style="padding: 8px 16px; font-size: 0.84rem;">
                     + Procesar Nuevo Archivo
                 </a>
             </div>
