@@ -505,6 +505,9 @@ if (isset($_GET['descargar']) && $_GET['descargar'] == '1' && !$error_dni && cou
             <a href="ProcesaNovedadesAltas.php" class="btn-nav-action" style="padding: 10px 18px; font-size: 0.9rem;">
                 Siguiente Paso: Procesar MovAltas.txt
             </a>
+            <a href="InformeAlta.php" class="btn-nav-action" style="padding: 10px 18px; font-size: 0.9rem;">
+                Paso 4: Informe Alta
+            </a>
             <a href="index.php" class="btn-nav-action" style="padding: 10px 18px; font-size: 0.9rem;">
                 Volver al Tablero
             </a>

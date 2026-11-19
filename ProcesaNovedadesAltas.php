@@ -70,6 +70,16 @@ if ($accion === 'subir_archivo') {
                 $nombreArchivoMostrado = $fileName;
                 $tamanoArchivo = $fileSize;
                 $archivoProcesado = true;
+
+                // Guardar metadatos para InformeAlta.php (Item 4)
+                $metaData = array(
+                    'nombre_original' => $fileName,
+                    'fecha_subida'    => date('Y-m-d H:i:s'),
+                    'tamano'          => $fileSize,
+                    'lineas'          => is_array($lineasRaw) ? count($lineasRaw) : 0
+                );
+                @file_put_contents($targetDir . 'RespuestaAltas_meta.json', json_encode($metaData));
+
                 $mensajeFeedback = "Archivo adjunto <strong>" . htmlspecialchars($fileName, ENT_QUOTES, 'UTF-8') . "</strong> (" . number_format($fileSize / 1024, 1, ',', '.') . " KB) recibido y procesado exitosamente.";
                 $tipoFeedback = "success";
             } else {
@@ -362,6 +372,7 @@ if ($accion === 'guardar_beneficiarios' && isset($_POST['datos_json'])) {
             }
 
             $mensajeFeedback = "¡Operación completada con éxito! Se incorporaron <strong>" . $guardadosCount . " nuevos titulares aceptados</strong> al padrón de beneficiarios." . (!empty($detallesOmitidos) ? " (Se omitieron " . implode(' y ', $detallesOmitidos) . ")." : "");
+            $mensajeFeedback .= ' &nbsp;&mdash;&nbsp; <a href="InformeAlta.php" style="color: #fff; background: #047857; padding: 4px 12px; border-radius: 6px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 6px;">&rarr; Ir a Paso 4: Generar Informe Alta y Notificación EML</a>';
             $tipoFeedback = "success";
             $stats['guardados'] = $guardadosCount;
             
@@ -591,6 +602,11 @@ if ($accion === 'guardar_beneficiarios' && isset($_POST['datos_json'])) {
                 Ver Padrón
             </a>
 
+            <a href="InformeAlta.php" class="btn-nav-action" title="Generar Informe y EML de Altas Procesadas">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                4. Informe Alta
+            </a>
+
             <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Alternar tema">
                 🌓
             </button>
@@ -726,10 +742,16 @@ if ($accion === 'guardar_beneficiarios' && isset($_POST['datos_json'])) {
                     </div>
                 </div>
             </div>
-            <a href="ProcesaNovedadesAltas.php" class="btn-modern-secondary" style="padding: 10px 18px; font-size: 0.88rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                Adjuntar Otro Archivo
-            </a>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <a href="InformeAlta.php" class="btn-modern-primary" style="padding: 10px 18px; font-size: 0.88rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    Paso 4: Ver Informe Alta
+                </a>
+                <a href="ProcesaNovedadesAltas.php" class="btn-modern-secondary" style="padding: 10px 18px; font-size: 0.88rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    Adjuntar Otro Archivo
+                </a>
+            </div>
         </div>
     <?php endif; ?>
 

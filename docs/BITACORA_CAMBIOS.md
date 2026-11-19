@@ -7,10 +7,79 @@
 ---
 
 ## Índice Cronológico
+- [Jornada: 19 de Noviembre de 2026 (Módulos de Informe Alta e Informe Acreditación con Exportación a EML para Thunderbird)](#jornada-19-de-noviembre-de-2026)
+- [Jornada: 16 de Noviembre de 2026 (Instalación de Skill de Auditoría de Seguridad Cloudflare security-audit-skill)](#jornada-16-de-noviembre-de-2026)
 - [Jornada: 27 de Octubre de 2026 (Módulo de Importación y Validación de Acreditaciones con Truncate y Carga en Tabla Acreditar)](#jornada-27-de-octubre-de-2026)
 - [Jornada: 23 de Octubre de 2026 (Modernización Integral de Estilos y Colores en Todas las Páginas)](#jornada-23-de-octubre-de-2026)
 - [Jornada: 21 de Octubre de 2026 (Sprint Mejoras de Altas y Subida Centralizada)](#jornada-21-de-octubre-de-2026)
 - [Jornada: 20 de Octubre de 2026 (Auditoría Integral, Documentación Base y Nuevo Tablero)](#jornada-20-de-octubre-de-2026)
+
+---
+
+## Jornada: 19 de Noviembre de 2026
+
+### 1. Objetivos de la Sesión
+1. **Módulo "Informe Alta" (`InformeAlta.php` - Item 4 en Altas de Tarjetas):**
+   - Creación de un informe en HTML estructurado para auditar las altas procesadas a partir del lote de respuesta `782_out_altas_*.txt` / `RespuestaAltas.txt`.
+   - Incorporación de cabecera institucional dual: Isologotipo del Ministerio de Desarrollo Humano (Gobierno de Río Negro) y logotipo oficial de Cabal Entidad 782 (`img/cabecera_ministerio.png`, `img/logo_cabal_oficial.png`).
+   - Actualización estricta de la denominación oficial a **"Secretaria de Niñez, Adolescencia y Familia"** (eliminando "de Estado").
+   - Enmascaramiento obligatorio de números de tarjetas mediante `formatearTarjetaCredito()` (`XXXX.XX**.****.XXXX`).
+   - Generación de correos electrónicos bajo norma RFC 822 / MIME `multipart/related` con extensión `.eml` y cabecera `X-Unsent: 1` para apertura directa en modo redacción de Mozilla Thunderbird.
+   - Campo destinatario ("Para") en blanco por defecto en el `.eml`, permitiendo al usuario definir destinatarios antes del envío; omisión de saludos genéricos informales.
+2. **Módulo "Informe Acreditación" (`InformeAcreditacion.php` - Item 7 en Acreditación de Saldo):**
+   - Desarrollo del módulo homólogo para el procesamiento del archivo de respuesta de cargas `RespuestaCargas.txt` / `782_RCAR` (norma fija de 80 bytes, Anexo 3 Cabal).
+   - Interpretación de registros de encabezado, detalle (`6339`, importes de compra en centavos, desglose de código de respuesta bancaria Anexo 11) y pie de control de lote (Trailer).
+   - Cruce optimizado en memoria con el padrón de beneficiarios (`beneficiario`) para asociar Apellido, Nombre, DNI, CUIL, Localidad y Tarjeta enmascarada a cada número de cuenta.
+   - Indicadores KPI ejecutivos: Cuentas en Lote, Acreditaciones Exitosas ($), Acreditaciones Rechazadas ($) y Monto Total Procesado ($).
+   - Modal interactivo con previsualización del correo, ajuste dinámico del destinatario "Para" y descarga directa del archivo `.eml`.
+   - Búsqueda en tiempo real, filtro por estado (Aprobadas / Rechazadas) y optimización de impresión con `@media print`.
+3. **Integración en Tablero Central y Flujos Operativos:**
+   - En `index.php`: Incorporación del **Item 7. Informe Acreditación** en el Paso 2 ("Acreditación de Saldo") del flujo paso a paso y como tarjeta de acción en la cuadrícula Bento del Módulo 2 (`#mod-acreditaciones`).
+   - En `ProcesarCarga.php`: Inclusión del botón directo "7. Informe Acreditación" en la barra de navegación superior y en la botonera de acciones del archivo auditado. Guardado automático de metadatos de subida en `archivos/RespuestaCargas_meta.json`.
+   - En `index-menu.html`: Vinculación del ítem 7 dentro del menú desplegable "Acreditar Saldos".
+
+### 2. Archivos Añadidos y Modificados
+- `InformeAcreditacion.php` (NUEVO): Módulo principal de auditoría de respuesta de cargas y generador de EML con `X-Unsent: 1`.
+- `InformeAlta.php` (NUEVO): Módulo principal de auditoría de respuesta de altas y generador de EML con `X-Unsent: 1`.
+- `img/cabecera_ministerio.png` (NUEVO): Cabecera institucional oficial del Ministerio de Desarrollo Humano (Gobierno de Río Negro).
+- `img/logo_cabal_oficial.png` (NUEVO): Logotipo oficial de Cabal Entidad 782 para incrustación MIME y vista HTML.
+- `index.php`: Actualización de la grilla de pasos y del Módulo 2 con el ítem 7 de Informe Acreditación.
+- `ProcesarCarga.php`: Botón de acceso directo en navbar, botón en banner de archivo auditado y persistencia de `RespuestaCargas_meta.json`.
+- `index-menu.html`: Menú desplegable "Acreditar Saldos" actualizado con los enlaces operativos del flujo y el ítem 7.
+- `docs/BITACORA_CAMBIOS.md`: Registro exhaustivo de la intervención.
+
+### 3. Pruebas y Certificación Técnica
+- **Verificación Sintáctica (Linting):** Ejecución de `php -l` sobre `InformeAcreditacion.php`, `InformeAlta.php`, `index.php` y `ProcesarCarga.php`, certificando ausencia total de errores de sintaxis (`No syntax errors detected`).
+- **Verificación MIME RFC 822 y X-Unsent:** Comprobación por CLI de la emisión del archivo `.eml` con cabeceras `X-Unsent: 1`, `From:`, `To: ` (en blanco), boundary MIME `multipart/related`, codificación Base64 de las imágenes adjuntas con `Content-ID` (`cid:cabecera-logo` y `cid:cabal-logo`).
+- **Privacidad y Enmascaramiento:** Certificación de que ninguna tarjeta de crédito/débito se muestra completa, verificando la aplicación incondicional de `formatearTarjetaCredito()` (`5896.57**.****.XXXX`).
+
+---
+
+## Jornada: 16 de Noviembre de 2026
+
+### 1. Objetivos de la Sesión
+1. **Instalación e Integración de la Skill de Auditoría de Seguridad (`security-audit`):**
+   - Incorporar la skill oficial de auditoría de seguridad de Cloudflare ([security-audit-skill](https://github.com/cloudflare/security-audit-skill)).
+   - Habilitar la skill tanto a nivel global (`~/.gemini/config/skills/security-audit/`) como a nivel de proyecto workspace (`.agents/skills/security-audit/`).
+   - Configurar esquemas de validación de reportes (`report-schema.json`) y validadores sin dependencias externas (`validate-findings.cjs`, `validate-coverage-ledger.cjs`).
+   - Ejecutar la suite de pruebas unitarias (`validate-findings.test.cjs`) para certificar compatibilidad completa bajo el entorno local Node.js.
+2. **Ejecución de Auditoría de Seguridad Integral (Full Audit Mode):**
+   - Ejecución de las seis fases del flujo formal: Reconocimiento arquitectónico, cacería guiada por libro de cobertura, validación adversaria de candidatos, salida estructurada JSON, verificación de registros y generación de informe neutral de seguridad.
+   - Generación de artefactos formales: `run-metadata.json`, `architecture.md`, `coverage-ledger.json`, `findings.json`, `REPORT.md`, `FINDINGS-DETAIL.md`, `NEEDS-VALIDATION.md`.
+   - Identificación y confirmación de 6 vulnerabilidades (2 Críticas, 3 Altas, 1 Media): Ausencia total de autenticación, Inyecciones SQL en `Crud2/`, credenciales hardcodeadas, exposición pública de PII bancaria, TRUNCATE DoS en acreditaciones y Path Traversal en `ProcesarMaestroPlasticos.php`.
+
+### 2. Archivos Añadidos y Generados
+- `.agents/skills/security-audit/SKILL.md`: Guía y reglas operativas de la skill (modos de guía y auditoría completa, roles de subagentes, aislamiento y seguridad).
+- `.agents/skills/security-audit/report-schema.json`: Esquema JSON formal para categorización de hallazgos (`confirmed`, `needs_validation`, `rejected`).
+- `.agents/skills/security-audit/validate-findings.cjs` y `.test.cjs`: Validador y pruebas unitarias de hallazgos.
+- `.agents/skills/security-audit/validate-coverage-ledger.cjs` y `.test.cjs`: Validador y pruebas del libro de cobertura.
+- `.agents/skills/security-audit/*.md`: Documentación especializada de reconocimiento, clases de ataque, cacería, validación y reporte.
+- `~/.gemini/config/skills/security-audit/`: Réplica para disponibilidad global en todos los workspaces de Antigravity.
+- `security-audit/run-1/*`: Artefactos de la auditoría ejecutada (`run-metadata.json`, `architecture.md`, `coverage-ledger.json`, `findings.json`, `REPORT.md`, `FINDINGS-DETAIL.md`, `NEEDS-VALIDATION.md`).
+
+### 3. Pruebas y Certificación Técnica
+- **Ejecución de Tests del Validador:** Se corrió `node .agents/skills/security-audit/validate-findings.test.cjs`, pasando satisfactoriamente los 34 tests de validación sintáctica, seguridad y mitigación de controles.
+- **Validación de Hallazgos y Cobertura:** Se ejecutaron `validate-findings.cjs` y `validate-coverage-ledger.cjs` sobre los artefactos de la corrida `run-1`, pasando ambas validaciones con código de salida 0 (`PASS: 6 findings valid`, `PASS: 6 coverage units valid`).
 
 ---
 
@@ -1182,6 +1251,126 @@ Para asegurar la total trazabilidad y la posibilidad de reversión inmediata ant
 | **Petición GET a `ProcesarCarga.php`** | `curl -s http://localhost/cabal-Gemini/ProcesarCarga.php` | Muestra únicamente el adjunto superior; no audita `RespuestaCargas.txt` preexistente | ✅ PASÓ |
 | **Petición POST a `ProcesarCarga.php`** | `curl -s -F "archivo_respuesta=@..."` | Procesa y audita exitosamente el archivo enviado | ✅ PASÓ |
 | **Comprobación de Botones Obsoletos** | Búsqueda grep de `analizar_existente` y `verificar_servidor` en vistas HTML | 0 referencias residuales activas | ✅ PASÓ |
+
+---
+
+## [2026-11-19 08:00] - Creación e Integración de "Item 4 - Informe Alta" y Generador EML Institucional SeNAF
+
+### 1. Objetivos de la Intervención
+1. Desarrollar el módulo **1.4 Informe Alta** (`InformeAlta.php`) dentro del flujo operativo de **Altas de Tarjetas** para procesar y presentar los datos del archivo de respuesta bancaria `782_out_altas_tpc` / `MovAltas.txt` emitido por Cabal.
+2. Extraer e informar la fecha de solicitud/proceso bancario (`AAMMDD` -> `DD/MM/AAAA`), entidad emisora (782) y sucursal (001).
+3. Detallar todos los datos de los beneficiarios creados o procesados (Apellido y Nombre, DNI formateado, CUIL/CUIT formateado, Domicilio completo, Localidad, Código Postal, Teléfono, Fecha de Nacimiento, Sexo, Estado Civil, N° de Cuenta y Plástico asignado).
+4. Cumplir estrictamente la directiva de seguridad y privacidad: enmascarar los dígitos centrales del número de tarjeta mediante `formatearTarjetaCredito()` (`6043.86**.****.XXXX`).
+5. Auditar y catalogar códigos de rechazo según Anexo 12 de Cabal (`BD/CabalErrores.php`).
+6. Sincronizar y cotejar en tiempo real la existencia de cada titular en el padrón local (`beneficiario`).
+7. Implementar generador y vista previa de correo institucional SeNAF con membrete oficial, indicadores clave (KPIs), tabla de nómina y exportación en formato `.EML` descargable (RFC 822 / MIME).
+8. Integrar el acceso al módulo en el circuito mensual de `index.php` (Paso 1, ítem 4), en el módulo Bento de Beneficiarios, y enlazarlo directamente desde `ProcesaNovedadesAltas.php`, `GenerarNovedadAltas.php`, `RespuestaAltas.php` e `index-menu.html`.
+
+### 2. Archivos Creados y Modificados
+- **`InformeAlta.php` (NUEVO):** Módulo central de Informe de Altas con parser de 196 bytes (Registros 01, 02 y 03 de Cabal), diseño responsive, selector/drag & drop de lotes, filtros en tiempo real, vista de impresión (`@media print`), modal institucional SeNAF y endpoint `?accion=descargar_eml`.
+- **`index.php`:**
+  - En la tarjeta del Paso 1 "Altas de Tarjetas" se agregó: `<a href="InformeAlta.php" class="step-link-item">&bull; 4. Informe Alta</a>`.
+  - En el Módulo Beneficiarios de la grilla Bento se agregó fila de acción destacada hacia `InformeAlta.php`.
+- **`ProcesaNovedadesAltas.php`:**
+  - Al recibir una carga de archivo, guarda los metadatos en `archivos/RespuestaAltas_meta.json` (`nombre_original`, `fecha_subida`, `tamano`, `lineas`).
+  - En la barra de navegación superior se incorporó el acceso directo a `4. Informe Alta`.
+  - En el banner de procesamiento y en el mensaje de éxito tras guardar en base de datos, se agregó botón directo para generar y consultar el Informe de Alta (Paso 4).
+- **`GenerarNovedadAltas.php`:** Se agregó botón de acceso a `Paso 4: Informe Alta`.
+- **`RespuestaAltas.php`:** Se agregó botón en barra de navegación a `Informe Alta (Item 4)`.
+- **`index-menu.html`:** Se agregó enlace a `Informe Alta (Item 4)` en el menú desplegable "Alta Beneficiarios".
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :---: |
+| **Linting Sintáctico PHP 5.6** | `php -l InformeAlta.php`, `index.php`, `ProcesaNovedadesAltas.php`, `GenerarNovedadAltas.php`, `RespuestaAltas.php` | 0 errores sintácticos en todos los archivos modificados | ✅ PASÓ |
+| **Parsing Posicional 196 Bytes** | Ejecución CLI sobre lote de prueba `MovAltas.txt` / `782_out_altas` | Registros 01, 02 y 03 parseados correctamente (apynom, domicilio, tel, fnac, cuenta) | ✅ PASÓ |
+| **Enmascaramiento de Tarjeta** | Inspección de salida HTML y EML | Tarjetas enmascaradas bajo formato `6043.86**.****.0000` (`formatearTarjetaCredito`) | ✅ PASÓ |
+| **Generación EML (.eml)** | Invocación con `?accion=descargar_eml` | Cabeceras MIME RFC 822 válidas, asunto codificado UTF-8 Base64, cuerpo HTML institucional SeNAF | ✅ PASÓ |
+| **Escape y Neutralización XSS** | Verificación de salida en plantilla | Todos los campos dinámicos sanitizados con `htmlspecialchars(..., ENT_QUOTES, 'UTF-8')` | ✅ PASÓ |
+
+---
+
+## [2026-11-19 08:10] - Ajustes Institucionales en Informe de Alta y Notificación EML
+
+### 1. Objetivos de la Intervención
+1. **Actualización de Denominación Institucional:** Reemplazar "Secretaría de Estado de Niñez, Adolescencia y Familia" por **"Secretaria de Niñez, Adolescencia y Familia"** en todas las vistas, textos informativos y plantillas de correo EML.
+2. **Cabecera Oficial con Imagen Institucional:** Incorporar la imagen de cabecera provista por el organismo (`RN - Ministerio de Desarrollo Humano`) guardada en `img/cabecera_ministerio.png`:
+   - En el encabezado del informe web `InformeAlta.php`.
+   - En el modal de previsualización de correo institucional.
+   - En el archivo `.eml` descargable mediante el estándar MIME `multipart/related` e incrustación `cid:cabecera-logo` con codificación Base64.
+3. **Destinatario en Blanco en EML:** Configurar el campo `To:` en blanco en las cabeceras del correo `.eml` (`To: \r\n`) y reflejarlo en la vista previa del modal para que el operador ingrese libremente los destinatarios al abrir el archivo en su cliente de correo.
+
+### 2. Archivos Modificados
+- **`img/cabecera_ministerio.png` (NUEVO):** Imagen de cabecera oficial del Ministerio de Desarrollo Humano / SeNAF.
+- **`InformeAlta.php`:**
+  - Actualización de textos institucionales a "Secretaria de Niñez, Adolescencia y Familia".
+  - Inclusión del banner gráfico en el membrete superior del informe web y en la vista previa del modal.
+  - Generación de estructura MIME `multipart/related` con adjunto inline `Content-ID: <cabecera-logo>` para el archivo `.eml`.
+  - Configuración del encabezado `To:` en blanco en el generador RFC 822 y en la interfaz de usuario.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro de la intervención.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :---: |
+| **Linting Sintáctico PHP 5.6** | `php -l InformeAlta.php` | 0 errores detectados | ✅ PASÓ |
+| **Verificación de Denominación** | `grep -i "Secretaria de Estado"` | 0 coincidencias en el código fuente | ✅ PASÓ |
+| **Campo To: en blanco en EML** | Generación de lote vía `?accion=descargar_eml` | `To: \r\n` generado limpiamente sin destinatarios predefinidos | ✅ PASÓ |
+| **Incrustación de Imagen CID** | Validación MIME en archivo `.eml` | Cabecera `multipart/related`, parte HTML con `<img src="cid:cabecera-logo">` y parte binaria base64 con `Content-ID: <cabecera-logo>` | ✅ PASÓ |
+
+---
+
+## [2026-11-19 08:20] - Compatibilidad Thunderbird (`X-Unsent: 1`), Destinatario Editable e Inclusión del Logo Cabal en Cabecera
+
+### 1. Objetivos de la Intervención
+1. **Compatibilidad Nativa de Envío en Mozilla Thunderbird:** Incorporar la cabecera estándar `X-Unsent: 1` en el archivo `.eml` generado. Esto instruye a Thunderbird (y clientes compatibles como Outlook) a abrir el archivo directamente en la **ventana de redacción / composición** en lugar de en modo de lectura. De esta manera, el campo destinatario ("Para") queda activo y editable, y el botón **"Enviar"** habilitado de inmediato.
+2. **Destinatario Dinámico u Opcional:** Permitir al usuario ingresar el o los destinatarios directamente desde el modal interactivo de la aplicación web, o dejarlos en blanco para completarlos en Thunderbird.
+3. **Incorporación del Logo Oficial Cabal:** Integrar la imagen del logo Cabal (`img/logo_cabal_oficial.png`) provista por el operador en el encabezado del informe web, modal de previsualización y dentro del archivo `.eml` mediante adjunto MIME inline con identificador `Content-ID: <cabal-logo>`.
+
+### 2. Archivos Creados y Modificados
+- **`img/logo_cabal_oficial.png` (NUEVO):** Logo oficial de Cabal para el membrete institucional.
+- **`InformeAlta.php`:**
+  - Cabecera `.eml`: Adición de `X-Unsent: 1` y lectura del parámetro `$_GET['destinatario']`.
+  - Estructura MIME: Inclusión de ambas imágenes (`cabecera_ministerio.png` y `logo_cabal_oficial.png`) como partes inline (`cid:cabecera-logo` y `cid:cabal-logo`) en `multipart/related`.
+  - Membrete y Modal: Distribución visual en dos columnas (Ministerio a la izquierda, Cabal a la derecha) e input interactivo para el destinatario con sincronización en tiempo real vía JavaScript.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro de la intervención.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :---: |
+| **Linting Sintáctico PHP 5.6** | `php -l InformeAlta.php` | 0 errores detectados | ✅ PASÓ |
+| **Cabecera `X-Unsent: 1`** | Verificación en salida `.eml` | Presente en el encabezado RFC 822 | ✅ PASÓ |
+| **Destinatario Opcional / Dinámico** | Generación con y sin parámetro `destinatario` | Con parámetro asigna `To: <email>`; sin parámetro genera `To: \r\n` | ✅ PASÓ |
+| **Adjuntos MIME Doble Imagen** | Validación de boundaries en `.eml` | Partes `cabecera-logo` y `cabal-logo` correctamente delimitadas y codificadas en Base64 | ✅ PASÓ |
+
+---
+
+## [2026-11-19 08:35] - Depuración de Textos y Remoción de Tarjeta de Sincronización en BD
+
+### 1. Objetivos de la Intervención
+1. **Remoción de Saludo Genérico:** Eliminar el párrafo *"Estimadas Autoridades y Delegaciones Zonales,"* tanto de la plantilla del correo descargable `.eml` como del modal de vista previa en [InformeAlta.php](file:///opt/lampp/htdocs/cabal-Gemini/InformeAlta.php).
+2. **Eliminación de la Métrica "Sincronizados en BD":**
+   - Suprimir la caja KPI *"Sincronizados en BD"* en el archivo `.eml` y reajustar el ancho de las 3 métricas restantes (Titulares Procesados, Tarjetas Creadas, Rechazadas Cabal) al 33.33% cada una.
+   - Suprimir la tarjeta de estadística *"En Padrón (BD) / Sincronizados en tabla beneficiario"* de la vista web principal del informe.
+
+### 2. Archivos Modificados
+- **`InformeAlta.php`:**
+  - Depuración de textos en la sección de contenido del correo EML y en la vista previa del modal.
+  - Remoción de la 4ta caja KPI en el correo electrónico.
+  - Remoción de la 4ta tarjeta métrica en el dashboard del informe web.
+  - Blindaje con `function_exists()` en todas las funciones auxiliares para prevención de redefiniciones.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro de la intervención.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :---: |
+| **Linting Sintáctico PHP 5.6** | `php -l InformeAlta.php` | 0 errores detectados | ✅ PASÓ |
+| **Ausencia de Texto "Estimadas Autoridades"** | `grep -i "Estimadas Autoridades"` | 0 coincidencias en todo el archivo | ✅ PASÓ |
+| **Ausencia de "Sincronizados en BD"** | `grep -i "Sincronizados en BD"` | 0 coincidencias en todo el archivo | ✅ PASÓ |
+| **Generación EML 3 Cajas KPI** | Invocación CLI con `?accion=descargar_eml` | 3 cajas KPI distribuidas al 33.33% sin errores visuales | ✅ PASÓ |
+
+
+
+
 
 
 

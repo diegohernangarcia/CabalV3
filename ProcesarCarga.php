@@ -64,6 +64,12 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST" &
                     $fechaModificacion = date("d/m/Y H:i:s", filemtime($destino));
                     $mensajeUpload = "Archivo <strong>" . htmlspecialchars($nombreOriginal, ENT_QUOTES, 'UTF-8') . "</strong> recibido y auditado con éxito.";
                     $tipoUpload = "success";
+                    $metaData = array(
+                        'nombre_original' => $nombreOriginal,
+                        'subido_en' => date("Y-m-d H:i:s"),
+                        'tamano_bytes' => $tamanoArchivo
+                    );
+                    @file_put_contents($targetDir . "RespuestaCargas_meta.json", json_encode($metaData));
                 } else {
                     $mensajeUpload = "Error al mover el archivo subido a la carpeta de destino. Verifique permisos en <code>archivos/</code>.";
                     $tipoUpload = "danger";
@@ -725,6 +731,16 @@ if ($archivoExiste) {
                 Subir Archivos
             </a>
 
+            <a href="InformeAcreditacion.php" class="btn-nav-action" id="btn-informe-acreditacion" style="border-color: #059669; color: #059669; font-weight: 700;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                7. Informe Acreditación
+            </a>
+
             <button type="button" class="btn-nav-action" onclick="toggleCatalogoErroresCarga()" id="btn-toggle-catalogo-carga">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                 Ver Catálogo Errores Anexo 11
@@ -846,6 +862,10 @@ if ($archivoExiste) {
                     </div>
 
                     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <a href="InformeAcreditacion.php" class="btn-modern-primary" style="padding: 8px 16px; font-size: 0.84rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #059669; color: #ffffff; border-radius: 6px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            Paso 7: Ver Informe Acreditación
+                        </a>
                         <a href="ProcesarCarga.php" class="btn-modern-secondary" style="padding: 8px 14px; font-size: 0.84rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             Adjuntar Otro Archivo

@@ -272,6 +272,7 @@ try {
                     <a href="CargaAltasDeExcelaBD.php" class="step-link-item">&bull; 1. Importar Excel Con Altas y Generar ALTASUCBPRE</a>
                     <a href="ValidarAltas.php" class="step-link-item">&bull; 2. Verificar y Validar ALTASUCBPRE</a>
                     <a href="ProcesaNovedadesAltas.php" class="step-link-item">&bull; 3. Validar respuesta de Altas</a>
+                    <a href="InformeAlta.php" class="step-link-item">&bull; 4. Informe Alta</a>
                 </div>
             </div>
 
@@ -284,7 +285,9 @@ try {
                     <a href="ImportarAcreditacionesValidado.php" class="step-link-item">&bull; 2. Importar y subir Acreditaciones Validado</a>
                     <a href="GenerarCargaCredito2026.php" class="step-link-item">&bull; 3. Generar NOVCAR.782</a>
                     <a href="VerificarNovcar.php" class="step-link-item">&bull; 4. Verificar Lote NOVCAR</a>
-                    <a href="ProcesarCarga.php" class="step-link-item">&bull; 5. Verificar Respuesta Carga</a>
+                    <a href="SubirArchivo.html" class="step-link-item">&bull; 5. Subir Respuesta Cargas</a>
+                    <a href="ProcesarCarga.php" class="step-link-item">&bull; 6. Verificar Respuesta Carga</a>
+                    <a href="InformeAcreditacion.php" class="step-link-item">&bull; 7. Informe Acreditación</a>
                 </div>
             </div>
 
@@ -448,6 +451,19 @@ try {
                     <span class="action-arrow">&rarr;</span>
                 </a>
 
+                <a href="InformeAlta.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Informe de Altas Procesadas (Item 4)</h5>
+                            <p>Informe HTML con datos del lote out_altas, tarjetas enmascaradas y exportación EML SeNAF</p>
+                        </div>
+                    </div>
+                    <span class="action-arrow">&rarr;</span>
+                </a>
+
                 <a href="ConsultarBeneficiario.php" class="action-row">
                     <div class="action-left">
                         <span class="action-icon">
@@ -596,6 +612,19 @@ try {
                         </div>
                     </div>
                     <span class="action-arrow">&rarr;</span>
+                </a>
+
+                <a href="InformeAcreditacion.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon" style="color: var(--emerald-600);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Informe Acreditación (Item 7)</h5>
+                            <p>Informe formal y generación de correo EML con acreditaciones procesadas</p>
+                        </div>
+                    </div>
+                    <span class="badge-tag success">EML</span>
                 </a>
             </div>
         </article>
