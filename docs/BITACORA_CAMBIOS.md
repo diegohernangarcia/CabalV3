@@ -33,23 +33,40 @@
    - Indicadores KPI ejecutivos: Cuentas en Lote, Acreditaciones Exitosas ($), Acreditaciones Rechazadas ($) y Monto Total Procesado ($).
    - Modal interactivo con previsualización del correo, ajuste dinámico del destinatario "Para" y descarga directa del archivo `.eml`.
    - Búsqueda en tiempo real, filtro por estado (Aprobadas / Rechazadas) y optimización de impresión con `@media print`.
-3. **Integración en Tablero Central y Flujos Operativos:**
-   - En `index.php`: Incorporación del **Item 7. Informe Acreditación** en el Paso 2 ("Acreditación de Saldo") del flujo paso a paso y como tarjeta de acción en la cuadrícula Bento del Módulo 2 (`#mod-acreditaciones`).
+3. **Módulo "Informe Padrón General" (`InformePadronGeneral.php` - Item 5 en Altas de Tarjetas):**
+   - Desarrollo del módulo de informe institucional para auditar la nómina completa del Padrón General de Beneficiarios (`beneficiario`).
+   - Generación y descarga de archivo `.eml` estándar con cabecera `X-Unsent: 1` para apertura directa en modo redacción de Mozilla Thunderbird.
+   - Cabecera institucional dual (`img/cabecera_ministerio.png` y `img/logo_cabal_oficial.png`) incrustadas como `cid:cabecera-logo` y `cid:cabal-logo`.
+   - Denominación oficial "Secretaria de Niñez, Adolescencia y Familia" y enmascaramiento estricto de números de tarjeta (`formatearTarjetaCredito()`).
+   - Modal interactivo con previsualización del correo, ajuste opcional del destinatario "Para" y filtrado interactivo en vivo por texto y localidad.
+   - Integración del acceso en la tarjeta de Altas de Tarjetas (`index.php`, Paso 1 y Módulo 1 Bento Grid), en `ReporteAltaBeneficiarios.php` y en `index-menu.html`.
+4. **Integración en Tablero Central y Flujos Operativos:**
+   - En `index.php`: Renombramiento de la Tarjeta 1 a **"Beneficiarios"** e incorporación del ítem `6. 👥 Administración de Beneficiarios (Gestión del Padrón "CRUD")` (`crud/index.php`), además de la vinculación del ítem 5 (`InformePadronGeneral.php`).
+   - En `index.php` (Módulo 2): Incorporación del **Item 7. Informe Acreditación** en el Paso 2 ("Acreditación de Saldo") y en el Módulo 2 Bento grid (`#mod-acreditaciones`).
    - En `ProcesarCarga.php`: Inclusión del botón directo "7. Informe Acreditación" en la barra de navegación superior y en la botonera de acciones del archivo auditado. Guardado automático de metadatos de subida en `archivos/RespuestaCargas_meta.json`.
-   - En `index-menu.html`: Vinculación del ítem 7 dentro del menú desplegable "Acreditar Saldos".
+   - En `index-menu.html`: Vinculación de los ítems en los menús desplegables "Alta Beneficiarios" y "Acreditar Saldos".
+5. **Modernización Visual de las 4 Tarjetas de Flujo Operativo (`css/dashboard.css` e `index.php`):**
+   - Rediseño completo de los ítems de las 4 tarjetas secuenciales, sustituyendo el formato de texto plano con viñetas por componentes interactivos (`.step-item-btn`).
+   - Incorporación de insignias circulares numeradas por paso (`.step-item-idx`), tipografía estructurada con truncamiento elegante (`.step-item-name`), micro-tags contextuales temáticos (`128B`, `EML`, `CRUD`, `NOVCAR`, `80B`, `NOVTRAN`, `Reporte`) y flecha de acción interactiva (`.step-item-arrow`) con animación de desplazamiento en hover (`translateX(3px)`).
+   - Codificación cromática específica por módulo: Azul para Beneficiarios (Paso 1), Verde para Acreditación (Paso 2), Ámbar para Respuestas/Débitos (Paso 3) y Púrpura para Cierre/Movimientos (Paso 4).
+   - Alineación vertical estricta de ítems entre las 4 tarjetas: Fijación de `min-height: 68px` en cabeceras de tarjetas (`.step-card-header`), altura uniforme de 38px en cada botón (`.step-item-btn`) y eliminación del `margin-top: auto` en `.step-links`, garantizando que las filas de ítems 1, 2, 3... comiencen exactamente en la misma cota horizontal en todas las columnas.
+   - Ajuste de contención y ancho sin desborde: Implementación de `grid-template-columns: repeat(4, minmax(0, 1fr))` con `gap: 12px`, `box-sizing: border-box`, `min-width: 0` y `overflow: hidden` en tarjetas y enlaces, optimizando el relleno del marco contenedor (`.workflow-section`) para que las 4 tarjetas permanezcan estrictamente contenidas dentro del marco visual sin desbordamiento horizontal en ninguna resolución.
+   - Compatibilidad completa con temas Claro y Oscuro (`[data-theme="dark"]`).
 
 ### 2. Archivos Añadidos y Modificados
+- `InformePadronGeneral.php` (NUEVO): Módulo de auditoría del padrón general de beneficiarios y generador de correo EML con `X-Unsent: 1`.
 - `InformeAcreditacion.php` (NUEVO): Módulo principal de auditoría de respuesta de cargas y generador de EML con `X-Unsent: 1`.
 - `InformeAlta.php` (NUEVO): Módulo principal de auditoría de respuesta de altas y generador de EML con `X-Unsent: 1`.
 - `img/cabecera_ministerio.png` (NUEVO): Cabecera institucional oficial del Ministerio de Desarrollo Humano (Gobierno de Río Negro).
 - `img/logo_cabal_oficial.png` (NUEVO): Logotipo oficial de Cabal Entidad 782 para incrustación MIME y vista HTML.
-- `index.php`: Actualización de la grilla de pasos y del Módulo 2 con el ítem 7 de Informe Acreditación.
+- `index.php`: Actualización de la grilla de pasos (Paso 1 y Paso 2) y de los módulos Bento 1 y 2 con accesos directos a los informes EML.
+- `ReporteAltaBeneficiarios.php`: Botones directos para emisión del informe y descarga del archivo EML del padrón.
 - `ProcesarCarga.php`: Botón de acceso directo en navbar, botón en banner de archivo auditado y persistencia de `RespuestaCargas_meta.json`.
-- `index-menu.html`: Menú desplegable "Acreditar Saldos" actualizado con los enlaces operativos del flujo y el ítem 7.
+- `index-menu.html`: Menús desplegables "Alta Beneficiarios" y "Acreditar Saldos" actualizados con los enlaces operativos.
 - `docs/BITACORA_CAMBIOS.md`: Registro exhaustivo de la intervención.
 
 ### 3. Pruebas y Certificación Técnica
-- **Verificación Sintáctica (Linting):** Ejecución de `php -l` sobre `InformeAcreditacion.php`, `InformeAlta.php`, `index.php` y `ProcesarCarga.php`, certificando ausencia total de errores de sintaxis (`No syntax errors detected`).
+- **Verificación Sintáctica (Linting):** Ejecución de `php -l` sobre `InformePadronGeneral.php`, `InformeAcreditacion.php`, `InformeAlta.php`, `index.php`, `ReporteAltaBeneficiarios.php` y `ProcesarCarga.php`, certificando ausencia total de errores de sintaxis (`No syntax errors detected`).
 - **Verificación MIME RFC 822 y X-Unsent:** Comprobación por CLI de la emisión del archivo `.eml` con cabeceras `X-Unsent: 1`, `From:`, `To: ` (en blanco), boundary MIME `multipart/related`, codificación Base64 de las imágenes adjuntas con `Content-ID` (`cid:cabecera-logo` y `cid:cabal-logo`).
 - **Privacidad y Enmascaramiento:** Certificación de que ninguna tarjeta de crédito/débito se muestra completa, verificando la aplicación incondicional de `formatearTarjetaCredito()` (`5896.57**.****.XXXX`).
 

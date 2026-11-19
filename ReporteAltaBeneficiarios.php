@@ -87,6 +87,11 @@ $total_beneficiarios = $result ? $result->num_rows : 0;
                 Volver al Tablero
             </a>
 
+            <a href="InformePadronGeneral.php" class="btn-nav-action" style="border-color: #2563eb; color: #2563eb; font-weight: 700;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                Informe EML Padrón
+            </a>
+
             <a href="ExportarExcelBeneficiarios.php" class="btn-nav-action">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -132,7 +137,11 @@ $total_beneficiarios = $result ? $result->num_rows : 0;
                 <h3>Listado de Titulares</h3>
                 <p>Total registrados: <?php echo number_format($total_beneficiarios, 0, ',', '.'); ?> • Ordenado por: <strong><?php echo htmlspecialchars($order . " (" . $direction . ")"); ?></strong></p>
             </div>
-            <div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <a href="InformePadronGeneral.php" class="btn-modern-primary" style="padding: 8px 16px; font-size: 0.84rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #2563eb; color: #ffffff; border-radius: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Generar Correo EML
+                </a>
                 <a href="ExportarExcelBeneficiarios.php" class="btn-modern-success" style="padding: 8px 16px; font-size: 0.84rem;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     Descargar en Excel

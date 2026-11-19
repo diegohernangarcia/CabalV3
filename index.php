@@ -264,52 +264,207 @@ try {
         </div>
 
         <div class="workflow-steps-grid">
-            <div class="step-card">
-                <div class="step-num-badge">1</div>
-                <h4>Altas de Tarjetas</h4>
-                <p>Carga de planilla Excel y emisión del lote de 128 bytes para Cabal.</p>
+            <!-- TARJETA 1: BENEFICIARIOS -->
+            <div class="step-card step-1">
+                <div class="step-card-header">
+                    <div class="step-num-badge">1</div>
+                    <div>
+                        <h4>Beneficiarios</h4>
+                        <p>Gestión del padrón, altas de titulares y emisión de lotes 128B.</p>
+                    </div>
+                </div>
                 <div class="step-links">
-                    <a href="CargaAltasDeExcelaBD.php" class="step-link-item">&bull; 1. Importar Excel Con Altas y Generar ALTASUCBPRE</a>
-                    <a href="ValidarAltas.php" class="step-link-item">&bull; 2. Verificar y Validar ALTASUCBPRE</a>
-                    <a href="ProcesaNovedadesAltas.php" class="step-link-item">&bull; 3. Validar respuesta de Altas</a>
-                    <a href="InformeAlta.php" class="step-link-item">&bull; 4. Informe Alta</a>
+                    <a href="CargaAltasDeExcelaBD.php" class="step-item-btn" title="Importar Excel Con Altas y Generar ALTASUCBPRE">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">1</span>
+                            <span class="step-item-name">Importar Excel con Altas</span>
+                        </div>
+                        <span class="step-item-tag step-tag-blue">128B</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="ValidarAltas.php" class="step-item-btn" title="Verificar y Validar ALTASUCBPRE">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">2</span>
+                            <span class="step-item-name">Verificar y Validar ALTAS</span>
+                        </div>
+                        <span class="step-item-tag step-tag-blue">Validar</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="ProcesaNovedadesAltas.php" class="step-item-btn" title="Validar respuesta de Altas">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">3</span>
+                            <span class="step-item-name">Validar Respuesta de Altas</span>
+                        </div>
+                        <span class="step-item-tag step-tag-blue">Respuesta</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="InformeAlta.php" class="step-item-btn" title="Informe Alta y Correo SeNAF">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">4</span>
+                            <span class="step-item-name">Informe Alta y Correo</span>
+                        </div>
+                        <span class="step-item-tag step-tag-blue">EML</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="InformePadronGeneral.php" class="step-item-btn" title="Informe Padrón General y Generación EML">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">5</span>
+                            <span class="step-item-name">Informe Padrón General</span>
+                        </div>
+                        <span class="step-item-tag step-tag-blue">EML</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="crud/index.php" class="step-item-btn" title="Administración de Beneficiarios (Gestión del Padrón CRUD)">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">6</span>
+                            <span class="step-item-name">Administración Beneficiarios</span>
+                        </div>
+                        <span class="step-item-tag step-tag-blue">CRUD</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
                 </div>
             </div>
 
-            <div class="step-card">
-                <div class="step-num-badge">2</div>
-                <h4>Acreditación de Saldo</h4>
-                <p>Procesamiento de montos, verificación y generación del archivo NOVCAR.</p>
+            <!-- TARJETA 2: ACREDITACIÓN DE SALDO -->
+            <div class="step-card step-2">
+                <div class="step-card-header">
+                    <div class="step-num-badge">2</div>
+                    <div>
+                        <h4>Acreditación de Saldo</h4>
+                        <p>Procesamiento de montos, verificación y lotes NOVCAR.</p>
+                    </div>
+                </div>
                 <div class="step-links">
-                    <a href="SubirArchivo.html" class="step-link-item">&bull; 1. Subir Acreditaciones.xlsx</a>
-                    <a href="ImportarAcreditacionesValidado.php" class="step-link-item">&bull; 2. Importar y subir Acreditaciones Validado</a>
-                    <a href="GenerarCargaCredito2026.php" class="step-link-item">&bull; 3. Generar NOVCAR.782</a>
-                    <a href="VerificarNovcar.php" class="step-link-item">&bull; 4. Verificar Lote NOVCAR</a>
-                    <a href="SubirArchivo.html" class="step-link-item">&bull; 5. Subir Respuesta Cargas</a>
-                    <a href="ProcesarCarga.php" class="step-link-item">&bull; 6. Verificar Respuesta Carga</a>
-                    <a href="InformeAcreditacion.php" class="step-link-item">&bull; 7. Informe Acreditación</a>
+                    <a href="SubirArchivo.html" class="step-item-btn" title="Subir Acreditaciones.xlsx provisto por Suministros">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">1</span>
+                            <span class="step-item-name">Subir Acreditaciones.xlsx</span>
+                        </div>
+                        <span class="step-item-tag step-tag-green">Upload</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="ImportarAcreditacionesValidado.php" class="step-item-btn" title="Importar y subir Acreditaciones Validado">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">2</span>
+                            <span class="step-item-name">Importar Planilla Validada</span>
+                        </div>
+                        <span class="step-item-tag step-tag-green">Validado</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="GenerarCargaCredito2026.php" class="step-item-btn" title="Generar Lote Bancario NOVCAR.782">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">3</span>
+                            <span class="step-item-name">Generar NOVCAR.782</span>
+                        </div>
+                        <span class="step-item-tag step-tag-green">Lote</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="VerificarNovcar.php" class="step-item-btn" title="Verificar Lote NOVCAR antes del envío">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">4</span>
+                            <span class="step-item-name">Verificar Lote NOVCAR</span>
+                        </div>
+                        <span class="step-item-tag step-tag-green">Auditoría</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="SubirArchivo.html" class="step-item-btn" title="Subir Respuesta de Cargas de Cabal">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">5</span>
+                            <span class="step-item-name">Subir Respuesta Cargas</span>
+                        </div>
+                        <span class="step-item-tag step-tag-green">RCAR</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="ProcesarCarga.php" class="step-item-btn" title="Verificar Respuesta Carga (RespuestaCargas.txt)">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">6</span>
+                            <span class="step-item-name">Verificar Respuesta Carga</span>
+                        </div>
+                        <span class="step-item-tag step-tag-green">80B</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="InformeAcreditacion.php" class="step-item-btn" title="Informe Acreditación y Generación de Correo EML">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">7</span>
+                            <span class="step-item-name">Informe Acreditación</span>
+                        </div>
+                        <span class="step-item-tag step-tag-green">EML</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
                 </div>
             </div>
 
-            <div class="step-card">
-                <div class="step-num-badge">3</div>
-                <h4>Respuestas y Débitos</h4>
-                <p>Carga de confirmaciones bancarias y descarga de fondos remanentes.</p>
+            <!-- TARJETA 3: RESPUESTAS Y DÉBITOS -->
+            <div class="step-card step-3">
+                <div class="step-card-header">
+                    <div class="step-num-badge">3</div>
+                    <div>
+                        <h4>Respuestas y Débitos</h4>
+                        <p>Confirmaciones bancarias y descarga de remanentes.</p>
+                    </div>
+                </div>
                 <div class="step-links">
-                    <a href="SubirArchivo.html" class="step-link-item">&bull; 1. Subir Respuesta Cargas</a>
-                    <a href="ProcesarCarga.php" class="step-link-item">&bull; 2. Procesar RespuestaCargas.txt</a>
-                    <a href="cereo_upload.php" class="step-link-item">&bull; 3. Generar NOVTRAN.782</a>
+                    <a href="SubirArchivo.html" class="step-item-btn" title="Subir archivo Respuesta Cargas de Cabal">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">1</span>
+                            <span class="step-item-name">Subir Respuesta Cargas</span>
+                        </div>
+                        <span class="step-item-tag step-tag-amber">Upload</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="ProcesarCarga.php" class="step-item-btn" title="Procesar y verificar RespuestaCargas.txt">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">2</span>
+                            <span class="step-item-name">Procesar RespuestaCargas</span>
+                        </div>
+                        <span class="step-item-tag step-tag-amber">RCAR</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="cereo_upload.php" class="step-item-btn" title="Generar lote de débito/descarga NOVTRAN.782">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">3</span>
+                            <span class="step-item-name">Generar NOVTRAN.782</span>
+                        </div>
+                        <span class="step-item-tag step-tag-amber">Débito</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
                 </div>
             </div>
 
-            <div class="step-card">
-                <div class="step-num-badge">4</div>
-                <h4>Cierre y Movimientos</h4>
-                <p>Liquidación mensual de consumos al cierre de cada mes.</p>
+            <!-- TARJETA 4: CIERRE Y MOVIMIENTOS -->
+            <div class="step-card step-4">
+                <div class="step-card-header">
+                    <div class="step-num-badge">4</div>
+                    <div>
+                        <h4>Cierre y Movimientos</h4>
+                        <p>Liquidación mensual de consumos al cierre de cada mes.</p>
+                    </div>
+                </div>
                 <div class="step-links">
-                    <a href="ProcesarMovimientos.php" class="step-link-item">&bull; 1. Procesar Movimientos.txt</a>
-                    <a href="ReporteMovimientos.php" class="step-link-item">&bull; 2. Reporte Mensual General</a>
-                    <a href="ReporteMovimientosPorNombre.php" class="step-link-item">&bull; 3. Reporte por Beneficiario</a>
+                    <a href="ProcesarMovimientos.php" class="step-item-btn" title="Procesar archivo de Movimientos.txt">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">1</span>
+                            <span class="step-item-name">Procesar Movimientos.txt</span>
+                        </div>
+                        <span class="step-item-tag step-tag-purple">Movs</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="ReporteMovimientos.php" class="step-item-btn" title="Reporte Mensual General de Consumos">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">2</span>
+                            <span class="step-item-name">Reporte Mensual General</span>
+                        </div>
+                        <span class="step-item-tag step-tag-purple">Reporte</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
+                    <a href="ReporteMovimientosPorNombre.php" class="step-item-btn" title="Reporte detallado por Beneficiario">
+                        <div class="step-item-content">
+                            <span class="step-item-idx">3</span>
+                            <span class="step-item-name">Reporte por Beneficiario</span>
+                        </div>
+                        <span class="step-item-tag step-tag-purple">Ficha</span>
+                        <span class="step-item-arrow">&rarr;</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -483,7 +638,7 @@ try {
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </span>
                         <div class="action-texts">
-                            <h5>Gestión del Padrón (CRUD)</h5>
+                            <h5>👥 Administración de Beneficiarios (Gestión del Padrón "CRUD")</h5>
                             <p>Búsqueda interactiva, alta, edición y baja de beneficiarios</p>
                         </div>
                     </div>
@@ -514,6 +669,19 @@ try {
                         </div>
                     </div>
                     <span class="action-arrow">&rarr;</span>
+                </a>
+
+                <a href="InformePadronGeneral.php" class="action-row">
+                    <div class="action-left">
+                        <span class="action-icon" style="color: var(--primary-600);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </span>
+                        <div class="action-texts">
+                            <h5>Informe Padrón General (EML)</h5>
+                            <p>Informe formal y emisión de correo EML con el padrón completo</p>
+                        </div>
+                    </div>
+                    <span class="badge-tag success">EML</span>
                 </a>
             </div>
         </article>
