@@ -163,18 +163,25 @@ $total = $result->num_rows;
 
 <header class="top-nav">
     <div class="top-nav-inner">
-        <a href="index.php" class="brand-group" id="brand-link">
-            <div class="brand-logo-wrap">
-                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+        <div class="top-nav-header-bar">
+            <div class="brand-logo-slot left">
+                <a href="index.php" class="brand-logo-wrap nexo-wrap" title="Nexo FRS">
+                    <img src="img/NexoFRS.png" alt="Logo Nexo FRS" onerror="this.src='img/favicon.png'">
+                </a>
             </div>
-            <div class="brand-text">
+            <a href="index.php" class="brand-text-center" id="brand-link">
                 <h1>
-                    CABAL FSR
+                    Nexo FRS
                     <span class="brand-badge">Entidad 782</span>
                 </h1>
-                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+                <p>SeNAF Río Negro • Familia Rionegrina Solidaria</p>
+            </a>
+            <div class="brand-logo-slot right">
+                <div class="brand-logo-wrap cabal-wrap" title="Cabal Entidad 782">
+                    <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+                </div>
             </div>
-        </a>
+        </div>
 
         <div class="nav-actions">
             <a href="index.php" class="btn-nav-action primary" id="btn-volver-tablero">

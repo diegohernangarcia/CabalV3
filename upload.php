@@ -195,15 +195,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['subir_archivo'])) {
 
 <header class="top-nav">
     <div class="top-nav-inner">
-        <a href="index.php" class="brand-group">
-            <div class="brand-logo-wrap">
-                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+        <div class="top-nav-header-bar">
+            <div class="brand-logo-slot left">
+                <a href="index.php" class="brand-logo-wrap nexo-wrap" title="Nexo FRS">
+                    <img src="img/NexoFRS.png" alt="Logo Nexo FRS" onerror="this.src='img/favicon.png'">
+                </a>
             </div>
-            <div class="brand-text">
-                <h1>CABAL FSR <span class="brand-badge">Entidad 782</span></h1>
-                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            <a href="index.php" class="brand-text-center" id="brand-link">
+                <h1>
+                    Nexo FRS
+                    <span class="brand-badge">Entidad 782</span>
+                </h1>
+                <p>SeNAF Río Negro • Familia Rionegrina Solidaria</p>
+            </a>
+            <div class="brand-logo-slot right">
+                <div class="brand-logo-wrap cabal-wrap" title="Cabal Entidad 782">
+                    <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+                </div>
             </div>
-        </a>
+        </div>
         <div class="nav-actions">
             <a href="SubirArchivo.html" class="btn-nav-action primary">Subir Otro Archivo</a>
             <a href="index.php" class="btn-nav-action">Ir al Tablero</a>

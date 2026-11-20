@@ -283,6 +283,24 @@ Cada operación realizada en el repositorio debe documentar de forma explícita 
 
 ---
 
+### Acción 18: Branding Nexo FRS, Logotipos en Extremos, Barra Centrada y Actualización Integral de Cabecera
+- **Fecha y Hora:** 2026-11-20 09:50:00 -0300
+- **Comando Ejecutado:** `git commit -m "Branding Nexo FRS" && git push origin main`
+- **Hash de Commit:** *Registrado en commit y push activo*
+- **Estado:** ✅ **EXITOSA**
+- **Detalle de la Operación:**
+  - Incorporación del nuevo logotipo oficial `NexoFRS.png` en alta definición con canal alfa transparente y banner a ancho completo en la pantalla de inicio de sesión (`auth/login.php`).
+  - Rediseño estructural y simétrico de la cabecera institucional en 52 archivos PHP (`index.php`, `admin_usuarios.php`, `crud/`, `crud-acreditacion/`, `V2/` y 45 páginas operativas):
+    - Extremo izquierdo: Logotipo oficial Nexo FRS (`img/NexoFRS.png`).
+    - Centro: Identificación institucional `Nexo FRS` con insignia `Entidad 782` y `SeNAF Río Negro • Familia Rionegrina Solidaria`.
+    - Extremo derecho: Logotipo oficial Cabal (`img/cabal.png`).
+    - Slots laterales simétricos de 80 px para garantizar el centrado geométrico absoluto del texto institucional.
+  - Centrado horizontal completo de la barra de acciones de navegación (`.nav-actions`).
+  - Incorporación de botón y modal de Blanqueo de Contraseña en `admin_usuarios.php` con registro de auditoría.
+  - Actualización de `docs/BITACORA_CAMBIOS.md`.
+
+---
+
 ## 3. Protocolos Operativos y Estándar Obligatorio de Registro
 
 Para cumplir con la directiva permanente fijada en `GEMINI.md`:

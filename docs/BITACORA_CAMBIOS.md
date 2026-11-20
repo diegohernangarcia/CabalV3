@@ -7,12 +7,49 @@
 ---
 
 ## Índice Cronológico
+- [Jornada: 20 de Noviembre de 2026 (Identidad Visual Nexo FRS, Logotipos en Extremos, Barra Centrada y Blanqueo Administrativo de Claves)](#jornada-20-de-noviembre-de-2026)
 - [Jornada: 19 de Noviembre de 2026 (Módulos de Informe Alta e Informe Acreditación con Exportación a EML para Thunderbird)](#jornada-19-de-noviembre-de-2026)
 - [Jornada: 16 de Noviembre de 2026 (Instalación de Skill de Auditoría de Seguridad Cloudflare security-audit-skill)](#jornada-16-de-noviembre-de-2026)
 - [Jornada: 27 de Octubre de 2026 (Módulo de Importación y Validación de Acreditaciones con Truncate y Carga en Tabla Acreditar)](#jornada-27-de-octubre-de-2026)
 - [Jornada: 23 de Octubre de 2026 (Modernización Integral de Estilos y Colores en Todas las Páginas)](#jornada-23-de-octubre-de-2026)
 - [Jornada: 21 de Octubre de 2026 (Sprint Mejoras de Altas y Subida Centralizada)](#jornada-21-de-octubre-de-2026)
 - [Jornada: 20 de Octubre de 2026 (Auditoría Integral, Documentación Base y Nuevo Tablero)](#jornada-20-de-octubre-de-2026)
+
+---
+
+## Jornada: 20 de Noviembre de 2026
+
+### 1. Objetivos de la Sesión
+1. **Identidad Visual "Nexo FRS" y Cabecera Institucional Unificada:**
+   - Incorporación del nuevo logotipo oficial `NexoFRS.png` con canal alfa transparente y alta definición en la pantalla de autenticación y en la barra superior del sistema.
+   - Reestructuración de la cabecera institucional en todas las páginas:
+     - **Extremo Izquierdo:** Logotipo oficial Nexo FRS (`img/NexoFRS.png` o `../img/NexoFRS.png`).
+     - **Centro:** Identificación institucional centrada: `Nexo FRS` con insignia `Entidad 782` y subtítulo `SeNAF Río Negro • Familia Rionegrina Solidaria`.
+     - **Extremo Derecho:** Logotipo oficial Cabal Entidad 782 (`img/cabal.png` o `../img/cabal.png`).
+     - Ranuras laterales simétricas (`.brand-logo-slot` de 80px) para garantizar el centrado geométrico absoluto del texto institucional en cualquier resolución de pantalla.
+   - Centrado horizontal completo de la barra de acciones de navegación (`.nav-actions`), ubicando centrados los selectores de modo visual, estado de base de datos, portal Cabal, guía operativa, documentación, administración de usuarios y usuario activo.
+2. **Pantalla de Inicio de Sesión (`auth/login.php`):**
+   - Incorporación del banner de ancho completo con el logotipo transparente de Nexo FRS (`.login-banner-container`).
+   - Retiro de enlaces públicos de auto-recuperación de clave, concentrando la gestión de seguridad en el perfil administrativo.
+3. **Módulo de Administración de Usuarios (`admin_usuarios.php`):**
+   - Incorporación de botón de acción directa *"🔑 Blanquear"* en la tabla de usuarios.
+   - Modal interactivo con preajustes de reseteo (`12345`, `cabal2026` o generación de contraseña aleatoria de 8 caracteres).
+   - Reseteo automático de bloqueos por intentos fallidos (`intentos_fallidos = 0`, `bloqueado_hasta = NULL`) y registro en la bitácora de auditoría `auditoria_accesos`.
+   - Corrección de consultas SQL a nombres de columnas del DDL (`creado_en`, `fecha_hora`, `expira_en`, `utilizado`).
+
+### 2. Archivos Añadidos y Modificados
+- `img/NexoFRS.png` (NUEVO): Logotipo oficial de Nexo FRS en formato RGBA con fondo transparente (586x377 px).
+- `auth/login.php`: Banner superior con logo Nexo FRS a ancho completo y título actualizado.
+- `admin_usuarios.php`: Modal y lógica de blanqueo de contraseñas por administradores; corrección de nombres de campos en base de datos; nueva cabecera simétrica.
+- `css/dashboard.css`: Reglas `.top-nav-header-bar`, `.brand-logo-slot`, `.brand-text-center` y centrado de `.nav-actions`.
+- `index.php`: Cabecera simétrica con Logo Nexo (izq), texto centrado (centro), Logo Cabal (der) y barra de acciones centrada.
+- `crud/index.php`, `crud/create.php`, `crud/edit.php`, `crud-acreditacion/crud.php`, `V2/Altas.php`: Despliegue de la cabecera simétrica con rutas relativas a imágenes.
+- 45 páginas operativas del sistema (`InformeAlta.php`, `InformeAcreditacion.php`, `InformePadronGeneral.php`, `AcreditarCSV.php`, `GenerarCargaCredito2026.php`, etc.): Actualización masiva de la cabecera unificada.
+
+### 3. Pruebas y Verificación
+- Verificación de sintaxis PHP: Las 52 páginas modificadas fueron analizadas con `php -l` arrojando 0 errores de sintaxis.
+- Verificación de alineación: Los dos logos quedan en extremos opuestos con slots simétricos de 80px y el texto institucional queda matemáticamente centrado.
+- Verificación de barra de acciones: `.nav-actions` se visualiza centrada horizontalmente bajo el bloque de cabecera.
 
 ---
 
@@ -1571,6 +1608,75 @@ Para asegurar la total trazabilidad y la posibilidad de reversión inmediata ant
 | **Protección CSRF en Blanqueo** | POST con y sin token `csrf_token` | Operación autorizada con token; rechazada sin él | ✅ PASÓ |
 | **Desbloqueo Automático al Blanquear** | Consulta SQL tras blanquear usuario con fallos | `intentos_fallidos` vuelve a 0 y `bloqueado_hasta` a NULL | ✅ PASÓ |
 | **Hash Criptográfico BCRYPT** | Verificación `password_verify($nuevaClave, $hash)` | Contraseña verificada satisfactoriamente | ✅ PASÓ |
+
+---
+
+## [2026-11-20 08:55] - Incorporación del Nombre Oficial del Sistema: Nexo FRS en Login y Cabeceras
+
+### 1. Objetivos de la Intervención
+1. **Identidad del Sistema en Pantalla de Login (`auth/login.php`):**
+   - Actualización del título principal a **"Nexo FRS"** acompañado del badge de Entidad 782.
+   - Ajuste del subtítulo a *"Gestión Cabal • Familia Rionegrina Solidaria • SeNAF"*.
+   - Actualización de la etiqueta `<title>` del navegador a *"Iniciar Sesión • Nexo FRS • Entidad 782"*.
+2. **Actualización de la Cabecera Institucional (Top Navigation):**
+   - Incorporación de **"NEXO FRS"** como marca principal en la barra superior en:
+     - `index.php` (Panel Principal, incluyendo footer institucional y `<title>Nexo FRS • Cabal 2026</title>`).
+     - `admin_usuarios.php` (Administración de Usuarios).
+     - `crud/index.php` (Padrón de Beneficiarios).
+     - `InformeAlta.php` (Módulo de Informe de Altas EML).
+     - `InformeAcreditacion.php` (Módulo de Informe de Cargas EML).
+     - `InformePadronGeneral.php` (Módulo de Padrón General EML).
+
+### 2. Archivos Modificados
+- **`auth/login.php`:** Nombre "Nexo FRS", subtítulo institucional y título de pestaña.
+- **`index.php`:** Marca "NEXO FRS" en cabecera, `<title>` y footer institucional.
+- **`admin_usuarios.php`:** Marca "NEXO FRS" en barra de navegación y título de pestaña.
+- **`crud/index.php`:** Marca "NEXO FRS" en barra de navegación y título de pestaña.
+- **`InformeAlta.php`:** Marca "NEXO FRS" en barra de navegación superior.
+- **`InformeAcreditacion.php`:** Marca "NEXO FRS" en barra de navegación superior.
+- **`InformePadronGeneral.php`:** Marca "NEXO FRS" en barra de navegación superior.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro formal de la intervención.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :--- |
+| **Linting Sintáctico PHP 5.6** | `php -l` en los 7 archivos modificados | 0 errores detectados | ✅ PASÓ |
+| **Consistencia Visual de Marca** | Inspección de elementos `.brand-text h1` y `.login-title` | Nombre "Nexo FRS" renderizado uniformemente | ✅ PASÓ |
+
+---
+
+## [2026-11-20 09:10] - Integración del Logotipo Nexo FRS en Login y Cabeceras de Todo el Sistema
+
+### 1. Objetivos de la Intervención
+1. **Tratamiento y Transparencia del Isologotipo (`img/NexoFRS.png`):**
+   - Procesamiento del logotipo provisto por el usuario para asegurar transparencia alfa real de 32 bits (RGBA), eliminando fondos sólidos o artefactos de cuadrícula para una integración armónica en fondos claros y oscuros.
+   - Respaldo de seguridad del archivo original en `img/NexoFRS_orig.png`.
+2. **Logotipo Destacado en Pantalla de Login ([auth/login.php](file:///opt/lampp/htdocs/cabal-Gemini/auth/login.php)):**
+   - Incorporación del contenedor `.login-banner-container` en la parte superior del recuadro de inicio de sesión.
+   - El logotipo transparente `NexoFRS.png` ocupa todo el ancho visual del recuadro (`max-width: 360px`, `object-fit: contain`) con sombra difuminada institutional (`drop-shadow`).
+3. **Logotipo Nexo FRS en Cabeceras de Todo el Sistema:**
+   - Incorporación de `.brand-logos-cluster` en `css/dashboard.css` para contener en paralelo los dos logotipos oficiales: **Nexo FRS** y **Cabal**, ambos con la misma altura normalizada de 44px.
+   - Despliegue en todas las páginas operativas del sistema (Panel Principal `index.php`, Administración de Usuarios `admin_usuarios.php`, Padrón `crud/`, Módulos de Informes EML `InformeAlta.php`, `InformeAcreditacion.php`, `InformePadronGeneral.php`, y en los 42 módulos operativos adicionales).
+
+### 2. Archivos Creados y Modificados
+- **`img/NexoFRS.png`:** Logotipo procesado con canal alfa transparente RGBA real (586x377 px).
+- **`auth/login.php`:** Banner superior de ancho completo con el logotipo transparente.
+- **`css/dashboard.css`:** Clases `.brand-logos-cluster` y `.brand-logo-wrap.nexo-wrap` (altura uniforme de 44px).
+- **`index.php`:** Cluster dual de logotipos (Nexo FRS + Cabal) en barra de navegación.
+- **`admin_usuarios.php`:** Cluster dual de logotipos en barra superior.
+- **`crud/index.php`, `crud/create.php`, `crud/edit.php`:** Cluster dual en barra superior.
+- **`InformeAlta.php`, `InformeAcreditacion.php`, `InformePadronGeneral.php`:** Cluster dual en barra superior.
+- **42 páginas operativas PHP del sistema:** Incorporación del cluster de logotipos institucional.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro formal de la intervención.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :--- |
+| **Linting Sintáctico PHP 5.6** | `php -l` en páginas principales modificadas | 0 errores sintácticos detectados | ✅ PASÓ |
+| **Transparencia Alfa RGBA** | Validación `file img/NexoFRS.png` | `8-bit/color RGBA, non-interlaced` | ✅ PASÓ |
+| **Alineación Visual en Cabecera** | Dimensionamiento `.brand-logo-wrap` | Altura homogénea de 44px junto al logo de Cabal | ✅ PASÓ |
+
+
 
 
 

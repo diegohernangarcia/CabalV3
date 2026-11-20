@@ -40,7 +40,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cabal 2026</title>
+    <title>Nexo FRS • Cabal 2026</title>
     <meta name="description" content="Sistema de gestión, altas y conciliación de tarjetas sociales Cabal - Familia Rionegrina Solidaria">
     <link rel="icon" href="img/favicon.png">
     <!-- Hojas de Estilo del Nuevo Tablero -->
@@ -55,18 +55,25 @@ try {
      ======================================================================= -->
 <header class="top-nav">
     <div class="top-nav-inner">
-        <a href="index.php" class="brand-group" id="brand-link">
-            <div class="brand-logo-wrap">
-                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+        <div class="top-nav-header-bar">
+            <div class="brand-logo-slot left">
+                <a href="index.php" class="brand-logo-wrap nexo-wrap" title="Nexo FRS">
+                    <img src="img/NexoFRS.png" alt="Logo Nexo FRS" onerror="this.src='img/favicon.png'">
+                </a>
             </div>
-            <div class="brand-text">
+            <a href="index.php" class="brand-text-center" id="brand-link">
                 <h1>
-                    CABAL FSR
+                    Nexo FRS
                     <span class="brand-badge">Entidad 782</span>
                 </h1>
-                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+                <p>SeNAF Río Negro • Familia Rionegrina Solidaria</p>
+            </a>
+            <div class="brand-logo-slot right">
+                <div class="brand-logo-wrap cabal-wrap" title="Cabal Entidad 782">
+                    <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+                </div>
             </div>
-        </a>
+        </div>
 
         <div class="nav-actions">
             <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Cambiar a Modo Claro" aria-label="Cambiar a Modo Claro">
@@ -1109,7 +1116,7 @@ try {
 <footer class="footer-main">
     <div class="footer-inner">
         <div>
-            <strong>Sistema CABAL FSR</strong> — Secretaría de Niñez, Adolescencia y Familia (SeNAF)
+            <strong>Sistema NEXO FRS</strong> — Secretaría de Niñez, Adolescencia y Familia (SeNAF)
             <div style="font-size: 0.75rem; margin-top: 4px; color: #64748b;">
                 Gobierno de la Provincia de Río Negro • Entidad Financiera 782 • Sucursal 000
             </div>

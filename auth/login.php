@@ -81,7 +81,7 @@ $csrfToken = generarTokenCsrf();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión • Cabal FSR • Entidad 782</title>
+    <title>Iniciar Sesión • Nexo FRS • Entidad 782</title>
     <link rel="icon" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <style>
@@ -116,9 +116,28 @@ $csrfToken = generarTokenCsrf();
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .login-banner-container {
+            width: 100%;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.4) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 24px 20px 16px 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-banner-container img.banner-nexo {
+            width: 100%;
+            max-width: 360px;
+            height: auto;
+            max-height: 140px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.5));
+            display: inline-block;
+        }
+
         .login-header {
-            padding: 28px 28px 20px 28px;
-            background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0) 100%);
+            padding: 16px 28px 18px 28px;
+            background: rgba(15, 23, 42, 0.3);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
         }
@@ -312,15 +331,16 @@ $csrfToken = generarTokenCsrf();
 <body class="login-body">
 
     <div class="login-wrapper">
+        <div class="login-banner-container">
+            <img src="../img/NexoFRS.png" alt="Nexo FRS" class="banner-nexo">
+        </div>
+
         <div class="login-header">
-            <div class="login-logos">
-                <img src="../img/cabal.png" alt="Cabal FSR" class="logo-cabal" onerror="this.src='../img/favicon.png'">
-            </div>
             <h1 class="login-title">
-                CABAL FSR
+                Nexo FRS
                 <span class="badge">Entidad 782</span>
             </h1>
-            <p class="login-subtitle">Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+            <p class="login-subtitle">Gestión Cabal • Familia Rionegrina Solidaria • SeNAF</p>
         </div>
 
         <div class="login-body-content">

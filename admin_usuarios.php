@@ -239,7 +239,7 @@ $csrfToken = generarTokenCsrf();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Usuarios y Seguridad • Cabal FSR</title>
+    <title>Administración de Usuarios y Seguridad • Nexo FRS</title>
     <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/theme.js"></script>
@@ -637,18 +637,25 @@ $csrfToken = generarTokenCsrf();
 <!-- NAVEGACIÓN INSTITUCIONAL -->
 <header class="top-nav">
     <div class="top-nav-inner">
-        <a href="index.php" class="brand-group">
-            <div class="brand-logo-wrap">
-                <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+        <div class="top-nav-header-bar">
+            <div class="brand-logo-slot left">
+                <a href="index.php" class="brand-logo-wrap nexo-wrap" title="Nexo FRS">
+                    <img src="img/NexoFRS.png" alt="Logo Nexo FRS" onerror="this.src='img/favicon.png'">
+                </a>
             </div>
-            <div class="brand-text">
+            <a href="index.php" class="brand-text-center" id="brand-link">
                 <h1>
-                    CABAL FSR
+                    Nexo FRS
                     <span class="brand-badge">Entidad 782</span>
                 </h1>
-                <p>Familia Rionegrina Solidaria • SeNAF Río Negro</p>
+                <p>SeNAF Río Negro • Familia Rionegrina Solidaria</p>
+            </a>
+            <div class="brand-logo-slot right">
+                <div class="brand-logo-wrap cabal-wrap" title="Cabal Entidad 782">
+                    <img src="img/cabal.png" alt="Logo Cabal" onerror="this.src='img/favicon.png'">
+                </div>
             </div>
-        </a>
+        </div>
 
         <div class="nav-actions">
             <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Cambiar tema">
