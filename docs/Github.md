@@ -306,6 +306,32 @@ Cada operación realizada en el repositorio debe documentar de forma explícita 
 
 ---
 
+### Acción 19: Ajuste CRUD Beneficiarios y Base de Datos Completa
+- **Fecha y Hora:** 2026-11-20 12:08:27 -0300
+- **Comando Ejecutado:** `git commit -m "Ajuste CRUD Beneficiarios y Base de Datos Completa" && git push origin main`
+- **Hash de Commit:** `4fdb0a5` (`8f6d733..4fdb0a5` hacia `origin/main`)
+- **Estado:** ✅ **EXITOSA**
+- **Salida Observada:**
+  ```text
+  To github.com:diegohernangarcia/CabalV3.git
+     8f6d733..4fdb0a5  main -> main
+  ```
+- **Detalle de la Operación:**
+  - **Eliminación Definitiva de Alta Manual en Beneficiarios:**
+    - `crud/create.php`: Deshabilitado con redirección hacia `index.php?info=flujo_altas` y protección de sesión.
+    - `crud/index.php`: Retiro de botones `Nuevo Beneficiario` y `+ Alta Manual`, reemplazados por accesos directos al circuito oficial institucional (`CargaAltasDeExcelaBD.php`). Inclusión de banner informativo.
+    - `crud/edit.php`: Incorporación de verificación de sesión con `requerirAutenticacion()`.
+  - **Ampliación de Contenedor y Reparación Visual en CRUD:**
+    - `.crud-container` expandido al 98% con ancho máximo de 1720px.
+    - Contenedor `.table-responsive-box` con scroll horizontal táctil y columna de acciones (`.col-acciones`) de 175px para evitar cortes en los botones `Editar` y `Eliminar`.
+  - **Script de Importación Limpia de Base de Datos (`docs/cabal_completo.sql`):**
+    - Estructura DDL completa de las 11 tablas del sistema (`roles`, `usuarios`, `auditoria_accesos`, `recuperacion_tokens`, `beneficiario`, `MasterTarjetas`, `acreditar`, `acreditar2`, `acreditarmanual`, `altas`, `movimientos`).
+    - Padrón `beneficiario` y tablas transaccionales exportadas vacías por directiva de privacidad y seguridad.
+    - Catálogo base de `roles` (3 perfiles) y las **2 únicas cuentas de usuarios administradores activas** (`dgarcia` y `pucho`).
+  - Actualización de bitácora en `docs/BITACORA_CAMBIOS.md`.
+
+---
+
 ## 3. Protocolos Operativos y Estándar Obligatorio de Registro
 
 Para cumplir con la directiva permanente fijada en `GEMINI.md`:
