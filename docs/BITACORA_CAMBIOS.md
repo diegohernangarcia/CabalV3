@@ -36,8 +36,34 @@
    - Modal interactivo con preajustes de reseteo (`12345`, `cabal2026` o generación de contraseña aleatoria de 8 caracteres).
    - Reseteo automático de bloqueos por intentos fallidos (`intentos_fallidos = 0`, `bloqueado_hasta = NULL`) y registro en la bitácora de auditoría `auditoria_accesos`.
    - Corrección de consultas SQL a nombres de columnas del DDL (`creado_en`, `fecha_hora`, `expira_en`, `utilizado`).
+4. **Auditoría Integral de Seguridad (Run-2) con Metodología Cloudflare `security-audit`:**
+   - Ejecución de la segunda auditoría de seguridad sobre el commit activo (`8f6d733`).
+   - Mapeo de 7 unidades de cobertura canónica certificadas mediante `validate-coverage-ledger.cjs` (7 PASS).
+   - Detección y documentación de 6 vulnerabilidades confirmadas validadas con `validate-findings.cjs` (6 PASS).
+   - Generación de artefactos formales de auditoría en `security-audit/run-2/` (`run-metadata.json`, `architecture.md`, `coverage-ledger.json`, `findings.json`, `FINDINGS-DETAIL.md`, `NEEDS-VALIDATION.md` y `REPORT.md`).
+   - Trazado de plan de mitigación prioritario P0 (propagación de autenticación a 45+ endpoints, eliminación de `Crud2/` y blindaje de `archivos/`).
+5. **Ajuste en Módulo CRUD Beneficiarios (`crud/index.php`, `crud/create.php`, `crud/edit.php`):**
+   - **Eliminación Definitiva de Alta Manual:** Por directiva institucional y de negocio, las altas de titulares de tarjeta nunca deben cargarse de forma manual sino exclusivamente siguiendo el circuito bancario de Beneficiarios (Paso 1: carga masiva de Excel a base de datos).
+   - Se retiraron todos los botones de *"Nuevo Beneficiario"* y *"+ Alta Manual"* en `crud/index.php`, reemplazándolos con accesos directos al circuito oficial (`CargaAltasDeExcelaBD.php`).
+   - Se deshabilitó `crud/create.php`, incorporando validación de sesión (`requerirAutenticacion()`) y redirección inmediata a `index.php?info=flujo_altas`.
+   - Se integró un banner informativo flotante en `crud/index.php` que explica que las altas se procesan desde el Paso 1 oficial.
+   - Se blindó `crud/edit.php` con verificación de sesión obligatoria (`requerirAutenticacion()`).
+   - **Ampliación de Contenedor y Reparación de Botones Cortados:**
+     - Se expandió el contenedor principal `.crud-container` a `width: 98%; max-width: 1720px; margin: 0 auto; padding: 24px 16px;`.
+     - Se incorporó la envoltura `.table-responsive-box` (`overflow-x: auto;`) dentro de `.modern-card`.
+     - Se asignó clase y ancho dedicado a la columna de acciones `.col-acciones` (`min-width: 175px !important; width: 175px !important; text-align: center;`).
+     - Se diseñó el agrupador `.actions-btn-group` con `display: inline-flex; gap: 8px;` con botones estilizados `Editar` y `Eliminar` provistos de iconos SVG vectoriales, eliminando cualquier corte o desborde visual.
+     - Se configuró DataTables con `scrollX: true`, `autoWidth: false` y definición explícita de la columna 9 para garantizar compatibilidad completa en cualquier resolución.
+6. **Generación de Script SQL Completo de Importación Limpia (`docs/cabal_completo.sql`):**
+   - Creación del archivo SQL maestro que contiene la estructura DDL completa de las 11 tablas del sistema (`roles`, `usuarios`, `auditoria_accesos`, `recuperacion_tokens`, `beneficiario`, `MasterTarjetas`, `acreditar`, `acreditar2`, `acreditarmanual`, `altas`, `movimientos`).
+   - Conforme a los requerimientos de seguridad y privacidad:
+     - La tabla `beneficiario` y las tablas transaccionales de movimientos y lotes se exportan completamente **VACÍAS** (sin registros personales de titulares).
+     - Se preserva el catálogo institucional de `roles` (3 perfiles: ADMIN, OPERADOR, AUDITOR).
+     - Se exportan exclusivamente los **2 usuarios administradores** actualmente creados (`dgarcia` y `pucho`) con sus respectivos hashes de contraseña e identidades institucionales.
+   - Verificado con prueba de importación en base de datos temporal en MariaDB.
 
 ### 2. Archivos Añadidos y Modificados
+- `docs/cabal_completo.sql` (NUEVO): Script SQL completo para importación y despliegue limpio de la base de datos `cabal`.
 - `img/NexoFRS.png` (NUEVO): Logotipo oficial de Nexo FRS en formato RGBA con fondo transparente (586x377 px).
 - `auth/login.php`: Banner superior con logo Nexo FRS a ancho completo y título actualizado.
 - `admin_usuarios.php`: Modal y lógica de blanqueo de contraseñas por administradores; corrección de nombres de campos en base de datos; nueva cabecera simétrica.

@@ -4,6 +4,9 @@
  * Edición de Beneficiario
  */
 
+require_once(__DIR__ . "/../auth/verificar_sesion.php");
+requerirAutenticacion();
+
 include_once 'conexion.php';
 $mensaje_error = '';
 
