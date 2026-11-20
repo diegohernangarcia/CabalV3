@@ -280,6 +280,71 @@ body {
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
 }
 
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px 4px 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-800));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.user-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.user-role-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #93c5fd;
+}
+
+.user-role-badge.role-admin {
+  color: #fcd34d;
+}
+
+.user-role-badge.role-operador {
+  color: #6ee7b7;
+}
+
+.user-role-badge.role-auditor {
+  color: #c084fc;
+}
+
+.btn-nav-action.btn-logout {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.btn-nav-action.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ffffff;
+}
+
 .btn-nav-action.primary:hover {
   background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);

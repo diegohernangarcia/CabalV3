@@ -15,6 +15,9 @@
  * Compatibilidad: PHP 5.6.40+ (XAMPP LAMPP)
  */
 
+require_once(__DIR__ . "/auth/verificar_sesion.php");
+requerirAutenticacion();
+
 require_once(__DIR__ . "/BD/BD.php");
 require_once(__DIR__ . "/BD/Funciones.php");
 require_once(__DIR__ . "/BD/UsarGestion.php");

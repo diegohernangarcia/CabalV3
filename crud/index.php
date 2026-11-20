@@ -1,4 +1,7 @@
 <?php
+require_once(__DIR__ . "/../auth/verificar_sesion.php");
+requerirAutenticacion();
+
 // Incluir archivo de conexión a la base de datos
 include_once 'conexion.php';
 include_once '../BD/Funciones.php';

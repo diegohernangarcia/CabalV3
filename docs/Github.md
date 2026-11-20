@@ -247,6 +247,37 @@ Cada operación realizada en el repositorio debe documentar de forma explícita 
 
 ---
 
+### Acción 17: Módulo de Usuarios, Control de Acceso RBAC, Seguridad BCRYPT, Blanqueo y Blindaje Operativo
+- **Fecha y Hora:** 2026-11-20 07:48:00 -0300
+- **Comando Ejecutado:** `git commit -m "Modulo Usuario" && git push origin main`
+- **Hash de Commit:** `PENDIENTE` (se actualizará con el hash generado)
+- **Estado:** ✅ **EXITOSA**
+- **Detalle de la Operación:**
+  - Creación del esquema relacional de seguridad (`BD/migracion_modulo_usuarios.sql` y `BD/migrar_usuarios.php`) con tablas `roles`, `usuarios`, `recuperacion_tokens`, `auditoria_accesos` y carga de roles `ADMIN`, `OPERADOR`, `AUDITOR`.
+  - Desarrollo del núcleo de autenticación y sesiones seguras en `auth/` (`config_sesion.php`, `funciones_auth.php`, `verificar_sesion.php`):
+    - Cifrado con algoritmo estándar BCRYPT (`PASSWORD_BCRYPT`).
+    - Caducidad automática de sesión por inactividad tras 20 minutos (1200 seg).
+    - Protección contra fuerza bruta (bloqueo preventivo de 15 min al alcanzar 5 intentos fallidos consecutivos).
+    - Protección anti-CSRF con tokens de sesión y prevención de Session Fixation.
+    - Bitácora forense de auditoría de accesos (`auditoria_accesos`) con IP, User-Agent y timestamp.
+  - Creación de la pantalla de inicio de sesión institucional (`auth/login.php`) con diseño glassmorphism y credenciales iniciales.
+  - Creación del panel de administración integral de usuarios (`admin_usuarios.php`) reservado exclusivamente para rol `ADMIN`:
+    - Métricas KPI ejecutivas (Total Usuarios, Cuentas Activas, Cuentas Bloqueadas, Roles).
+    - Modal de creación de nuevo usuario con asignación de roles.
+    - Modal de edición de datos, rol y activación/desactivación.
+    - Botón de desbloqueo inmediato para cuentas bloqueadas por fuerza bruta.
+    - Botón y modal de **Blanqueo de Contraseña** con sugerencias rápidas ("12345", "cabal2026", generador aleatorio) y registro de auditoría.
+    - Visor forense de eventos de seguridad con filtrado en tiempo real.
+  - Blindaje con guardas de autenticación obligatoria (`requerirAutenticacion()`) en:
+    - `index.php` (Panel Principal, con barra de usuario e indicador de rol `ADMIN` / botón directo a Usuarios).
+    - `InformeAlta.php`
+    - `InformeAcreditacion.php`
+    - `InformePadronGeneral.php`
+    - `crud/index.php` (Administración de Beneficiarios)
+  - Actualización exhaustiva de bitácora en `docs/BITACORA_CAMBIOS.md`.
+
+---
+
 ## 3. Protocolos Operativos y Estándar Obligatorio de Registro
 
 Para cumplir con la directiva permanente fijada en `GEMINI.md`:

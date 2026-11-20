@@ -52,8 +52,15 @@
    - Alineación vertical estricta de ítems entre las 4 tarjetas: Fijación de `min-height: 68px` en cabeceras de tarjetas (`.step-card-header`), altura uniforme de 38px en cada botón (`.step-item-btn`) y eliminación del `margin-top: auto` en `.step-links`, garantizando que las filas de ítems 1, 2, 3... comiencen exactamente en la misma cota horizontal en todas las columnas.
    - Ajuste de contención y ancho sin desborde: Implementación de `grid-template-columns: repeat(4, minmax(0, 1fr))` con `gap: 12px`, `box-sizing: border-box`, `min-width: 0` y `overflow: hidden` en tarjetas y enlaces, optimizando el relleno del marco contenedor (`.workflow-section`) para que las 4 tarjetas permanezcan estrictamente contenidas dentro del marco visual sin desbordamiento horizontal en ninguna resolución.
    - Compatibilidad completa con temas Claro y Oscuro (`[data-theme="dark"]`).
+6. **Módulo de Usuarios y Autenticación — Fase 1: Estructura de Base de Datos y Sembrado Inicial:**
+   - Creación del script DDL formal `BD/migracion_modulo_usuarios.sql` con definición de tablas `roles`, `usuarios`, `recuperacion_tokens` y `auditoria_accesos`.
+   - Implementación de ejecutor PHP automatizado `BD/migrar_usuarios.php` con soporte dual PDO/MySQLi y verificación criptográfica con `password_verify()`.
+   - Inicialización del catálogo con 3 roles institucionales: `ADMIN` (Administrador General), `OPERADOR` (Operador de Carga y Lotes) y `AUDITOR` (Consulta y Reportes).
+   - Alta/sincronización de la cuenta de Administrador inicial: usuario `dgarcia`, email `dgarcia@senaf.rionegro.gov.ar`, nombre `Diego Garcia`, rol `ADMIN` (1) y contraseña cifrada con `PASSWORD_BCRYPT` (clave configurada: `78900`).
 
 ### 2. Archivos Añadidos y Modificados
+- `BD/migracion_modulo_usuarios.sql` (NUEVO): Script DDL para creación de tablas y datos semilla de roles y usuarios.
+- `BD/migrar_usuarios.php` (NUEVO): Ejecutor interactivo de migración con diagnóstico y validación bcrypt.
 - `InformePadronGeneral.php` (NUEVO): Módulo de auditoría del padrón general de beneficiarios y generador de correo EML con `X-Unsent: 1`.
 - `InformeAcreditacion.php` (NUEVO): Módulo principal de auditoría de respuesta de cargas y generador de EML con `X-Unsent: 1`.
 - `InformeAlta.php` (NUEVO): Módulo principal de auditoría de respuesta de altas y generador de EML con `X-Unsent: 1`.
@@ -1384,6 +1391,190 @@ Para asegurar la total trazabilidad y la posibilidad de reversión inmediata ant
 | **Ausencia de Texto "Estimadas Autoridades"** | `grep -i "Estimadas Autoridades"` | 0 coincidencias en todo el archivo | ✅ PASÓ |
 | **Ausencia de "Sincronizados en BD"** | `grep -i "Sincronizados en BD"` | 0 coincidencias en todo el archivo | ✅ PASÓ |
 | **Generación EML 3 Cajas KPI** | Invocación CLI con `?accion=descargar_eml` | 3 cajas KPI distribuidas al 33.33% sin errores visuales | ✅ PASÓ |
+
+---
+
+## [2026-11-19 13:30] - Módulo de Usuarios y Seguridad: Fase 1 (Base de Datos) y Fase 2 (Autenticación, Sesiones, Login, Recuperación y Guardas de Acceso)
+
+### 1. Objetivos de la Intervención
+1. **Fase 1 - Infraestructura de Base de Datos y Modelo de Seguridad:**
+   - Creación del esquema relacional de seguridad y control de acceso RBAC (`roles`, `usuarios`, `recuperacion_tokens`, `auditoria_accesos`).
+   - Carga de roles base: `ADMIN` (Administrador General con control total), `OPERADOR` (Operador Bancario y Carga de Lotes), `AUDITOR` (Solo Lectura y Reportes).
+   - Generación del usuario inicial administrador: `usuario: dgarcia`, `email: dgarcia@senaf.rionegro.gov.ar`, `pass: 78900` cifrado de forma irreversible mediante algoritmo BCRYPT estándar (`password_hash`).
+   - Script de migración resiliente con soporte dual PDO / MySQLi (`BD/migrar_usuarios.php`).
+
+2. **Fase 2 - Núcleo de Autenticación, Middleware de Sesión y Vistas Institucionales:**
+   - **Gestión Segura de Sesiones (`auth/config_sesion.php`):**
+     - Directivas de sesión endurecidas (`cookie_httponly = 1`, `use_only_cookies = 1`, `use_strict_mode = 1`, flag seguro si corre en HTTPS).
+     - Caducidad obligatoria de sesión por inactividad tras 20 minutos (1200 segundos).
+     - Destrucción segura y saneamiento de cookies en desconexión o expiración (`cerrarSesionSegura()`).
+   - **Funciones Criptográficas y Control de Intentos (`auth/funciones_auth.php`):**
+     - Autenticación con verificación BCRYPT (`password_verify`).
+     - Protección anti-fuerza bruta: bloqueo temporal automático por 15 minutos al acumular 5 intentos fallidos consecutivos.
+     - Tokens anti-CSRF criptográficos (`generarTokenCsrf()`, `verificarTokenCsrf()`).
+     - Rotación de identificador de sesión (`session_regenerate_id(true)`) post-login contra ataques de Session Fixation.
+     - Bitácora forense de auditoría de accesos (`auditoria_accesos`) con registro de IP de origen, User-Agent y marcas temporales.
+   - **Middleware Guardián de Acceso (`auth/verificar_sesion.php`):**
+     - Función `requerirAutenticacion()` para proteger cualquier página sensible, memorizando la URL previa de navegación para redirección post-login.
+     - Función `requerirRol($rolesPermitidos)` con pantalla institucional HTTP 403 Forbidden para denegación de accesos no autorizados.
+     - Funciones auxiliares para plantillas: `obtenerUsuarioActual()`, `estaAutenticado()`, `tienePermiso($clave)`.
+   - **Pantalla de Inicio de Sesión (`auth/login.php`):**
+     - Diseño institucional responsivo con fondo degradado y estética glassmorphism coherente con `css/dashboard.css`.
+     - Logotipos de SeNAF y Cabal Entidad 782.
+     - Conmutador visual para mostrar/ocultar contraseña.
+     - Manejo de alertas institucionales contextuales (sesión expirada, cierre exitoso, credenciales inválidas, bloqueo temporal con contador de minutos restantes).
+   - **Cierre de Sesión Seguro (`auth/logout.php`):**
+     - Auditoría forense de desconexión y destrucción integral de sesión.
+   - **Recuperación y Restablecimiento de Contraseñas (`auth/recuperar.php` y `auth/restablecer.php`):**
+     - Solicitud de restablecimiento por usuario o email sin revelación de cuentas existentes (anti-enumeración).
+     - Emisión de tokens criptográficos de un solo uso en SHA-256 con vencimiento estricto a los 45 minutos.
+     - Botón de restablecimiento directo y formulario seguro para actualización de contraseña con validación de coincidencia y longitud mínima.
+     - Desbloqueo automático de cuenta y limpieza de intentos fallidos al actualizar contraseña.
+   - **Integración en Panel Principal (`index.php` y `css/dashboard.css`):**
+     - Inclusión del guardián `requerirAutenticacion()`.
+     - Nueva barra de usuario en la navegación superior con avatar, nombre de usuario y badge coloreado de rol (`role-admin`, `role-operador`, `role-auditor`).
+     - Botón de cierre de sesión institucional (`Salir`) con confirmación visual.
+
+### 2. Archivos Creados y Modificados
+- **`BD/migracion_modulo_usuarios.sql` (NUEVO):** DDL completo y semillas iniciales de roles y usuario admin.
+- **`BD/migrar_usuarios.php` (NUEVO):** Migrador de base de datos con autotest criptográfico.
+- **`auth/config_sesion.php` (NUEVO):** Configuración de directivas seguras y timeout de 20 minutos.
+- **`auth/funciones_auth.php` (NUEVO):** Autenticación BCRYPT, bloqueo temporal por 5 fallos, CSRF y auditoría.
+- **`auth/verificar_sesion.php` (NUEVO):** Middleware de guarda de sesión y verificación de roles.
+- **`auth/login.php` (NUEVO):** Interfaz institucional de login con protección CSRF y rate limiting.
+- **`auth/logout.php` (NUEVO):** Controlador de cierre seguro de sesión y auditoría.
+- **`auth/recuperar.php` (NUEVO):** Solicitud y emisión de tokens de recuperación de 45 minutos.
+- **`auth/restablecer.php` (NUEVO):** Validación de token SHA-256 y actualización de hash de contraseña.
+- **`index.php`:** Integración de guarda de autenticación, insignia de usuario conectado y botón de cierre de sesión en cabecera.
+- **`css/dashboard.css`:** Estilos para `.user-pill`, `.user-avatar`, `.user-info`, `.user-role-badge` y `.btn-logout`.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro formal de las fases 1 y 2.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :--- |
+| **Linting Sintáctico PHP 5.6** | `php -l` en los 7 archivos de `auth/` e `index.php` | 0 errores sintácticos detectados | ✅ PASÓ |
+| **Generación de Hash BCRYPT** | Verificación `password_verify('78900', $hash)` | Algoritmo estándar BCRYPT operativo y validado | ✅ PASÓ |
+| **Control de Sesión e Inactividad** | Verificación de umbral de 1200 seg (20 min) | Destrucción de sesión y redirección a `login.php?motivo=expirada` | ✅ PASÓ |
+| **Protección contra CSRF** | Generación con `openssl_random_pseudo_bytes` y validación | Token único por sesión validado estrictamente en POST | ✅ PASÓ |
+| **Rate Limiting y Bloqueo** | Lógica de 5 intentos fallidos y bloqueo por 15 min | Contador incremental y campo `bloqueado_hasta` activo | ✅ PASÓ |
+| **Recuperación de Contraseña** | Token criptográfico de 32 bytes con hash SHA-256 | Validez de 45 minutos y consumo de un solo uso | ✅ PASÓ |
+
+---
+
+## [2026-11-19 13:45] - Módulo de Usuarios y Seguridad: Fase 3 (Panel de Administración CRUD, Gestión de Roles, Desbloqueo y Blindaje de Páginas Operativas)
+
+### 1. Objetivos de la Intervención
+1. **Panel Integral de Administración de Usuarios (`admin_usuarios.php`):**
+   - Control de acceso estricto reservado exclusivamente al rol `ADMIN` mediante `requerirRol('ADMIN')`.
+   - Visualización y gestión de todas las cuentas de usuario: nombre, usuario, correo institucional, rol asignado, estado (Activo/Inactivo), contador de fallos y marca de tiempo de último acceso.
+   - Creación de nuevos usuarios con validación de unicidad, asignación de rol (`ADMIN`, `OPERADOR`, `AUDITOR`) y contraseña inicial con hash BCRYPT.
+   - Edición de perfiles de usuario, cambio administrativo de contraseñas y alternancia de estado (Activar/Desactivar) protegiendo la cuenta del administrador actual contra auto-bloqueos.
+   - Desbloqueo inmediato de cuentas bloqueadas por fuerza bruta (restablece `intentos_fallidos` a 0 y limpia `bloqueado_hasta`).
+   - Visor forense de eventos de auditoría (`auditoria_accesos`) con filtros en tiempo real por texto, usuario, acción o IP.
+   - Indicadores KPI ejecutivos: Total Usuarios, Cuentas Activas, Cuentas Bloqueadas y Roles Definidos.
+2. **Acceso Rápido en Barra de Navegación (`index.php`):**
+   - Botón directo "Usuarios" con ícono de escudo y permisos condicionales (visible únicamente para usuarios con rol `ADMIN`).
+3. **Blindaje de Páginas Operativas Clave con Middleware de Sesión:**
+   - Incorporación de `verificar_sesion.php` y `requerirAutenticacion()` en:
+     - `InformeAlta.php`
+     - `InformeAcreditacion.php`
+     - `InformePadronGeneral.php`
+     - `crud/index.php` (Gestión del Padrón de Beneficiarios)
+   - Redirección automática al login si se accede sin sesión activa, con memorización de la URL solicitada para retorno transparente post-autenticación.
+
+### 2. Archivos Creados y Modificados
+- **`admin_usuarios.php` (NUEVO):** Panel de administración RBAC, modales de alta/edición, desbloqueo y auditoría.
+- **`index.php`:** Botón administrativo condicional en la cabecera superior.
+- **`InformeAlta.php`:** Guarda de autenticación obligatoria.
+- **`InformeAcreditacion.php`:** Guarda de autenticación obligatoria.
+- **`InformePadronGeneral.php`:** Guarda de autenticación obligatoria.
+- **`crud/index.php`:** Guarda de autenticación obligatoria.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro formal de la Fase 3.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :--- |
+| **Linting Sintáctico PHP 5.6** | `php -l` en `admin_usuarios.php` y módulos blindados | 0 errores sintácticos detectados | ✅ PASÓ |
+| **Control de Acceso `requerirRol('ADMIN')`** | Invocación de `admin_usuarios.php` | Redirección o HTTP 403 según corresponda | ✅ PASÓ |
+| **Protección CSRF en Formularios Admin** | Validación en `admin_usuarios.php` con token de sesión | Solicitudes POST sin token o token adulterado rechazadas | ✅ PASÓ |
+| **Desbloqueo de Cuentas** | Acción `desbloquear` vía POST en `admin_usuarios.php` | Limpieza de `intentos_fallidos` y `bloqueado_hasta` con auditoría | ✅ PASÓ |
+| **Corrección Nombres de Columnas** | Alineación estricta con DDL (`creado_en`, `fecha_hora`, `expira_en`, `utilizado`) | Eliminación del error 1054 Unknown column en consultas SQL | ✅ PASÓ |
+
+---
+
+## [2026-11-19 13:45] - Seguridad en Recuperación de Contraseña: Validación Obligatoria por Correo y Cliente SMTP
+
+### 1. Objetivos de la Intervención
+1. **Supresión del Enlace en Pantalla (`auth/recuperar.php`):**
+   - Remoción absoluta del botón de restablecimiento que se desplegaba en el navegador para evitar que cualquier persona que conozca el correo de un usuario pueda blanquear su contraseña sin acceder a su casilla.
+2. **Validación y Despacho Exclusivo por Correo Electrónico:**
+   - La pantalla de recuperación solicita la dirección de correo registrada.
+   - Si el usuario existe y está activo, se genera el token de seguridad temporal (45 minutos) y se despacha obligatoriamente al correo del titular.
+   - En pantalla solo se presenta un mensaje de confirmación neutro, instruyendo a revisar la bandeja de entrada.
+3. **Módulo de Correo y Configuración SMTP (`config/mail.php` y `auth/mailer.php`):**
+   - Creación de `config/mail.php` para parametrizar el servidor SMTP institucional (host, puerto, cifrado TLS/SSL, usuario y contraseña).
+   - Desarrollo de un cliente SMTP nativo en PHP (`auth/mailer.php`) mediante sockets (`fsockopen` / `STARTTLS` / `AUTH LOGIN`) sin dependencias externas, 100% compatible con PHP 5.6.40.
+   - Plantilla de correo institucional HTML responsive y alternativa en texto plano con botón de acción directa a `restablecer.php?token=...`.
+
+### 2. Archivos Creados y Modificados
+- **`config/mail.php` (NUEVO):** Configuración de servidor SMTP y credenciales salientes.
+- **`auth/mailer.php` (NUEVO):** Cliente SMTP nativo en PHP puro con soporte STARTTLS y autenticación.
+- **`auth/recuperar.php`:** Blindaje del flujo, remoción de enlaces expuestos y envío por correo.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro de la intervención.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :--- |
+| **Linting Sintáctico PHP 5.6** | `php -l` en `config/mail.php`, `auth/mailer.php` y `auth/recuperar.php` | 0 errores detectados | ✅ PASÓ |
+| **No Exposición de Tokens en Pantalla** | Inspección del código HTML y POST en `auth/recuperar.php` | 0 botones o tokens expuestos al navegador | ✅ PASÓ |
+| **Generación de Token 45 min** | Inserción en `recuperacion_tokens` con `expira_en` y `utilizado = 0` | Registro creado y solicitudes previas invalidadas | ✅ PASÓ |
+
+---
+
+## [2026-11-20 07:40] - Supresión de Recuperación Pública y Centralización de Blanqueo de Contraseñas en Panel de Administración
+
+### 1. Objetivos de la Intervención
+1. **Desactivación de Recuperación Externa por Correo:**
+   - Supresión del flujo público de recuperación de contraseña para eliminar dependencias de servidores SMTP externos, autenticaciones de buzón y riesgos de enumeración o interceptación.
+   - En [auth/login.php](file:///opt/lampp/htdocs/cabal-Gemini/auth/login.php): se removió el enlace de *"¿Olvidó su contraseña?"* y se incorporó una indicación institucional: *"Para blanqueo o reseteo de contraseñas, solicítelo al Administrador del sistema."*.
+   - Los archivos `auth/recuperar.php` y `auth/restablecer.php` se configuraron para redirigir inmediatamente a `login.php`.
+   - Limpieza y descarte de archivos temporales de correo (`config/mail.php`, `auth/mailer.php`).
+2. **Botón y Modal de Blanqueo Directo en Administración de Usuarios (`admin_usuarios.php`):**
+   - Incorporación de un botón interactivo **`🔑 Blanquear`** en la columna de acciones para cada cuenta de usuario.
+   - Modal contextual de confirmación que despliega el usuario y nombre del titular a modificar.
+   - Opciones rápidas de asignación:
+     - Claves sugeridas estándar: `"12345"` y `"cabal2026"`.
+     - Generador automático de claves aleatorias seguras (8 caracteres alfanuméricos).
+     - Campo editable para ingresar cualquier contraseña personalizada (mínimo 5 caracteres).
+   - Procesamiento seguro vía POST con validación anti-CSRF:
+     - Cifrado inmediato de la nueva clave mediante algoritmo **BCRYPT** (`PASSWORD_BCRYPT`).
+     - Actualización en la tabla `usuarios` limpiando de forma simultánea el contador de fallos (`intentos_fallidos = 0`) y cualquier bloqueo preventivo (`bloqueado_hasta = NULL`).
+     - Trazabilidad y auditoría forense en `auditoria_accesos`: registro de `BLANQUEO_PASSWORD: <usuario> (ID <id>) por Admin <admin>`.
+     - Banner informativo de éxito en pantalla confirmando el usuario y la nueva contraseña asignada.
+
+### 2. Archivos Creados y Modificados
+- **`admin_usuarios.php`:**
+  - Acción POST `blanquear_password` con hash BCRYPT y desbloqueo.
+  - Estilo CSS `.btn-tbl.blanquear` con realce visual institucional.
+  - Botón "🔑 Blanquear" en cada fila de usuario.
+  - Modal `#modal-blanquear` con sugerencias rápidas y generador aleatorio.
+  - Funciones JavaScript `abrirModalBlanquear()`, `asignarClaveSugerida()` y `generarClaveAleatoria()`.
+- **`auth/login.php`:** Remoción del enlace público de recuperación y actualización del pie de página.
+- **`auth/recuperar.php` y `auth/restablecer.php`:** Desactivación y redirección directa a login.
+- **`.gitignore`:** Limpieza de reglas de correo innecesarias.
+- **`docs/BITACORA_CAMBIOS.md`:** Registro formal de la intervención.
+
+### 3. Matriz de Pruebas
+| Prueba | Método de Verificación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :--- |
+| **Linting Sintáctico PHP 5.6** | `php -l` en `admin_usuarios.php`, `auth/login.php`, `auth/recuperar.php`, `auth/restablecer.php` | 0 errores detectados | ✅ PASÓ |
+| **Protección CSRF en Blanqueo** | POST con y sin token `csrf_token` | Operación autorizada con token; rechazada sin él | ✅ PASÓ |
+| **Desbloqueo Automático al Blanquear** | Consulta SQL tras blanquear usuario con fallos | `intentos_fallidos` vuelve a 0 y `bloqueado_hasta` a NULL | ✅ PASÓ |
+| **Hash Criptográfico BCRYPT** | Verificación `password_verify($nuevaClave, $hash)` | Contraseña verificada satisfactoriamente | ✅ PASÓ |
+
+
+
+
 
 
 
