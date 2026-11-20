@@ -250,8 +250,13 @@ Cada operación realizada en el repositorio debe documentar de forma explícita 
 ### Acción 17: Módulo de Usuarios, Control de Acceso RBAC, Seguridad BCRYPT, Blanqueo y Blindaje Operativo
 - **Fecha y Hora:** 2026-11-20 07:48:00 -0300
 - **Comando Ejecutado:** `git commit -m "Modulo Usuario" && git push origin main`
-- **Hash de Commit:** `PENDIENTE` (se actualizará con el hash generado)
+- **Hash de Commit:** `350ba6f` (`edd9c64..350ba6f` hacia `origin/main`)
 - **Estado:** ✅ **EXITOSA**
+- **Salida Observada:**
+  ```text
+  To github.com:diegohernangarcia/CabalV3.git
+     edd9c64..350ba6f  main -> main
+  ```
 - **Detalle de la Operación:**
   - Creación del esquema relacional de seguridad (`BD/migracion_modulo_usuarios.sql` y `BD/migrar_usuarios.php`) con tablas `roles`, `usuarios`, `recuperacion_tokens`, `auditoria_accesos` y carga de roles `ADMIN`, `OPERADOR`, `AUDITOR`.
   - Desarrollo del núcleo de autenticación y sesiones seguras en `auth/` (`config_sesion.php`, `funciones_auth.php`, `verificar_sesion.php`):
